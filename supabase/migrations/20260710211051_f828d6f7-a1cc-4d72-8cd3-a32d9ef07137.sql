@@ -1,0 +1,1 @@
+DELETE FROM public.foods WHERE id = 'cbd4b5f4-740a-4a6f-93ca-be03d18455de';

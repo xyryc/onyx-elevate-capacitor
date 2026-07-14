@@ -1,0 +1,31 @@
+# Onyx Elevate
+
+> Free exercise library and premium training programs built by competing athletes — strength, hypertrophy, conditioning, nutrition and recipes.
+
+Onyx Elevate is a fitness platform with a free searchable exercise database (400+ exercises with step-by-step instructions, pro tips and common mistakes), premium training programs and meal plans, a recipe library, and articles written by coaches who actively compete in powerlifting, bodybuilding, strongman, boxing and running.
+
+## Pages
+
+- [Home](/): Overview of the Onyx Elevate platform.
+- [Exercise library](/exercises): Free, searchable database of 400+ exercises filtered by muscle group, equipment, difficulty and type.
+- [Training programs](/programs): Premium strength, hypertrophy, conditioning and fat-loss programs.
+- [Meal plans](/meal-plans): Premium nutrition plans for cutting, lean muscle and mass gain.
+- [Recipes](/recipes): Free high-protein recipe library.
+- [Coaches](/coaches): The competing athletes behind every Onyx program.
+- [Challenges](/challenges): Free training and habit challenges.
+- [The Onyx app](/app): Preview of the upcoming iOS and Android app.
+- [Program quiz](/quiz): 7-question quiz that recommends a matching program.
+- [Articles](/articles/rpe-explained-simple-guide): Training and nutrition education.
+
+## About
+
+- [About Onyx Elevate](/about): Mission, team and story.
+- [FAQ](/faq): Common questions about programs, coaching and pricing.
+- [Contact](/contact): How to reach the team.
+- [Careers](/careers): Open roles.
+
+## Optional
+
+- [Privacy policy](/privacy)
+- [Terms of service](/terms)
+- [Refund policy](/refund)

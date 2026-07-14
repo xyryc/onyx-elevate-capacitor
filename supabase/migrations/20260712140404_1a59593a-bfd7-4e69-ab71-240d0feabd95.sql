@@ -1,0 +1,1 @@
+ALTER TABLE public.purchases RENAME COLUMN paddle_transaction_id TO transaction_id;

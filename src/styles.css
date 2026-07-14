@@ -1,0 +1,185 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+@import "@fontsource/space-grotesk/400.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-onyx-50: var(--onyx-50);
+  --color-onyx-100: var(--onyx-100);
+  --color-onyx-200: var(--onyx-200);
+  --color-onyx-300: var(--onyx-300);
+  --color-electric: var(--electric);
+  --color-electric-glow: var(--electric-glow);
+  --color-electric-soft: var(--electric-soft);
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Onyx Elevate palette */
+  --onyx-50: oklch(0.11 0 0);
+  --onyx-100: oklch(0.18 0 0);
+  --onyx-200: oklch(0.24 0.005 240);
+  --onyx-300: oklch(0.32 0.008 240);
+  --electric: oklch(0.7 0.22 240);
+  --electric-glow: oklch(0.78 0.2 235);
+  --electric-soft: oklch(0.55 0.15 240);
+
+  --background: var(--onyx-50);
+  --foreground: oklch(0.97 0 0);
+  --card: var(--onyx-100);
+  --card-foreground: oklch(0.97 0 0);
+  --popover: var(--onyx-100);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: var(--electric);
+  --primary-foreground: var(--onyx-50);
+  --secondary: var(--onyx-200);
+  --secondary-foreground: oklch(0.97 0 0);
+  --muted: var(--onyx-200);
+  --muted-foreground: oklch(0.65 0.01 240);
+  --accent: var(--onyx-300);
+  --accent-foreground: oklch(0.97 0 0);
+  --destructive: oklch(0.62 0.23 25);
+  --destructive-foreground: oklch(0.97 0 0);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: var(--electric);
+
+  --gradient-hero: radial-gradient(ellipse at top, oklch(0.7 0.22 240 / 0.25), transparent 60%);
+  --gradient-card: linear-gradient(180deg, var(--onyx-100), var(--onyx-50));
+  --gradient-electric: linear-gradient(135deg, var(--electric), var(--electric-glow));
+  --shadow-electric: 0 0 0 1px oklch(0.7 0.22 240 / 0.2), 0 20px 60px -20px oklch(0.7 0.22 240 / 0.4);
+  --shadow-electric-glow: 0 0 0 1px oklch(0.78 0.2 235 / 0.45), 0 0 35px -5px oklch(0.78 0.2 235 / 0.55), 0 20px 60px -20px oklch(0.7 0.22 240 / 0.5);
+  --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 20px 40px -20px oklch(0 0 0 / 0.6);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    overflow-x: clip;
+    max-width: 100vw;
+    overscroll-behavior-y: none;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: visible;
+    max-width: 100vw;
+    touch-action: pan-x pan-y;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overscroll-behavior-y: none;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: var(--electric);
+    color: var(--onyx-50);
+  }
+}
+
+@utility container-onyx {
+  @apply mx-auto w-full max-w-7xl px-5 md:px-8;
+}
+
+@utility text-gradient-electric {
+  background: var(--gradient-electric);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility surface-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+}
+
+@utility glow-ring {
+  box-shadow: var(--shadow-electric);
+}
+
+@utility hairline {
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+}
+
+@keyframes supp-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@utility animate-supp-scroll {
+  animation: supp-scroll 50s linear infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-120%); }
+  45% { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
+
+@utility animate-shimmer-sweep {
+  animation: shimmer-sweep 2.4s ease-in-out infinite;
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility chat-bg {
+  background-image:
+    radial-gradient(circle at 20% 10%, color-mix(in oklab, var(--electric) 8%, transparent), transparent 40%),
+    radial-gradient(circle at 80% 90%, color-mix(in oklab, var(--electric) 6%, transparent), transparent 45%);
+}
+
