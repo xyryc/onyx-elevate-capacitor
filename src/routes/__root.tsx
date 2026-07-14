@@ -185,7 +185,7 @@ function RootComponent() {
         <AutoTranslator />
         <LanguageSplash />
         {/* TranslationGate removed, instant switch, no loading screen */}
-        <div className="h-dvh flex flex-col overflow-hidden">
+        <div className="h-dvh flex flex-col overflow-hidden pt-[env(safe-area-inset-top)]">
           <div className={`shrink-0 z-50 ${isDetailPage || isFullscreenMobilePage ? "hidden md:block" : ""}`}>
             <PaymentTestModeBanner />
             <SiteHeader />
