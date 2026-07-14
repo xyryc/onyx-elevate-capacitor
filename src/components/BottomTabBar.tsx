@@ -38,7 +38,7 @@ export function BottomTabBar() {
   return (
     <nav
       className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-border bg-onyx-100/95 backdrop-blur-xl shadow-[0_-1px_0_0_oklch(1_0_0_/_6%)_inset] [body.hide-bottom-tabbar_&]:hidden"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) * 0.5)" }}
       aria-label="Primary"
     >
       <ul className="grid grid-cols-5">
