@@ -17,6 +17,7 @@ import {
   CalendarDays,
   BarChart3,
   Pencil,
+  X,
 } from "lucide-react";
 import { Link, useRouter } from "@tanstack/react-router";
 import { getMyStreak, getRecentCheckInDays, getThisWeekLoggedDays } from "@/lib/streak";
@@ -25,7 +26,7 @@ import { useT, useLang } from "@/i18n/LanguageProvider";
 import type { Lang } from "@/i18n";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -843,7 +844,7 @@ function AchievementsBlock({
       <Dialog open={achievementsOpen} onOpenChange={setAchievementsOpen}>
         <DialogContent className="fixed inset-0 z-50 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 rounded-none border-0 bg-gradient-to-b from-onyx-50 to-onyx-100 p-0 text-foreground data-[state=open]:zoom-in-100 data-[state=closed]:zoom-out-100">
           <div className="flex h-[100dvh] flex-col overflow-hidden">
-            <div className="sticky top-0 z-10 border-b border-white/10 bg-onyx-50/95 px-5 py-4 backdrop-blur-md">
+            <div className="sticky top-0 z-10 border-b border-white/10 bg-onyx-50/95 px-5 pt-[env(safe-area-inset-top)] pb-4 backdrop-blur-md">
               <DialogTitle className="flex items-center gap-2 font-display text-xl text-electric">
                 <Trophy className="h-5 w-5" />
                 {t("profile.hero.allAchievements") || "All achievements"}
@@ -852,6 +853,10 @@ function AchievementsBlock({
                 {achievements.filter((a) => a.unlocked).length} / {achievements.length} {t("profile.hero.done")}
               </DialogDescription>
             </div>
+            <DialogClose className="absolute right-3 top-[max(env(safe-area-inset-top),0.75rem)] z-50 grid h-9 w-9 place-items-center rounded-full bg-onyx-950/70 text-white backdrop-blur-md ring-1 ring-white/20 hover:bg-onyx-950/90 transition-colors focus:outline-none focus:ring-2 focus:ring-electric">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
             <div className="flex-1 overflow-y-auto overscroll-y-contain p-5 pb-8 [-webkit-overflow-scrolling:touch]">
               <div className="grid grid-cols-2 gap-3">
                 {achievements.map((a, i) => (
