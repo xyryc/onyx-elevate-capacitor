@@ -17,7 +17,7 @@ import testimonial1 from "@/assets/testimonial-1.jpg";
 import testimonial2 from "@/assets/testimonial-2.jpg";
 import testimonial3 from "@/assets/testimonial-3.jpg";
 import ogHome from "@/assets/og-home.jpg";
-import nutritionBg from "@/assets/nutrition-bg.jpg.asset.json";
+import nutritionBg from "@/assets/nutrition-bg.jpg";
 import { useImageOverrides } from "@/hooks/useImageOverrides";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { exercises, muscleGroups } from "@/data/exercises";

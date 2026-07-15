@@ -5,7 +5,7 @@ import { useT } from "@/i18n/LanguageProvider";
 import { CollapsibleChips } from "@/components/CollapsibleChips";
 import { RecipeDialog } from "@/components/RecipeDialog";
 import recipesHeroImg from "@/assets/recipes-hero.jpg";
-import nutritionBg from "@/assets/nutrition-bg.jpg.asset.json";
+import nutritionBg from "@/assets/nutrition-bg.jpg";
 
 export const Route = createFileRoute("/recipes/")({
   head: () => ({
@@ -93,7 +93,7 @@ function RecipesPage() {
       {/* Grouped categories */}
       <section className="relative">
         <img
-          src={nutritionBg.url}
+          src={nutritionBg}
           alt=""
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover opacity-60"

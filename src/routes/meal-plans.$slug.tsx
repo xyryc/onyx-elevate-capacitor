@@ -24,7 +24,7 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { useT } from "@/i18n/LanguageProvider";
 import { logDraftBatch, listSourceRefDates } from "@/lib/nutrition.functions";
 import { DatePickerRow, todayISO } from "@/components/DatePickerRow";
-import nutritionBg from "@/assets/nutrition-bg.jpg.asset.json";
+import nutritionBg from "@/assets/nutrition-bg.jpg";
 
 
 
@@ -99,7 +99,7 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
     <div className="relative min-h-screen">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
-        style={{ backgroundImage: `url(${nutritionBg.url})` }}
+        style={{ backgroundImage: `url(${nutritionBg})` }}
         aria-hidden="true"
       />
       {/* HERO IMAGE — always on top */}

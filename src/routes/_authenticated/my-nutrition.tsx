@@ -32,7 +32,7 @@ import {
 } from "@/lib/nutrition.functions";
 import { useLang } from "@/i18n/LanguageProvider";
 import { FastingCard, WeightCard, NotesCard } from "@/components/NutritionExtras";
-import nutritionBg from "@/assets/nutrition-bg.jpg.asset.json";
+import nutritionBg from "@/assets/nutrition-bg.jpg";
 
 export const Route = createFileRoute("/_authenticated/my-nutrition")({
   head: () => ({
@@ -562,7 +562,7 @@ function NutritionPage() {
       <div className="relative">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
-          style={{ backgroundImage: `url(${nutritionBg.url})` }}
+          style={{ backgroundImage: `url(${nutritionBg})` }}
           aria-hidden="true"
         />
         <div className="relative mx-auto w-full max-w-7xl px-3 pt-3 sm:px-5 sm:pt-5 md:px-8 md:pt-6">

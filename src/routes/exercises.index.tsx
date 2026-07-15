@@ -17,7 +17,7 @@ import { useAccess } from "@/hooks/useAccess";
 import { isFreePreviewExercise } from "@/lib/exercisePreview";
 import { Lock } from "lucide-react";
 import { useT } from "@/i18n/LanguageProvider";
-import nutritionBg from "@/assets/nutrition-bg.jpg.asset.json";
+import nutritionBg from "@/assets/nutrition-bg.jpg";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -150,7 +150,7 @@ function ExerciseLibrary() {
     <div className="relative min-h-screen">
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-40"
-        style={{ backgroundImage: `url(${nutritionBg.url})` }}
+        style={{ backgroundImage: `url(${nutritionBg})` }}
         aria-hidden="true"
       />
       <div className="container-onyx relative z-10 py-10 md:py-14">

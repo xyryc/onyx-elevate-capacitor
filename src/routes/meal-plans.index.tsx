@@ -8,7 +8,7 @@ import { useAccess } from "@/hooks/useAccess";
 import { useT } from "@/i18n/LanguageProvider";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { MealPlanDetailView } from "./meal-plans.$slug";
-import nutritionBg from "@/assets/nutrition-bg.jpg.asset.json";
+import nutritionBg from "@/assets/nutrition-bg.jpg";
 
 export const Route = createFileRoute("/meal-plans/")({
   component: MealPlansIndex,
@@ -38,7 +38,7 @@ function MealPlansIndex() {
     <div className="relative">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
-        style={{ backgroundImage: `url(${nutritionBg.url})` }}
+        style={{ backgroundImage: `url(${nutritionBg})` }}
         aria-hidden="true"
       />
       <div className="container-onyx relative py-10 sm:py-16 lg:py-24">

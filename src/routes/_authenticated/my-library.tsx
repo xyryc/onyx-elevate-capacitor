@@ -16,8 +16,8 @@ import { useT } from "@/i18n/LanguageProvider";
 import { Heart, Flame, Trophy, Dumbbell, Users, Ruler, X, Utensils, Bookmark } from "lucide-react";
 import { TrainingCalendar } from "@/components/TrainingCalendar";
 import { ProfileHero } from "@/components/ProfileHero";
-import tileChallengesImg from "@/assets/tile-challenges.png.asset.json";
-import tileSavedImg from "@/assets/tile-saved-workout.png.asset.json";
+import tileChallengesImg from "@/assets/tile-challenges.png";
+import tileSavedImg from "@/assets/tile-saved-workout.png";
 import builderHeroImg from "@/assets/builder-hero-real.jpg";
 
 import { getMyMembership } from "@/utils/payments.functions";
@@ -201,13 +201,13 @@ function MyLibrary() {
 
       {/* Quick tiles */}
       <div className="mt-6 flex justify-center gap-3 pb-2">
-        <QuickTile to="/challenges" icon={Trophy} title={t("library.challengesTitle")} subtitle={t("library.tileChallengesSub")} tone="purple" image={tileChallengesImg.url} />
+        <QuickTile to="/challenges" icon={Trophy} title={t("library.challengesTitle")} subtitle={t("library.tileChallengesSub")} tone="purple" image={tileChallengesImg} />
         <QuickTile
           icon={Bookmark}
           title={t("library.tileSavedTitle")}
           subtitle={t("library.tileSavedSub")}
           tone="orange"
-          image={tileSavedImg.url}
+          image={tileSavedImg}
           onClick={() => {
             const el = document.getElementById("saved-library-section");
             if (el) {
@@ -671,14 +671,28 @@ function QuickTile({
     orange: { bg: "bg-[#c2410c]/30", ring: "border-[#f97316]/50", icon: "text-[#fb923c]" },
   };
   const c = tones[tone];
+  const bgGradients: Record<string, string> = {
+    purple: "bg-gradient-to-br from-[#581c87]/60 via-[#7e22ce]/20 to-[#a855f7]/10",
+    orange: "bg-gradient-to-br from-[#9a3412]/60 via-[#c2410c]/20 to-[#f97316]/10",
+    blue: "bg-gradient-to-br from-[#1e3a5f]/60 via-[#1d4ed8]/20 to-[#3b82f6]/10",
+    green: "bg-gradient-to-br from-[#14532d]/60 via-[#15803d]/20 to-[#22c55e]/10",
+  };
+  const [imgError, setImgError] = useState(false);
   const inner = (
     <>
-      {image && (
-        <>
-          <img src={image} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-55" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
-        </>
+      {/* Gradient background — always visible as reliable fallback */}
+      <div className={`absolute inset-0 ${bgGradients[tone] || bgGradients.purple}`} />
+      {/* Lovable CDN image — loads on top if available (Lovable cloud) */}
+      {image && !imgError && (
+        <img
+          src={image}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover opacity-55"
+          onError={() => setImgError(true)}
+        />
       )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
       <div className="relative h-full p-3 flex flex-col">
         <div className={`w-9 h-9 rounded-xl ${c.bg} border ${c.ring} flex items-center justify-center backdrop-blur-sm`}>
           <Icon className={`w-4.5 h-4.5 ${c.icon}`} strokeWidth={2.25} />
