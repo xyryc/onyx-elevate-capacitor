@@ -19,11 +19,17 @@ npm run preview
 
 ## iOS Simulator (Capacitor)
 
+> **Note:** This is a server-rendered app (TanStack Start). `vite build` does **not**
+> emit a static `index.html`, so Capacitor's copy/sync step fails unless one exists.
+> Always run `npm run build:cap` (builds and writes the required placeholder
+> `index.html` into `.output/public`) before any `cap` command. At runtime,
+> `cap run -l` loads the real app from the dev server via `server.url`.
+
 ### First-time setup
 
 ```bash
 npm install @capacitor/core @capacitor/cli @capacitor/ios --legacy-peer-deps
-npx cap init "Onyx Elevate" "com.onyxelevate.app" --web-dir dist
+npx cap init "Onyx Elevate" "com.onyxelevate.app" --web-dir .output/public
 npx cap add ios
 ```
 
@@ -35,21 +41,20 @@ npx cap add ios
 npm run dev
 ```
 
-**Terminal 2** — launch on iOS simulator with live reload:
+**Terminal 2** — build the Capacitor web assets, then launch on the iOS simulator with live reload:
 
 ```bash
-npx cap run ios -l --host $(ipconfig getifaddr en0)
-```
-
-If the dev server is on a different port than 3000, add `--port <port>`:
-
-```bash
+npm run build:cap
 npx cap run ios -l --host $(ipconfig getifaddr en0) --port 5173
 ```
+
+> Re-run `npm run build:cap` whenever you change web code, then `npx cap run ios -l` again.
+> The dev server runs on port **5173** by default.
 
 ### Sync web assets to iOS project (without rebuilding)
 
 ```bash
+npm run build:cap
 npx cap sync ios
 ```
 
@@ -66,12 +71,17 @@ npx cap open ios
 3. Product → Archive
 4. Follow the Xcode Organizer flow to upload to App Store Connect
 
+> For a production build the WebView must load your deployed backend. Set a
+> `server` block in `capacitor.config.ts` pointing `url` at your Cloudflare
+> app (e.g. `https://<your-app>.pages.dev`) before archiving.
+
 ## Other Commands
 
 | Command                 | What it does                   |
 | ----------------------- | ------------------------------ |
 | `npm run lint`          | Run ESLint                     |
 | `npm run format`        | Format with Prettier           |
+| `npm run build:cap`     | Build + write placeholder index.html for Capacitor |
 | `npm run build:dev`     | Vite build in development mode |
 | `npm run i18n:generate` | Regenerate translation files   |
 
@@ -90,7 +100,7 @@ Copy `.env.example` to `.env` and fill in:
 ```bash
 npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
 npx cap init "Onyx Elevate" "com.onyxelevate.app" --web-dir .output/public
-npm run build
+npm run build:cap
 npx cap add android
 ```
 
@@ -102,18 +112,19 @@ npx cap add android
 npm run dev
 ```
 
-**Terminal 2** — launch on Android with live reload:
+**Terminal 2** — build the Capacitor web assets, then launch on Android with live reload:
 
 ```bash
-npx cap run android -l --host 10.10.28.165 --port 8080
+npm run build:cap
+npx cap run android -l --host $(ipconfig getifaddr en0) --port 5173
 ```
 
-> **Note:** Replace `10.10.28.165` with your machine's local IP (`ipconfig` on Windows). The dev server runs on port **8080** by default.
+> Replace the `--host` IP with your machine's local IP. The dev server runs on port **5173** by default.
 
 ### Sync web assets to Android project (without rebuilding)
 
 ```bash
-npm run build
+npm run build:cap
 npx cap sync android
 ```
 
@@ -126,7 +137,7 @@ npx cap open android
 ### Build a standalone debug APK (no live reload)
 
 ```bash
-npm run build
+npm run build:cap
 npx cap build android
 ```
 
@@ -140,3 +151,7 @@ The APK will be at `android/app/build/outputs/apk/debug/app-debug.apk`.
 4. Open in Android Studio: `npx cap open android`
 5. Build → Generate Signed Bundle / APK
 6. Upload the `.aab` to Play Console
+
+> For a production build the WebView must load your deployed backend. Set a
+> `server` block in `capacitor.config.ts` pointing `url` at your Cloudflare
+> app before building.
