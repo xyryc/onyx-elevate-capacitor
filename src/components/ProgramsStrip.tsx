@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import { X } from "lucide-react";
+import { Dialog, DialogContent, DialogClose, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import programMuscle from "@/assets/program-muscle.jpg";
 import programBeginner from "@/assets/program-beginner.jpg";
 import programLower from "@/assets/program-lower.jpg";
@@ -118,7 +119,11 @@ function ProgramPreviewDialog({ title, subtitle, image, week1, lengthLabel, focu
   const locked = week !== 1 && !unlocked;
 
   return (
-    <DialogContent className="block! sm:grid! left-0! top-0! translate-x-0! translate-y-0! w-full h-[100dvh] max-w-none max-h-[100dvh] rounded-none border-0 sm:left-[50%]! sm:top-[50%]! sm:translate-x-[-50%]! sm:translate-y-[-50%]! sm:w-[calc(100vw-2rem)] sm:max-w-4xl sm:h-auto sm:max-h-[92vh] sm:rounded-lg sm:border overflow-y-auto overflow-x-hidden bg-onyx-50 border-border p-0">
+    <DialogContent showClose={false} className="block! sm:grid! left-0! top-0! translate-x-0! translate-y-0! w-full h-[100dvh] max-w-none max-h-[100dvh] rounded-none border-0 sm:left-[50%]! sm:top-[50%]! sm:translate-x-[-50%]! sm:translate-y-[-50%]! sm:w-[calc(100vw-2rem)] sm:max-w-4xl sm:h-auto sm:max-h-[92vh] sm:rounded-lg sm:border overflow-y-auto overflow-x-hidden bg-onyx-50 border-border p-0">
+      <DialogClose className="fixed sm:absolute right-3 top-[max(env(safe-area-inset-top),0.75rem)] sm:top-3 z-[60] grid h-10 w-10 place-items-center rounded-full bg-onyx-950/80 text-white backdrop-blur-md ring-1 ring-white/25 hover:bg-onyx-950/95 transition-colors focus:outline-none focus:ring-2 focus:ring-electric shadow-lg">
+        <X className="h-5 w-5" />
+        <span className="sr-only">Close</span>
+      </DialogClose>
       {/* Hero */}
       <div className="relative aspect-[16/10] sm:aspect-[21/9] overflow-hidden rounded-t-lg">
         <img src={image} alt={title} className="absolute inset-0 h-full w-full object-cover" />

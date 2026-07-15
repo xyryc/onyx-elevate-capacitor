@@ -543,7 +543,7 @@ export function LiveWorkoutPlayer({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-hidden sm:overflow-y-auto overscroll-none touch-pan-y p-0 border-border/60 rounded-none sm:rounded-2xl text-white" style={{ backgroundColor: "hsl(220 20% 4%)" }}>
+      <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-hidden sm:overflow-y-auto overscroll-none touch-pan-y p-0 border-border/60 rounded-none sm:rounded-2xl text-white" style={{ backgroundColor: "hsl(220 20% 4%)" }}>
 
         <VisuallyHidden asChild><DialogTitle>{t(workout.title)}</DialogTitle></VisuallyHidden>
         <VisuallyHidden asChild><DialogDescription>{L.exercise}</DialogDescription></VisuallyHidden>
@@ -554,7 +554,7 @@ export function LiveWorkoutPlayer({
         <button
           type="button"
           onClick={() => onOpenChange(false)}
-          className="absolute right-3 top-3 z-50 grid h-9 w-9 place-items-center rounded-full bg-onyx-950/70 text-white backdrop-blur-md ring-1 ring-white/20 hover:bg-onyx-950/90"
+          className="absolute right-3 top-[calc(env(safe-area-inset-top)_+_0.75rem)] z-50 grid h-9 w-9 place-items-center rounded-full bg-onyx-950/70 text-white backdrop-blur-md ring-1 ring-white/20 hover:bg-onyx-950/90"
         >
           <X className="h-4 w-4" />
         </button>
@@ -562,7 +562,7 @@ export function LiveWorkoutPlayer({
         {phase === "done" ? (
           <DoneView workout={workout} onFinish={finishAndLog} logging={logging} onClose={() => onOpenChange(false)} />
         ) : step ? (
-          <div className="flex flex-col min-h-[100dvh] sm:min-h-0">
+          <div className="flex flex-col h-[100dvh] sm:h-auto sm:min-h-0 pt-[env(safe-area-inset-top)]">
             {/* Video */}
             <div className="relative aspect-video bg-black">
               {videoSrc ? (
@@ -897,7 +897,7 @@ function DoneView({
   const t = useT();
   const title = t(`programs.quick.item.${workout.slug}.title`) || workout.title;
   return (
-    <div className="min-h-[100dvh] sm:min-h-0 px-5 py-10 sm:py-12 flex flex-col items-center justify-center">
+    <div className="h-[100dvh] sm:h-auto sm:min-h-0 px-5 pt-[calc(env(safe-area-inset-top)_+_2.5rem)] pb-10 sm:py-12 flex flex-col items-center justify-center">
       <div className="w-full max-w-md rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.02] shadow-[0_30px_80px_-20px_rgba(0,180,255,0.35)]">
         {workout.image && (
           <div className="relative aspect-[16/10] overflow-hidden">

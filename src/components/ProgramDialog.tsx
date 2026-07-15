@@ -128,7 +128,7 @@ export function ProgramDialog({ program, children }: { program: Program; childre
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       {trigger}
-      <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+      <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
         <DialogClose className="fixed sm:absolute right-3 top-[max(env(safe-area-inset-top),0.75rem)] sm:top-3 z-[60] grid h-10 w-10 place-items-center rounded-full bg-onyx-950/80 text-white backdrop-blur-md ring-1 ring-white/25 hover:bg-onyx-950/95 transition-colors focus:outline-none focus:ring-2 focus:ring-electric shadow-lg">
           <X className="h-5 w-5" />
           <span className="sr-only">{t("common.close")}</span>
