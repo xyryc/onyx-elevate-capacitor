@@ -35,8 +35,6 @@ dist-ssr
 
 # Capacitor (iOS build artifacts — re-generated with `npx cap sync ios`)
 ios/
-capacitor.config.ts
-capacitor.config.json
 
 .env
 .env.*
