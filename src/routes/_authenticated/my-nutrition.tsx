@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useEffect, useRef } from "react";
+import { Capacitor } from "@capacitor/core";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -2613,6 +2614,8 @@ function NutritionPaywall() {
   const prices = usePrices();
   const monthlyIntro = usePrice("monthlyIntro");
 
+  const isIOS = Capacitor.getPlatform() === "ios";
+
   const features = [
     { icon: Utensils, title: "Full food diary", desc: "Log every meal, breakfast, lunch, dinner, snacks, with a searchable database of 120+ foods." },
     { icon: Flame, title: "Calories + macros, live", desc: "Watch your calories, protein, carbs and fat update in real time as you log." },
@@ -2624,7 +2627,7 @@ function NutritionPaywall() {
 
   const plans = [
     { kind: "monthly" as const, priceId: monthlyPriceId, label: "Monthly", price: monthlyIntro, sub: "first month", perks: ["Cancel anytime", "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops"] },
-    { kind: "yearly" as const, priceId: yearlyPriceId, label: "Yearly", price: prices.yearly, sub: "per year", perks: [`Or split in 3× ${prices.yearly3x}`, "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops"], highlight: true, savings: "Save 55%+ vs monthly" },
+    { kind: "yearly" as const, priceId: yearlyPriceId, label: "Yearly", price: prices.yearly, sub: "per year", perks: [...(isIOS ? [] : [`Or split in 3× ${prices.yearly3x}`]), "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops"], highlight: true, savings: "Save 55%+ vs monthly" },
     { kind: "lifetime" as const, priceId: lifetimePriceId, label: "Lifetime", price: prices.lifetime, originalPrice: prices.bundleOriginal, sub: "one-time payment", savings: "Save 55%", perks: ["Pay once, keep forever", "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops forever"] },
   ];
 

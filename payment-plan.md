@@ -1,6 +1,6 @@
 # Onyx Elevate — Subscription & Payment System Implementation Plan
 
-This document outlines the step-by-step implementation plan to configure the Onyx Elevate payment system as requested by the client, supporting both **Stripe (Web)** and **Apple App Store Connect / StoreKit 2 (iOS)**.
+This document outlines the step-by-step implementation plan to configure the Onyx Elevate payment system as requested by the client, supporting both **Stripe (Web)** and **Apple App Store Connect / StoreKit 2 (iOS)**, unified through **RevenueCat**.
 
 ---
 
@@ -9,15 +9,16 @@ This document outlines the step-by-step implementation plan to configure the Ony
 ```mermaid
 graph TD
     User([User]) -->|Web Checkout| Stripe[Stripe Payment Gateway]
-    User -->|iOS App Purchase| Apple[Apple App Store Connect]
+    User -->|iOS App Purchase| Apple[Apple App Store Connect / StoreKit 2]
     
-    Stripe -->|Webhooks| WebhookAPI[API Route: /api/public/payments/webhook]
-    Apple -->|App Store Server Notifications v2| AppleWebhook[API Route: /api/public/payments/apple-webhook]
+    Stripe -->|Payments / Subscriptions| RC[RevenueCat]
+    Apple -->|StoreKit 2 + App Store Server Notifications v2| RC
     
-    WebhookAPI -->|Sync subscriptions & purchases| DB[(Supabase Database)]
-    AppleWebhook -->|Sync subscriptions & purchases| DB
+    RC -->|Webhooks: purchase, renewal, expiration, revoke| API[Backend: /api/public/payments/rc-webhook]
+    API -->|Upsert subscriptions & purchases| DB[(Supabase Database)]
     
-    App[Onyx Elevate App] -->|Check Access| Hook[useAccess hook]
+    App[Onyx Elevate App] -->|Capacitor Purchases SDK| RC
+    App -->|Check Access| Hook[useAccess hook]
     Hook -->|Query| DB
 ```
 
@@ -66,7 +67,7 @@ Create **ONE** subscription group called `all_access` in App Store Connect. Appl
 | Product Name | App Store Product ID | Type | Features & Offers |
 | :--- | :--- | :--- | :--- |
 | **Monthly Subscription** | `com.onyxelevate.app.all_access_monthly` | Auto-renewable Subscription | Configure **Introductory Offer**: *Pay as you go - 1 period at intro price* (closest tiered pricing matching $6.99, R$ 14,99, €5,99, 49 kr) |
-| **Yearly Subscription** | `com.onyxelevate.app.all_access_yearly` | Auto-renewable Subscription | Configure **Introductory Offer**: *Free trial* (1-week free trial to align with web marketing) |
+| **Yearly Subscription** | `com.onyxelevate.app.all_access_yearly` | Auto-renewable Subscription | Configure **Introductory Offer**: *Free trial* (1-week free trial). Apple-only promo; optionally mirror on Stripe Yearly for web parity. |
 | **Lifetime Access** | `com.onyxelevate.app.all_access_lifetime` | Non-Consumable In-App Purchase | One-time charge (closest tiered pricing matching $129, R$ 799, €119, 1299 kr). This is NOT a subscription. |
 
 > [!WARNING]
@@ -182,20 +183,26 @@ const options = [
 
 ---
 
-### Step 5: Implement In-App Purchases on iOS (Capacitor)
+### Step 5: Implement In-App Purchases on iOS with RevenueCat (Capacitor)
 
-1. **Install Capacitor IAP Plugin:**
-   Use the official Capacitor community purchase plugin or `@awesome-cordova-plugins/in-app-purchase-2`:
+1. **Install the RevenueCat Capacitor SDK:**
    ```bash
-   npm install cordova-plugin-purchase --save
+   npm install @revenuecat/purchases-capacitor
+   npx cap sync
    ```
-2. **Register Products:**
-   Register the App Store Product IDs (`all_access_monthly`, `all_access_yearly`, `all_access_lifetime`) on startup.
-3. **Execute Purchase Flow:**
+2. **Configure at startup** (after the `Capacitor.getPlatform()` check):
+   ```typescript
+   import { Purchases } from '@revenuecat/purchases-capacitor';
+
+   await Purchases.configure({ apiKey: '<RC_IOS_API_KEY>' });
+   await Purchases.logIn(userId); // link to Supabase auth user
+   ```
+3. **Fetch offerings & products:** RevenueCat pulls the App Store Product IDs (`all_access_monthly`, `all_access_yearly`, `all_access_lifetime`) automatically as `Offerings`. No manual product registration needed.
+4. **Execute Purchase Flow:**
    When a user clicks "Subscribe" or "Buy" on iOS:
-   - Call the store purchase plugin.
-   - On success, retrieve the signed transaction receipt (JWS).
-   - Send the JWS receipt to your server-side verification endpoint to unlock access.
+   - `const { customerInfo } = await Purchases.purchaseStoreProduct(product);`
+   - Check `customerInfo.entitlements.all['all_access'].isActive` to unlock access locally.
+   - RevenueCat's webhook (Step 2) is the server source of truth; you no longer send raw JWS receipts to your own endpoint.
 
 ---
 
@@ -204,4 +211,4 @@ const options = [
 To maximize profit margins, apply for the program before launching:
 1. Go to the [Apple Developer Small Business Program Portal](https://developer.apple.com/programs/small-business/).
 2. Submit your developer account details.
-3. Once approved, the App Store commission drops from 30% to **15%** for all subscriptions and in-app purchases (since annual proceeds are < $1M USD).
+3. Once approved, the App Store commission drops to **15%** for all subscriptions and in-app purchases (vs the standard 30% year 1 / 15% year 2+ per subscriber). Eligible when annual proceeds are < $1M USD.
