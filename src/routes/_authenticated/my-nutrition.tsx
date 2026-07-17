@@ -10,6 +10,7 @@ import { BarcodeScanDialog } from "@/components/BarcodeScanDialog";
 import { useAccess } from "@/hooks/useAccess";
 import { useCheckout } from "@/hooks/useCheckout";
 import { useStripePriceId, usePrices, usePrice } from "@/lib/pricing";
+import { isIOSNative } from "@/lib/revenuecat";
 import {
   searchFoods,
   listDayLog,
@@ -2627,7 +2628,7 @@ function NutritionPaywall() {
 
   const plans = [
     { kind: "monthly" as const, priceId: monthlyPriceId, label: "Monthly", price: monthlyIntro, sub: "first month", perks: ["Cancel anytime", "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops"] },
-    { kind: "yearly" as const, priceId: yearlyPriceId, label: "Yearly", price: prices.yearly, sub: "per year", perks: [...(isIOS ? [] : [`Or split in 3× ${prices.yearly3x}`]), "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops"], highlight: true, savings: "Save 55%+ vs monthly" },
+    { kind: "yearly" as const, priceId: yearlyPriceId, label: "Yearly", price: prices.yearly, sub: "per year", perks: [...(!isIOSNative() ? [`Or split in 3× ${prices.yearly3x}`] : []), "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops"], highlight: true, savings: "Save 55%+ vs monthly" },
     { kind: "lifetime" as const, priceId: lifetimePriceId, label: "Lifetime", price: prices.lifetime, originalPrice: prices.bundleOriginal, sub: "one-time payment", savings: "Save 55%", perks: ["Pay once, keep forever", "Full nutrition tracker", "All programs & meal plans", "Onyx app included", "All future drops forever"] },
   ];
 

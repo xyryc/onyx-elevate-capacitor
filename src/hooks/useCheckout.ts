@@ -1,6 +1,9 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { isIOSNative, rcPurchase, type RCProductKind } from "@/lib/revenuecat";
+import { toast } from "sonner";
+import { refreshAccess } from "@/hooks/useAccess";
 
 interface OpenCheckoutOptions {
   priceId: string;
@@ -11,8 +14,8 @@ interface OpenCheckoutOptions {
 }
 
 /**
- * Backwards-compatible hook name, now uses Stripe under the hood.
- * Navigates to /checkout which mounts Stripe Embedded Checkout.
+ * Backwards-compatible hook name, now uses Stripe on Web and RevenueCat on iOS.
+ * Navigates to /checkout which mounts Stripe Embedded Checkout, or starts RC purchase.
  */
 export function useCheckout() {
   const [loading, setLoading] = useState(false);
@@ -28,6 +31,41 @@ export function useCheckout() {
           window.location.href = `/auth?redirect=${encodeURIComponent(next)}`;
           return;
         }
+
+        // On iOS native, intercept checkout and run Apple In-App Purchase via RevenueCat.
+        if (isIOSNative()) {
+          // Map productSlug to RevenueCat product kind
+          let rcKind: RCProductKind | null = null;
+          if (options.productSlug.includes("monthly") || options.productSlug.startsWith("program:") || options.productSlug.startsWith("plan:")) {
+            rcKind = "monthly";
+          } else if (options.productSlug.includes("yearly")) {
+            rcKind = "yearly";
+          } else if (options.productSlug.includes("lifetime") || options.productSlug === "bundle" || options.productSlug === "__all_access__") {
+            rcKind = "lifetime";
+          }
+
+          if (!rcKind) {
+            toast.error("Invalid purchase option selected for this app.");
+            return;
+          }
+
+          toast.loading("Opening App Store checkout...", { id: "rc-checkout" });
+          const success = await rcPurchase(rcKind);
+          if (success) {
+            toast.success("Purchase successful! Unlocking your access...", { id: "rc-checkout" });
+            refreshAccess();
+            // Optional redirect or reload
+            if (options.successUrl) {
+              window.location.href = options.successUrl;
+            } else {
+              window.location.reload();
+            }
+          } else {
+            toast.dismiss("rc-checkout");
+          }
+          return;
+        }
+
         await navigate({
           to: "/checkout",
           search: {
@@ -40,6 +78,8 @@ export function useCheckout() {
               : {}),
           },
         });
+      } catch (err: any) {
+        toast.error(err?.message || "An error occurred during checkout.");
       } finally {
         setLoading(false);
       }
@@ -49,4 +89,5 @@ export function useCheckout() {
 
   return { openCheckout, loading };
 }
+
 
