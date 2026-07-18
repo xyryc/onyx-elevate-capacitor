@@ -52,14 +52,15 @@ export function useCheckout() {
           toast.loading("Opening App Store checkout...", { id: "rc-checkout" });
           const success = await rcPurchase(rcKind);
           if (success) {
-            toast.success("Purchase successful! Unlocking your access...", { id: "rc-checkout" });
+            toast.success("🎉 Purchase successful! Access unlocked.", { id: "rc-checkout" });
+            // Refresh access state reactively — NO hard reload, NO successUrl navigation.
+            // successUrl is a web-only Stripe redirect path (e.g. /checkout/success?…)
+            // that doesn't exist in the native router and causes a "Not Found" screen.
+            // refreshAccess() updates useAccess across the whole app so gated content
+            // unlocks immediately without leaving the current page.
             refreshAccess();
-            // Optional redirect or reload
-            if (options.successUrl) {
-              window.location.href = options.successUrl;
-            } else {
-              window.location.reload();
-            }
+            // Poll a couple more times in case the RevenueCat→Supabase webhook takes a moment.
+            [1500, 4000].forEach((ms) => window.setTimeout(refreshAccess, ms));
           } else {
             toast.dismiss("rc-checkout");
           }

@@ -4,40 +4,47 @@ import { supabase } from "@/integrations/supabase/client";
 import { clearAllUnlocks } from "@/lib/nutritionAccess";
 import { rcConfigure, rcLogIn, rcLogOut } from "@/lib/revenuecat";
 
+// ─── Module-level RC init guard ───────────────────────────────────────────────
+// useAuth can be mounted in many components at once. We want rcConfigure and
+// the initial rcLogIn to fire exactly once per app lifecycle, not once per mount.
+let _rcInitDone = false;
+let _rcLastUserId: string | null = null;
+
+function rcInitOnce(userId: string | null) {
+  if (!_rcInitDone) {
+    _rcInitDone = true;
+    rcConfigure(); // no-op on web; guarded internally for repeated calls
+  }
+  if (userId && userId !== _rcLastUserId) {
+    _rcLastUserId = userId;
+    rcLogIn(userId);
+  }
+}
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    
-    // Initialize RevenueCat client natively on iOS
-    rcConfigure();
 
     supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return;
       const currentUser = data.session?.user ?? null;
       setUser(currentUser);
       setLoading(false);
-      
-      // If a user session is active on startup, log into RevenueCat
-      if (currentUser) {
-        rcLogIn(currentUser.id);
-      }
+      rcInitOnce(currentUser?.id ?? null);
     });
 
     const { data: sub } = supabase.auth.onAuthStateChange((evt, session) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
-      
-      if (currentUser) {
-        rcLogIn(currentUser.id);
-      }
+      rcInitOnce(currentUser?.id ?? null);
 
       if (evt === "SIGNED_OUT") {
         // Prevent a shared browser from showing a previous user's unlocks.
         clearAllUnlocks();
-        // Log out of RevenueCat
+        _rcLastUserId = null;
         rcLogOut();
       }
     });
@@ -52,7 +59,7 @@ export function useAuth() {
     loading,
     signOut: async () => {
       clearAllUnlocks();
-      // Log out of RevenueCat
+      _rcLastUserId = null;
       await rcLogOut();
       // Reset the language splash so the next visit starts fresh:
       // pick language → sign in, just like a brand-new visitor.
@@ -70,5 +77,6 @@ export function useAuth() {
     },
   };
 }
+
 
 

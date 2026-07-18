@@ -120,6 +120,7 @@ const SPLASH_DONE_KEY = "onyx.languageSplash.done";
 const LEGACY_SPLASH_DONE_KEY = "onyx.splash.dismissed";
 const LANG_KEY = "onyx.lang";
 const FORCED_LOGIN_SPLASH_KEY = "onyx.loginSplash.forceOpen";
+const SAVED_EMAIL_KEY = "onyx.lastLoginEmail";
 
 function authEmailRedirectTo() {
   const origin = window.location.origin;
@@ -165,7 +166,9 @@ export function LanguageSplash() {
 
   // auth form
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => {
+    try { return localStorage.getItem(SAVED_EMAIL_KEY) ?? ""; } catch { return ""; }
+  });
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
@@ -380,6 +383,7 @@ export function LanguageSplash() {
         dbg("SignIn OK");
       }
       dbg("Persisting language...");
+      try { localStorage.setItem(SAVED_EMAIL_KEY, email); } catch {}
       await persistLanguage(lang);
       setSignedIn(true);
       dbg("Done, dismissing...");
