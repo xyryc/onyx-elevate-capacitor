@@ -1,11 +1,14 @@
 // Client hook: resolves whether the current user has access to bundles/programs/plans.
 // Priority: active subscription (Onyx Pro / All Access) OR a purchase row in DB OR
 // a localStorage unlock flag from a prior one-time purchase.
+// On iOS, RevenueCat entitlement is used as an instant fallback so access unlocks
+// immediately after Apple IAP — before the RC webhook writes to Supabase.
 // When signed out: everything is locked. Local flags from a previous session are
 // ignored (see nutritionAccess.clearAllUnlocks() called on sign-out in root).
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { isIOSNative, rcCheckEntitlement } from "@/lib/revenuecat";
 import {
   BUNDLE_KEY,
   isBundleUnlocked as localBundle,
@@ -142,18 +145,19 @@ export function useAccess(): AccessState & {
           .eq("user_id", user.id),
       ]);
       const now = new Date();
-      const hasSubscription = (subRes.data ?? []).some((s: any) => {
+      let hasSubscription = (subRes.data ?? []).some((s: any) => {
         if (!s) return false;
-        // Access is granted only while the subscription is actually paid.
-        // `past_due` (failed renewal) revokes access immediately so unpaid
-        // users can't keep using premium features while Stripe retries.
         const active = s.status === "active" || s.status === "trialing";
         const endOk = !s.current_period_end || new Date(s.current_period_end) > now;
-        // If the user cancels, they keep access until the end of the paid period.
         const cancelledButStillPaid =
           s.status === "canceled" && s.current_period_end && new Date(s.current_period_end) > now;
         return (active && endOk) || cancelledButStillPaid;
       });
+      // iOS fallback: check the local RevenueCat entitlement cache instantly.
+      // Grants access right after Apple IAP, before the RC webhook writes to Supabase.
+      if (!hasSubscription && isIOSNative()) {
+        hasSubscription = await rcCheckEntitlement();
+      }
       const programSlugs = new Set<string>();
       const planSlugs = new Set<string>();
       let hasBundle = false;

@@ -178,3 +178,61 @@ export async function rcCheckEntitlement(): Promise<boolean> {
     return false;
   }
 }
+
+// ─── Subscription info (for subscription page) ────────────────────────────────
+
+export interface RCSubscriptionInfo {
+  isActive: boolean;
+  tier: "monthly" | "yearly" | "lifetime" | null;
+  productIdentifier: string | null;
+  expirationDate: string | null;       // ISO string, null for lifetime
+  willRenew: boolean;
+  isSandbox: boolean;
+  periodType: "NORMAL" | "INTRO" | "TRIAL" | string;
+  store: string;
+}
+
+/**
+ * Returns rich subscription details from the RevenueCat customer info cache.
+ * Used by the subscription page to show plan tier, renewal date, etc. on iOS.
+ * Returns null if not on iOS or no entitlement found.
+ */
+export async function rcGetSubscriptionInfo(): Promise<RCSubscriptionInfo | null> {
+  if (!isIOSNative()) return null;
+  const { Purchases } = await getRC();
+  try {
+    const { customerInfo } = await Purchases.getCustomerInfo();
+    const ent = customerInfo.entitlements?.all?.["all_access"];
+    if (!ent) return null;
+
+    const productId: string | null = ent.productIdentifier ?? null;
+    let tier: RCSubscriptionInfo["tier"] = null;
+    if (productId?.includes("lifetime")) tier = "lifetime";
+    else if (productId?.includes("yearly") || productId?.includes("annual")) tier = "yearly";
+    else if (productId?.includes("monthly")) tier = "monthly";
+
+    return {
+      isActive: ent.isActive === true,
+      tier,
+      productIdentifier: productId,
+      expirationDate: ent.expirationDate ?? null,
+      willRenew: ent.willRenew === true,
+      isSandbox: ent.isSandbox === true,
+      periodType: ent.periodType ?? "NORMAL",
+      store: ent.store ?? "APP_STORE",
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Open the iOS App Store subscription management screen so the user can
+ * cancel or change their Apple subscription (cannot be done in-app per Apple guidelines).
+ */
+export async function rcOpenManageSubscriptions(): Promise<void> {
+  if (!isIOSNative()) return;
+  // Deep link to the iOS subscription management page
+  const url = "https://apps.apple.com/account/subscriptions";
+  window.open(url, "_blank");
+}

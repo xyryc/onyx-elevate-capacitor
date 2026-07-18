@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Shield, Sparkles } from "lucide-react";
 import { MembershipBillingCard } from "@/components/MembershipBillingCard";
 import { useT } from "@/i18n/LanguageProvider";
+import { isIOSNative } from "@/lib/revenuecat";
 
 export const Route = createFileRoute("/_authenticated/subscription")({
   head: () => ({
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/subscription")({
 
 function SubscriptionPage() {
   const t = useT();
+  const onIOS = isIOSNative();
   return (
     <div className="container-onyx py-6 md:py-10 max-w-3xl">
       <Link
@@ -41,10 +43,13 @@ function SubscriptionPage() {
 
       <MembershipBillingCard />
 
-      <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-border bg-onyx-50 p-4 text-xs text-muted-foreground">
-        <Shield className="h-4 w-4 mt-0.5 text-electric shrink-0" />
-        <p>{t("Payments are handled securely by Stripe. Onyx never stores your card details.")}</p>
-      </div>
+      {!onIOS && (
+        <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-border bg-onyx-50 p-4 text-xs text-muted-foreground">
+          <Shield className="h-4 w-4 mt-0.5 text-electric shrink-0" />
+          <p>{t("Payments are handled securely by Stripe. Onyx never stores your card details.")}</p>
+        </div>
+      )}
     </div>
   );
 }
+

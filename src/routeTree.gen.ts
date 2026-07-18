@@ -71,6 +71,7 @@ import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/e
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
+import { Route as ApiPublicPaymentsRcWebhookRouteImport } from './routes/api/public/payments/rc-webhook'
 import { Route as ApiPublicNotificationsStreakReminderRouteImport } from './routes/api/public/notifications/streak-reminder'
 
 const YogaMobilityRoute = YogaMobilityRouteImport.update({
@@ -393,6 +394,12 @@ const ApiPublicPaymentsWebhookRoute =
     path: '/api/public/payments/webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPaymentsRcWebhookRoute =
+  ApiPublicPaymentsRcWebhookRouteImport.update({
+    id: '/api/public/payments/rc-webhook',
+    path: '/api/public/payments/rc-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicNotificationsStreakReminderRoute =
   ApiPublicNotificationsStreakReminderRouteImport.update({
     id: '/api/public/notifications/streak-reminder',
@@ -457,6 +464,7 @@ export interface FileRoutesByFullPath {
   '/training/$slug': typeof AuthenticatedTrainingSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/notifications/streak-reminder': typeof ApiPublicNotificationsStreakReminderRoute
+  '/api/public/payments/rc-webhook': typeof ApiPublicPaymentsRcWebhookRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -520,6 +528,7 @@ export interface FileRoutesByTo {
   '/training/$slug': typeof AuthenticatedTrainingSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/notifications/streak-reminder': typeof ApiPublicNotificationsStreakReminderRoute
+  '/api/public/payments/rc-webhook': typeof ApiPublicPaymentsRcWebhookRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -586,6 +595,7 @@ export interface FileRoutesById {
   '/_authenticated/training/$slug': typeof AuthenticatedTrainingSlugRoute
   '/lovable/email/suppression': typeof LovableEmailSuppressionRoute
   '/api/public/notifications/streak-reminder': typeof ApiPublicNotificationsStreakReminderRoute
+  '/api/public/payments/rc-webhook': typeof ApiPublicPaymentsRcWebhookRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -652,6 +662,7 @@ export interface FileRouteTypes {
     | '/training/$slug'
     | '/lovable/email/suppression'
     | '/api/public/notifications/streak-reminder'
+    | '/api/public/payments/rc-webhook'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -715,6 +726,7 @@ export interface FileRouteTypes {
     | '/training/$slug'
     | '/lovable/email/suppression'
     | '/api/public/notifications/streak-reminder'
+    | '/api/public/payments/rc-webhook'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -780,6 +792,7 @@ export interface FileRouteTypes {
     | '/_authenticated/training/$slug'
     | '/lovable/email/suppression'
     | '/api/public/notifications/streak-reminder'
+    | '/api/public/payments/rc-webhook'
     | '/api/public/payments/webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -834,6 +847,7 @@ export interface RootRouteChildren {
   RecipesIndexRoute: typeof RecipesIndexRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   ApiPublicNotificationsStreakReminderRoute: typeof ApiPublicNotificationsStreakReminderRoute
+  ApiPublicPaymentsRcWebhookRoute: typeof ApiPublicPaymentsRcWebhookRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -1278,6 +1292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/rc-webhook': {
+      id: '/api/public/payments/rc-webhook'
+      path: '/api/public/payments/rc-webhook'
+      fullPath: '/api/public/payments/rc-webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsRcWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/notifications/streak-reminder': {
       id: '/api/public/notifications/streak-reminder'
       path: '/api/public/notifications/streak-reminder'
@@ -1378,6 +1399,7 @@ const rootRouteChildren: RootRouteChildren = {
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   ApiPublicNotificationsStreakReminderRoute:
     ApiPublicNotificationsStreakReminderRoute,
+  ApiPublicPaymentsRcWebhookRoute: ApiPublicPaymentsRcWebhookRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
