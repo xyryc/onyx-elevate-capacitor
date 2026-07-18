@@ -24,6 +24,7 @@ import { useSyncTranslations } from "../i18n/useSyncTranslations";
 import { AiCoachBubble } from "../components/AiCoachBubble";
 import { BottomTabBar } from "../components/BottomTabBar";
 import { NameCapture } from "../components/NameCapture";
+import { useAutoCheckIn } from "@/hooks/useAutoCheckIn";
 import { useAccess } from "@/hooks/useAccess";
 // Single-session enforcement disabled, allow multiple concurrent devices.
 
@@ -184,6 +185,7 @@ function RootComponent() {
       <LanguageProvider>
         <AutoTranslator />
         <LanguageSplash />
+        <AutoCheckInTrigger />
         {/* TranslationGate removed, instant switch, no loading screen */}
         <div className="h-dvh flex flex-col overflow-hidden pt-[env(safe-area-inset-top)]">
           <div className={`shrink-0 z-50 ${isDetailPage || isFullscreenMobilePage ? "hidden md:block" : ""}`}>
@@ -206,6 +208,11 @@ function RootComponent() {
       </LanguageProvider>
     </QueryClientProvider>
   );
+}
+
+function AutoCheckInTrigger() {
+  useAutoCheckIn();
+  return null;
 }
 
 /**
