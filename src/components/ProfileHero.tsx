@@ -23,6 +23,13 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { getMyStreak, getRecentCheckInDays, getThisWeekLoggedDays } from "@/lib/streak";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { useT, useLang } from "@/i18n/LanguageProvider";
+import {
+  isIOSNative,
+  hkIsAvailable,
+  hkRequestPermissions,
+  hkIsConnected,
+  hkSetEnabled,
+} from "@/lib/healthkit";
 import type { Lang } from "@/i18n";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
@@ -109,6 +116,70 @@ export function ProfileHero({
   const [nameDialogOpen, setNameDialogOpen] = useState(false);
   const [newName, setNewName] = useState(name);
   const [savingName, setSavingName] = useState(false);
+
+  // ── HealthKit State & Sync handlers ───────────────────────────────────────
+  const [hkAvailable, setHkAvailable] = useState(false);
+  const [hkConnected, setHkConnected] = useState(false);
+  const [syncingHk, setSyncingHk] = useState(false);
+
+  useEffect(() => {
+    if (isIOSNative()) {
+      hkIsAvailable().then(setHkAvailable);
+      hkIsConnected().then(setHkConnected);
+    }
+  }, []);
+
+  const handleHkToggle = async (enabled: boolean) => {
+    if (enabled) {
+      setSyncingHk(true);
+      
+      // Wait 500ms to allow dropdown menu close transitions to fully finish.
+      // This stabilizes the iOS view hierarchy and prevents RunningBoard (RBS) errors.
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Create a timeout promise to reset the loading state if the native iOS coordinator hangs/fails.
+      let hasTimedOut = false;
+      const timeoutPromise = new Promise<boolean>((resolve) => {
+        setTimeout(() => {
+          hasTimedOut = true;
+          resolve(false);
+        }, 8000); // 8 seconds
+      });
+
+      try {
+        console.log("[HealthKit] Starting authorization race with 8s timeout...");
+        const authorized = await Promise.race([
+          hkRequestPermissions(),
+          timeoutPromise
+        ]);
+
+        if (authorized) {
+          await hkSetEnabled(true);
+          setHkConnected(true);
+          toast.success(t("profile.healthkit.success") || "Apple Health sync enabled successfully! ✅");
+        } else {
+          if (hasTimedOut) {
+            console.warn("[HealthKit] Request timed out. Incomplete Xcode HealthKit capabilities/plist setup is the typical cause.");
+            toast.error(
+              "Sync timed out. Please ensure you have added the 'HealthKit' Capability in Xcode under 'Signing & Capabilities'.",
+              { duration: 8000 }
+            );
+          } else {
+            toast.error(t("profile.healthkit.error") || "Permission to access Apple Health was denied.");
+          }
+        }
+      } catch (err) {
+        console.error("[HealthKit] Authorization race threw error:", err);
+        toast.error("Failed to connect to Apple Health.");
+      } finally {
+        setSyncingHk(false);
+      }
+    } else {
+      await hkSetEnabled(false);
+      setHkConnected(false);
+      toast.success(t("profile.healthkit.disabled") || "Apple Health sync disabled.");
+    }
+  };
 
 
   const initial = (name || "A").trim().charAt(0).toUpperCase();
@@ -334,6 +405,24 @@ export function ProfileHero({
                 aria-label={pushOn ? t("profile.hero.remindersOn") : t("profile.hero.remindersOff")}
               />
             </DropdownMenuItem>
+            {isIOSNative() && (
+              <DropdownMenuItem
+                disabled={syncingHk}
+                onSelect={(e) => e.preventDefault()}
+                className="flex items-center justify-between hover:bg-white/5 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-rose-400 fill-rose-400/20" />
+                  <span>{t("profile.healthkit.dropdownTitle") || "Apple Health Sync"}</span>
+                </div>
+                <Switch
+                  checked={hkConnected}
+                  onCheckedChange={handleHkToggle}
+                  disabled={syncingHk}
+                  aria-label={t("profile.healthkit.dropdownTitle") || "Apple Health Sync"}
+                />
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={onSignOut} className="text-red-400 focus:text-red-400">
               <LogOut className="h-4 w-4 mr-2" />
@@ -554,6 +643,36 @@ export function ProfileHero({
           </Link>
         )}
       </div>
+
+      {/* iOS HealthKit Integration Card */}
+      {isIOSNative() && !hkConnected && (
+        <div className="relative overflow-hidden rounded-[1.5rem] border border-rose-500/25 bg-gradient-to-br from-rose-500/10 via-onyx-100 to-onyx-100 p-5 shadow-[0_12px_24px_rgba(244,63,94,0.06)]">
+          <div className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-rose-500/10 blur-2xl" aria-hidden />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex gap-3">
+              <div className="h-10 w-10 shrink-0 rounded-xl bg-rose-500/20 grid place-items-center text-rose-400">
+                <Heart className="h-5 w-5 fill-rose-500/30 animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                  Sync with Apple Health
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5 max-w-md">
+                  Automatically import your body weight, sync workouts, and track daily activity calories.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              disabled={syncingHk}
+              onClick={() => handleHkToggle(true)}
+              className="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-rose-500 hover:bg-rose-600 active:scale-95 text-white rounded-xl transition duration-150 shrink-0"
+            >
+              {syncingHk ? "Connecting..." : "Enable Sync"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Achievements */}
       <AchievementsBlock
