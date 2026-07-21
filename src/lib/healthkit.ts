@@ -1,10 +1,10 @@
 /**
  * HealthKit helpers — iOS Apple Health integration.
- * Wraps `@capgo/capacitor-health` with lazy loading and safety guards.
+ * Wraps the app's native HealthPlugin with safety guards.
  * On non-iOS platforms, all functions resolve gracefully without crashing.
  */
 
-import { Capacitor } from "@capacitor/core";
+import { Capacitor, registerPlugin } from "@capacitor/core";
 
 // ─── Platform guard ──────────────────────────────────────────────────────────
 
@@ -20,22 +20,17 @@ export function isIOSNative(): boolean {
   return _isIOSNativeCache;
 }
 
-// ─── Lazy Health import (only on iOS) ────────────────────────────────────────
+type HealthDataType = "steps" | "calories" | "weight" | "height";
 
-let _healthModule: Awaited<ReturnType<typeof import("@capgo/capacitor-health")>>["Health"] | null =
-  null;
-
-async function getHealth() {
-  if (_healthModule) return _healthModule;
-  try {
-    const { Health } = await import("@capgo/capacitor-health");
-    _healthModule = Health;
-    return Health;
-  } catch (err) {
-    console.error("[HealthKit] Failed to import '@capgo/capacitor-health' plugin:", err);
-    throw err;
-  }
+interface HealthPlugin {
+  isAvailable(): Promise<{ available: boolean; platform: "ios" }>;
+  requestAuthorization(options: {
+    read: HealthDataType[];
+    write: HealthDataType[];
+  }): Promise<unknown>;
 }
+
+const Health = registerPlugin<HealthPlugin>("Health");
 
 // ─── Native HealthKit Operations ─────────────────────────────────────────────
 
@@ -45,10 +40,9 @@ async function getHealth() {
 export async function hkIsAvailable(): Promise<boolean> {
   if (!isIOSNative()) return false;
   try {
-    const Health = await getHealth();
-    const available = await Health.isAvailable();
-    console.log(`[HealthKit] isAvailable: ${available}`);
-    return !!available;
+    const res = await Health.isAvailable();
+    console.log("[HealthKit] isAvailable result:", JSON.stringify(res));
+    return typeof res === "object" && res !== null ? !!res.available : !!res;
   } catch (err) {
     console.error("[HealthKit] isAvailable() failed:", err);
     return false;
@@ -58,61 +52,50 @@ export async function hkIsAvailable(): Promise<boolean> {
 /**
  * Request read/write permissions for fitness and body metrics.
  * Shows the native Apple Health permission sheet.
- *
- * NOTE: requires a fresh Xcode build after `pod install` so that the
- * CapgoCapacitorHealth native framework is linked into the binary.
  */
 export async function hkRequestPermissions(): Promise<boolean> {
   if (!isIOSNative()) return false;
 
-  // Safety timeout — if the native bridge doesn't respond in 10s, resolve false
-  // rather than hanging the UI forever. This can happen if the plugin class is
-  // stripped by the linker (requires import CapgoCapacitorHealth in AppDelegate).
-  const timeoutPromise = new Promise<boolean>((resolve) =>
-    setTimeout(() => {
+  // Safety timeout — if the native bridge doesn't respond in 15s, resolve false
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<boolean>((resolve) => {
+    timeoutId = setTimeout(() => {
       console.warn(
-        "[HealthKit] Native bridge timed out (10s). " +
-          "Ensure `import CapgoCapacitorHealth` is in AppDelegate.swift and rebuild from Xcode.",
+        "[HealthKit] Native bridge timed out. Rebuild the iOS app so BridgeViewController can register HealthPlugin.",
       );
       resolve(false);
-    }, 10000),
-  );
+    }, 15000);
+  });
 
   const authPromise = (async (): Promise<boolean> => {
     try {
       console.log("[HealthKit] Requesting permissions...");
-      const Health = await getHealth();
-
-      // Fast-fail if HealthKit is not available on this device/simulator.
-      const available = await Health.isAvailable();
-      if (!available) {
+      const isAvail = await hkIsAvailable();
+      if (!isAvail) {
         console.warn("[HealthKit] HealthKit is not available on this device.");
         return false;
       }
       console.log("[HealthKit] HealthKit available — calling requestAuthorization...");
 
       const options = {
-        read: ["steps", "calories", "weight", "height"],
-        write: ["weight", "calories"],
+        read: ["steps" as const, "calories" as const, "weight" as const, "height" as const],
+        write: ["weight" as const, "calories" as const],
       };
       await Health.requestAuthorization(options);
       console.log("[HealthKit] requestAuthorization resolved — permission sheet answered.");
       return true;
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("Failed to execute") || msg.includes("not implemented")) {
-        console.error(
-          "[HealthKit] Native plugin not linked. Rebuild from Xcode after adding import.",
-          err,
-        );
-      } else {
-        console.error("[HealthKit] Authorization failed:", err);
-      }
+      console.error("[HealthKit] Authorization failed:", msg);
       return false;
     }
   })();
 
-  return Promise.race([authPromise, timeoutPromise]);
+  try {
+    return await Promise.race([authPromise, timeoutPromise]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 }
 
 /**

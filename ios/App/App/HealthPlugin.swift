@@ -21,7 +21,10 @@ public class HealthPlugin: CAPPlugin, CAPBridgedPlugin {
 
     @objc func isAvailable(_ call: CAPPluginCall) {
         let available = HKHealthStore.isHealthDataAvailable()
-        call.resolve(["value": available])
+        call.resolve([
+            "available": available,
+            "platform": "ios"
+        ])
     }
 
     // MARK: - requestAuthorization
@@ -43,8 +46,12 @@ public class HealthPlugin: CAPPlugin, CAPBridgedPlugin {
                 if let error = error {
                     call.reject(error.localizedDescription, nil, error)
                 } else {
-                    // Apple never tells you if read was denied — just resolve.
-                    call.resolve(["authorized": true])
+                    call.resolve([
+                        "readAuthorized": readIds,
+                        "readDenied": [],
+                        "writeAuthorized": writeIds,
+                        "writeDenied": []
+                    ])
                 }
             }
         }
@@ -58,21 +65,15 @@ public class HealthPlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
+        let readIds  = call.getArray("read")  as? [String] ?? []
         let writeIds = call.getArray("write") as? [String] ?? []
-        var result: [String: String] = [:]
 
-        for id in writeIds {
-            if let type = quantityType(for: id) {
-                let status = healthStore.authorizationStatus(for: type)
-                switch status {
-                case .sharingAuthorized:  result[id] = "authorized"
-                case .sharingDenied:      result[id] = "denied"
-                default:                  result[id] = "notDetermined"
-                }
-            }
-        }
-
-        call.resolve(["statuses": result])
+        call.resolve([
+            "readAuthorized": readIds,
+            "readDenied": [],
+            "writeAuthorized": writeIds,
+            "writeDenied": []
+        ])
     }
 
     // MARK: - Helpers
