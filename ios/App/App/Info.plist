@@ -24,6 +24,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Onyx Elevate uses your camera to scan food barcodes and take photos of your meals for nutrition tracking.</string>
+	<key>NSHealthClinicalHealthRecordsShareUsageDescription</key>
+	<string>Onyx Elevate imports your daily metrics to track your fitness progression.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Onyx Elevate imports your daily metrics to track your fitness progression.</string>
 	<key>NSHealthUpdateUsageDescription</key>
