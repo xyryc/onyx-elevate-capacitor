@@ -1,13 +1,11 @@
 import { createFileRoute, Outlet, useRouter } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
-import { getBuilderAccess } from "@/lib/custom-programs.functions";
 import { Loader2, Lock, Check } from "lucide-react";
 import builderHero from "@/assets/builder-hero-real.jpg";
 import { ShimmerButton } from "@/components/ShimmerButton";
 import { MembershipModal } from "@/components/MembershipModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useT } from "@/i18n/LanguageProvider";
+import { useAccess } from "@/hooks/useAccess";
 
 export const Route = createFileRoute("/builder")({
   ssr: false,
@@ -37,14 +35,9 @@ export const Route = createFileRoute("/builder")({
 function BuilderLayout() {
   const t = useT();
   const { user, loading: authLoading } = useAuth();
-  const fetchAccess = useServerFn(getBuilderAccess);
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["builder-access", user?.id ?? "guest"],
-    queryFn: () => fetchAccess({}),
-    enabled: Boolean(user),
-  });
+  const { hasSubscription, hasBundle, loading: accessLoading } = useAccess();
 
-  if (authLoading || (user && isLoading)) {
+  if (authLoading || accessLoading) {
     return (
       <div className="container-onyx py-24 text-center">
         <Loader2 className="mx-auto h-6 w-6 animate-spin text-electric" />
@@ -52,15 +45,9 @@ function BuilderLayout() {
     );
   }
 
-  if (user && error) {
-    return (
-      <div className="container-onyx py-16 text-center">
-        <p className="text-sm text-muted-foreground">Couldn't verify access. Please refresh.</p>
-      </div>
-    );
-  }
+  const hasAccess = hasSubscription || hasBundle;
 
-  if (!user || !data?.hasAccess) {
+  if (!user || !hasAccess) {
     const features = [
       { title: t("builder.gate.f1.title"), desc: t("builder.gate.f1.desc") },
       { title: t("builder.gate.f2.title"), desc: t("builder.gate.f2.desc") },

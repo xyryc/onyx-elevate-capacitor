@@ -302,6 +302,25 @@ export const getMyMembership = createServerFn({ method: "GET" })
       return { tier: "none", status: null, currentPeriodEnd: null, cancelAtPeriodEnd: false, stripeSubscriptionId: null, stripeCustomerId: null };
     }
 
+    const status = sub.status ?? "";
+    const endsAt = sub.current_period_end ? new Date(sub.current_period_end) : null;
+    const now = new Date();
+    const stillInPeriod = !endsAt || endsAt > now;
+
+    const isActive = (["active", "trialing", "past_due"].includes(status) && stillInPeriod) ||
+                     (status === "canceled" && endsAt && endsAt > now);
+
+    if (!isActive) {
+      return {
+        tier: "none",
+        status: sub.status,
+        currentPeriodEnd: sub.current_period_end,
+        cancelAtPeriodEnd: sub.cancel_at_period_end ?? false,
+        stripeSubscriptionId: sub.stripe_subscription_id,
+        stripeCustomerId: sub.stripe_customer_id,
+      };
+    }
+
     const priceId = (sub.price_id ?? "").toLowerCase();
     const tier: MembershipInfo["tier"] = priceId.includes("year") ? "yearly" : "monthly";
 

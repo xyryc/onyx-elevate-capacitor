@@ -16,6 +16,7 @@ import { useT } from "@/i18n/LanguageProvider";
 import { Heart, Flame, Trophy, Dumbbell, Users, Ruler, X, Utensils, Bookmark } from "lucide-react";
 import { TrainingCalendar } from "@/components/TrainingCalendar";
 import { ProfileHero } from "@/components/ProfileHero";
+import { useAuth } from "@/hooks/useAuth";
 import tileChallengesImg from "@/assets/tile-challenges.png";
 import tileSavedImg from "@/assets/tile-saved-workout.png";
 import builderHeroImg from "@/assets/builder-hero-real.jpg";
@@ -86,7 +87,7 @@ function SeeAllDialog({
 }
 
 function MyLibrary() {
-
+  const { signOut } = useAuth();
   const t = useT();
   const router = useRouter();
   const { highlight } = Route.useSearch();
@@ -156,8 +157,16 @@ function MyLibrary() {
     .filter(Boolean) as { program: any; progress: any; pct: number; totalDays: number }[];
 
   async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.navigate({ to: "/" });
+    try {
+      await signOut();
+    } catch (err) {
+      console.error("Sign out error:", err);
+    }
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
+    } else {
+      router.navigate({ to: "/" });
+    }
   }
 
   // Apple/Google sometimes give us a private relay email or an opaque ID

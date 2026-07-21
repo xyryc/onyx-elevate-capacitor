@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bunny.net Video Library Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            bunny: {
+              50: '#fcf8f2',
+              100: '#f7edde',
+              200: '#edd8bc',
+              500: '#f0821e', // Bunny.net primary orange
+              600: '#d96c14',
+              900: '#1b140e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #1c1917, #0c0a09);
+      color: #f5f5f4;
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(28, 25, 23, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .glass-hover:hover {
+      background: rgba(41, 37, 36, 0.85);
+      border-color: rgba(240, 130, 30, 0.3);
+      transform: translateY(-2px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(240, 130, 30, 0.5);
+    }
+  </style>
+</head>
+<body class="custom-scrollbar antialiased pb-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-800 pb-6 mb-8">
+      <div class="flex items-center gap-4 mb-4 md:mb-0">
+        <div class="p-3 bg-gradient-to-tr from-bunny-500 to-amber-400 rounded-2xl shadow-lg shadow-bunny-500/20">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">Bunny Stream Viewer</h1>
+          <p class="text-stone-400 text-sm mt-0.5">Explore, search, and preview videos from your library</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="source-badge" class="px-3 h-7 inline-flex items-center text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          Loaded from Cached Snapshot
+        </span>
+        <button onclick="toggleCredsModal()" class="px-4 py-2 text-sm font-medium text-stone-300 hover:text-white glass rounded-lg hover:bg-stone-800 transition">
+          View API Credentials
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats Dashboard -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="glass p-5 rounded-xl">
+        <p class="text-xs text-stone-400 font-medium uppercase tracking-wider">Total Videos</p>
+        <p id="stat-total" class="text-3xl font-semibold mt-2 text-white">-</p>
+      </div>
+      <div class="glass p-5 rounded-xl">
+        <p class="text-xs text-stone-400 font-medium uppercase tracking-wider">Library ID</p>
+        <p id="stat-library" class="text-xl font-semibold mt-3 text-stone-200">709339</p>
+      </div>
+      <div class="glass p-5 rounded-xl">
+        <p class="text-xs text-stone-400 font-medium uppercase tracking-wider">Storage Size</p>
+        <p id="stat-storage" class="text-3xl font-semibold mt-2 text-white">-</p>
+      </div>
+      <div class="glass p-5 rounded-xl">
+        <p class="text-xs text-stone-400 font-medium uppercase tracking-wider">Avg Length</p>
+        <p id="stat-length" class="text-3xl font-semibold mt-2 text-white">-</p>
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <div class="glass p-4 rounded-xl mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <!-- Search -->
+      <div class="relative flex-1">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input type="text" id="search-input" oninput="filterVideos()" placeholder="Search videos by title..." class="block w-full pl-10 pr-4 py-2.5 bg-stone-900/60 border border-stone-800 rounded-lg text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-bunny-500 focus:border-bunny-500 transition text-sm">
+      </div>
+
+      <!-- Live Fetch Options -->
+      <div class="flex items-center gap-3">
+        <button id="fetch-live-btn" onclick="fetchLiveVideos()" class="px-5 py-2.5 bg-bunny-500 hover:bg-bunny-600 active:scale-95 transition text-white font-medium text-sm rounded-lg shadow-lg shadow-bunny-500/10 flex items-center gap-2">
+          <svg id="fetch-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path>
+          </svg>
+          <span id="fetch-btn-text">Fetch Live API</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden glass rounded-xl p-16 text-center">
+      <svg class="mx-auto h-12 w-12 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+      </svg>
+      <h3 class="mt-4 text-lg font-medium text-stone-200">No videos found</h3>
+      <p class="mt-1 text-sm text-stone-400">Try adjusting your search query or trigger a live fetch.</p>
+    </div>
+
+    <!-- Video Grid -->
+    <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Dynamic list -->
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative w-full max-w-4xl bg-stone-900 rounded-2xl overflow-hidden border border-stone-800 shadow-2xl flex flex-col">
+      <!-- Title Bar -->
+      <div class="px-6 py-4 border-b border-stone-800 flex items-center justify-between bg-stone-950/60">
+        <h3 id="modal-title" class="font-semibold text-lg text-white truncate pr-6">-</h3>
+        <button onclick="closeModal()" class="text-stone-400 hover:text-white transition focus:outline-none">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <!-- Video Player Wrapper -->
+      <div class="relative pb-[56.25%] h-0 bg-black">
+        <iframe id="modal-iframe" src="" class="absolute top-0 left-0 w-full h-full border-0" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen></iframe>
+      </div>
+      <!-- Bottom Metadata -->
+      <div class="px-6 py-4 bg-stone-950/40 text-stone-400 text-sm flex flex-wrap gap-x-6 gap-y-2">
+        <div><span class="text-stone-500 font-medium">Video ID:</span> <span id="modal-video-id" class="font-mono text-stone-300"></span></div>
+        <div><span class="text-stone-500 font-medium">Resolutions:</span> <span id="modal-resolutions" class="text-stone-300"></span></div>
+        <div><span class="text-stone-500 font-medium">Uploaded:</span> <span id="modal-date" class="text-stone-300"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credentials Modal -->
+  <div id="creds-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-stone-900 border border-stone-800 rounded-xl p-6 shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-white">Bunny Stream API Settings</h3>
+        <button onclick="toggleCredsModal()" class="text-stone-400 hover:text-white transition">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-stone-400 uppercase tracking-wider mb-1">Library ID</label>
+          <input type="text" id="input-library-id" value="709339" class="w-full px-3 py-2 bg-stone-950 border border-stone-850 rounded text-stone-200 font-mono text-sm focus:outline-none focus:border-bunny-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-stone-400 uppercase tracking-wider mb-1">Access Key (Read-Only)</label>
+          <input type="password" id="input-api-key" value="15e83594-eb5e-41a8-b3a802820541-d143-4524" class="w-full px-3 py-2 bg-stone-950 border border-stone-850 rounded text-stone-200 font-mono text-sm focus:outline-none focus:border-bunny-500">
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button onclick="saveCredsAndRefresh()" class="px-4 py-2 bg-bunny-500 hover:bg-bunny-600 text-white font-medium text-sm rounded shadow transition">
+          Save & Apply
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Embedded static backup data from the curl output
+    const cachedData = {"totalItems":51,"currentPage":1,"itemsPerPage":100,"items":[{"videoLibraryId":709339,"guid":"2243baaf-5115-41b3-aae8-5b2aed63bc5e","title":"Neck stretch (right).mp4","description":null,"dateUploaded":"2026-07-21T01:29:13.897","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76675017,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/2243baaf-5115-41b3-aae8-5b2aed63bc5e/thumbnail.jpg","thumbnailBlurhash":"WkON5tt7IURjD%Rj_Nt7WBj[jsj[MxxaoLt7xuof%gozoKofofj]","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"245ED5BEBC797E7636F9F6A492FE62A7E205981346DCAD60444159C10CBC2428","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"65950494-9fc0-4143-8f7f-c8246c6edd25","title":"Neck stretch (left).mp4","description":null,"dateUploaded":"2026-07-21T01:29:13.461","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76791665,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/65950494-9fc0-4143-8f7f-c8246c6edd25/thumbnail.jpg","thumbnailBlurhash":"WkOWmLt7IURjD%Rj_Nt7WBofjsa{MxxaoLt7xuof%gt7oJofofof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"09F8202919F430000ED30B8B8E93B4E941B6FB5824D48BF319D2BF99C065B3AE","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"76277ff5-70fa-4c17-b72a-9f0e388de343","title":"Neck rotations (counter clockwise).mp4","description":null,"dateUploaded":"2026-07-21T01:29:11.758","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77762717,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/76277ff5-70fa-4c17-b72a-9f0e388de343/thumbnail.jpg","thumbnailBlurhash":"WlO:-9kCInM{D%WB_NozWBj]oLfkMxxajut7xuof%gozoLofkCof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"C551F12BD5B06D8A5281AEC5DA84ED27DDDBEE007C44BC9127C8287328B3A9B1","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"2868a85a-c943-4604-8aa5-00b27bb7d685","title":"Low lunge with rotation (left).mp4","description":null,"dateUploaded":"2026-07-21T01:29:10.171","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":78607615,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/2868a85a-c943-4604-8aa5-00b27bb7d685/thumbnail.jpg","thumbnailBlurhash":null,"averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"61A5538EFFB4BF0B3BDDFF2B135D99B2DC0F9068BB99DDD0BAC40402098547E8","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"934be614-c9f8-4542-9608-7e1f66570170","title":"Neck rotations (clockwise).mp4","description":null,"dateUploaded":"2026-07-21T01:29:08.16","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77673179,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/934be614-c9f8-4542-9608-7e1f66570170/thumbnail.jpg","thumbnailBlurhash":"WlO|Rwf+InM{D%WB_NozWBj]oKfkMxxajbt7xukC%gt7oLofkCoM","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"0C2DAE11249D74A75396067B0F4E5D00EAE08316C5EF1CC68FFCC0813D78704B","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"85ff6b6e-354a-49ed-bc7f-8e1864d6bf7f","title":"Low lunge with rotation (right).mp4","description":null,"dateUploaded":"2026-07-21T01:29:07.735","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":78130349,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/85ff6b6e-354a-49ed-bc7f-8e1864d6bf7f/thumbnail.jpg","thumbnailBlurhash":"WsPZcKkDInIUM{of_NkCRjt7ofWBITt7t7tRj[f6tRt7t7WBj[t7","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"3D6B2F87757E0BA791665046EEFA95CCE0C2333B4732ED7EC2A5FF5B6D3D525A","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"fbf79035-0d1d-4810-84a2-8708802c401e","title":"Inch worms.mp4","description":null,"dateUploaded":"2026-07-21T01:29:05.469","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":83615598,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/fbf79035-0d1d-4810-84a2-8708802c401e/thumbnail.jpg","thumbnailBlurhash":"WqPZcLWVIURjIURj_NozRja}ofj[Mwxtofoft7ofxvoft7t7aej[","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"A612CFAE6368C415A0AC238F9606EF22AACC9C3690CD9F00E9037694557B0FC9","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"1d5c2153-e9eb-43eb-8567-e74f8da713ad","title":"Hip flexor stretch (right).mp4","description":null,"dateUploaded":"2026-07-21T01:29:05.328","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76915955,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/1d5c2153-e9eb-43eb-8567-e74f8da713ad/thumbnail.jpg","thumbnailBlurhash":"WpOpxyt7IUM{IUof_NozRjofofWBITt7t7t7t7ayx]t7t7j[ayoz","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"A00FE7328D3C10E455370752EFF7032EA561C96291D59028C16BB403CCCF03E6","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"7b2123cf-1a91-44a0-83de-ccf32aa8ea8d","title":"Hamstring stretch (right).mp4","description":null,"dateUploaded":"2026-07-21T01:29:04.285","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76426612,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/7b2123cf-1a91-44a0-83de-ccf32aa8ea8d/thumbnail.jpg","thumbnailBlurhash":"WpO|U*ofE0RjIUWB_NozRjoLofbHIAxat8s;ofofx]ogofoff6j[","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"7AFA3CF28B9153DF5979E01BD22C7BB5C0BA8A5A2B920502E6154B0B6C45209D","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"11c342ba-ccf5-4360-9c10-a306671447c0","title":"Hip circles (counter clockwise).mp4","description":null,"dateUploaded":"2026-07-21T01:29:03.443","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"480p,720p,240p,1080p,360p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":85789278,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/11c342ba-ccf5-4360-9c10-a306671447c0/thumbnail.jpg","thumbnailBlurhash":"WlP6,GkDInM{D%fk_NozWBkCoLbHMxxajbt7xujZ%gogoKofkCoM","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"A70D0D48DF656F397549B4F38A8CC27740B68F34966B645E16BF3A370FB99426","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"9f204926-bc2e-43e8-97e2-88fd788a2ae2","title":"Hip flexor stretch (left).mp4","description":null,"dateUploaded":"2026-07-21T01:29:03.006","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77340525,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/9f204926-bc2e-43e8-97e2-88fd788a2ae2/thumbnail.jpg","thumbnailBlurhash":"WpOpurt7IUM{IUj]_NozRjofofWBITt7t7t7t7juxvt7t7j[ayog","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"228302FD23B6E8672B7636C23F6BDEC475F4181B6B518AFB75751663CA6BFFFE","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"fd24866b-9c01-403c-a3df-77c4bb48f097","title":"Hip circles (clockwise).mp4","description":null,"dateUploaded":"2026-07-21T01:28:59.979","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":86227939,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/fd24866b-9c01-403c-a3df-77c4bb48f097/thumbnail.jpg","thumbnailBlurhash":"WlO|OoozInM{D%a|_NozWBj]oLfkMxxajat7xuj[%gogoLofkCoL","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"C383742BB142EB2DBA7083D04646233239D7617FD37B2212F9D24167F5DD85BF","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"689eb780-f287-4f1e-bc34-9f1806c15662","title":"Frog squats.mp4","description":null,"dateUploaded":"2026-07-21T01:28:59.337","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":81531154,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/689eb780-f287-4f1e-bc34-9f1806c15662/thumbnail.jpg","thumbnailBlurhash":"WpPGW}kCIUM{IUWV_NozRjkCofayMxxaoft7t7oLxvozt7ofWBof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"18DC9D9DC752029B2FE41A7DBE2B7F7619C560B4A7B709375E3F228726F63FD3","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"c7879e22-6ea5-48fb-ab1d-f744a54dc970","title":"Hamstring stretch (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:59.02","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76085360,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/c7879e22-6ea5-48fb-ab1d-f744a54dc970/thumbnail.jpg","thumbnailBlurhash":"WpO|U*ofITRjIUV@_NozRjoLofj[IAxat8ogofofx]ogofofayj[","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"1E9D214EA3DB3E4AD93313488117730520E5F8A0354BF286B920B924D0334FD8","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"b8eefc5d-b978-4dc0-8d36-ac1b32be2569","title":"Forearm stretch (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:58.044","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76955360,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/b8eefc5d-b978-4dc0-8d36-ac1b32be2569/thumbnail.jpg","thumbnailBlurhash":"WiOWmMt7E0RjD%Rj_Nt7a{off5ayMxxts;t7t8of%gt7e.ofozof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"29E82D4496F024AC71B73195FDA21EEEDCF634C6171495D6F107D8C0DDFC9C26","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"861f752b-1e34-4a6b-9405-1f14b8b2cc83","title":"Figure four stretch (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:56.835","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":75956657,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/861f752b-1e34-4a6b-9405-1f14b8b2cc83/thumbnail.jpg","thumbnailBlurhash":"WpO|U+ogE0NGIUay_NozRjofofayIAt7xut7ofj[x]ogt7ofayof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"76628A0C226F58E630D8A220F678D183ADF56770217435A8870E8EFB019EE5CB","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"f9eac0b5-ff9f-4171-9664-3adfe35f8ca1","title":"Forearm stretch (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:55.229","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76506653,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/f9eac0b5-ff9f-4171-9664-3adfe35f8ca1/thumbnail.jpg","thumbnailBlurhash":"WiOWpTt8E0RjD%Rj_Nt7a{off5ayMxxas;t7t8of%gt7e.ofozof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"FB1EBE5E7C14EF0E4E81DC5B19031DEFF67F12206D85BDE5467D23FD61694AE3","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"51a36425-67a3-474f-890d-395cf0b5e63f","title":"Figure four stretch (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:53.572","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":75820657,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/51a36425-67a3-474f-890d-395cf0b5e63f/thumbnail.jpg","thumbnailBlurhash":"WoP6]dofE0NGIUax_NozRjofofayIAxaxut7ofj[x]ogt7ofayof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"A7E54F1C0A32B5404D2345C7C5B75994017D151C9779E0DF2D7C98BC5161B564","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"77188ed1-d245-45fe-a052-778f9d7e37ad","title":"Deep squat rotations.mp4","description":null,"dateUploaded":"2026-07-21T01:28:53.076","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":80623003,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/77188ed1-d245-45fe-a052-778f9d7e37ad/thumbnail.jpg","thumbnailBlurhash":"WpPsnxWXIUNGIUWB_NozRjj]t7a|IAxat7t7ofofx]ogt7ofaeof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"BA1D11468E979DF2F2F35E12C8E05802D52A1692D93F11EAE7B90DB9BE4EB568","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"caf92d7a-2a7a-48f5-9f0f-73d1a8a02750","title":"Calf stretch (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:52.273","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76735018,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/caf92d7a-2a7a-48f5-9f0f-73d1a8a02750/thumbnail.jpg","thumbnailBlurhash":"WnOgE3ozIURjITWB_NozR%j[oej[Mxxaoft7t8ofx]ogoft7j[ay","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"C50C26546FFAD9858D82EF83EBBB2C056A7A4D61DFF05AEA91D83AF1341D4654","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"c28a3fcd-3517-4013-ad21-63f798704068","title":"Arm circles (forward).mp4","description":null,"dateUploaded":"2026-07-21T01:28:51.03","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":83545857,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/c28a3fcd-3517-4013-ad21-63f798704068/thumbnail.jpg","thumbnailBlurhash":"WjO|OokDInM{D%WB_NozWVkCjZfjMwxtoft7xuof%gozoLofofof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"557624DD823977EEAFFB4925D386DC9B6902AC5F2432069C09DE2FF12BE7BD9B","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"9f996e12-3fb5-4694-81c2-f6e783a47086","title":"Calf stretch (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:51.002","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"480p,720p,240p,1080p,360p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76772090,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/9f996e12-3fb5-4694-81c2-f6e783a47086/thumbnail.jpg","thumbnailBlurhash":"WnOgE3ozIURjITRj_Nt7Rjj[ofkCMxxaoft7t8ofx]ogoft7fRay","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"351528BDBD3C4EBCD769E77E2B154D2ED82AE33D661652650F048908134258BB","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"06367695-487b-47b3-aa48-3d525339a345","title":"Butterfly stretch.mp4","description":null,"dateUploaded":"2026-07-21T01:28:49.959","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76672678,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/06367695-487b-47b3-aa48-3d525339a345/thumbnail.jpg","thumbnailBlurhash":"WpP6?WkCE0RjIUWB_NozRjj[offkIAxaxat7ofj]x]ogt7ofaxoM","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"EAA614B144BD37F4DEB7D6A3E137A21C667335C0FD75EAE7391B515E65DC0145","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"8e523184-0962-45e6-aae9-368111f8f077","title":"Arm swings.mp4","description":null,"dateUploaded":"2026-07-21T01:28:48.348","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"480p,720p,240p,1080p,360p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":85100189,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/8e523184-0962-45e6-aae9-368111f8f077/thumbnail.jpg","thumbnailBlurhash":"WkO|OokDInM{D%WB_NozWUkCjsa{MxxaoMt7xuoL%gozoLofofof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"BA55C82002F01E3B1BE7A64190BE9030B171816B346B98CDA6FFCC90C68F01AE","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"5abebcc5-b3d0-48e2-972c-0f9dfc4dedd3","title":"90-90 hip switches.mp4","description":null,"dateUploaded":"2026-07-21T01:28:47.25","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":79801831,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/5abebcc5-b3d0-48e2-972c-0f9dfc4dedd3/thumbnail.jpg","thumbnailBlurhash":"WpPsnxWXIUNGIUWB_NozRjj[t7j[IAxat7t7ofoMx]ogt7ofaeof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"C4DE287EDDC9FC8663BE57FD059419D63632F61C986BF120E33C3C2D89F24C8C","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"1b6bf9b7-a191-4005-bd80-7f427ee4fa41","title":"Arm circles (backward).mp4","description":null,"dateUploaded":"2026-07-21T01:28:47.165","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":82980298,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/1b6bf9b7-a191-4005-bd80-7f427ee4fa41/thumbnail.jpg","thumbnailBlurhash":"WkO|OoozIUM{D%WB_NozWBkCoKfkMxxaj]t7xuoM%gozoJofofoM","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"CEE24D9D85CB5B0F273769AA89462FDB3412971A5876D9E83AE4C4DF863504AF","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"7adfdcf2-5c28-4e6b-ae16-1ea1a34e4933","title":"Warrior II (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:12.224","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77124629,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/7adfdcf2-5c28-4e6b-ae16-1ea1a34e4933/thumbnail.jpg","thumbnailBlurhash":"WlQS}3ocS2WBIUx]_Nt7WBofoLWAIUofaeozt8V@x]ayaxWBWBof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"DB4640A3BC9F801558F205250D5FC19A982FDE02043254B2F0E831D741C00290","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"e81e0513-85ef-4852-a9b2-616f00491448","title":"Warrior II (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:11.246","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77030153,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/e81e0513-85ef-4852-a9b2-616f00491448/thumbnail.jpg","thumbnailBlurhash":"WlQceqocR*aeIUxv_Nt7WBofoeWBIUofaeozt7WAx]ayjZWVWBof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"3DF1CE420AC834D66CFC57C26BD2168B500243CFA730A8C66D9F2F1BC3527A6C","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"5bf6aa31-468b-4061-9eda-6b10d5471a7f","title":"Tree pose (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:10.286","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77263861,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/5bf6aa31-468b-4061-9eda-6b10d5471a7f/thumbnail.jpg","thumbnailBlurhash":"WhQchzoJNGj?IUxu_Nt7W;ofo0WBITofV@oftRWBx^aeaej[WVf6","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"91F24B582B9522F969093500DE36ACD7706372BABBF32EA4175F0C193B23E5B4","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"bd45f93e-fe08-4a24-bf12-ce794581d966","title":"Warrior I (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:09.74","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77271657,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/bd45f93e-fe08-4a24-bf12-ce794581d966/thumbnail.jpg","thumbnailBlurhash":"WkQchzodRjWAIU%M_Nt7WCs:oLRjIAofjZogozV@x]f6ayWBayt7","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"4B2AC7A394C73E4C20CE503DEDC8C392835B3BDE659DFA350DB783ABD6D32ABA","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"33223c95-e32d-478c-9ef5-be63c9c4a2e8","title":"Warrior I (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:08.847","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77190434,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/33223c95-e32d-478c-9ef5-be63c9c4a2e8/thumbnail.jpg","thumbnailBlurhash":"WlQchyocR%WBIUx]_Nt7WBs:oLRjIAofjZogozWBx]f6ayWBWVs:","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"0C52D39026F8BF250D7E20629C17B6C5107BADE40FB474FFFA0D25A8D5392D70","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"ea26afc0-f700-4430-b9e1-3715e2f9c185","title":"Triangle pose (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:07.156","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76374829,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/ea26afc0-f700-4430-b9e1-3715e2f9c185/thumbnail.jpg","thumbnailBlurhash":"WpQceqoJWUaeIoxv_Nt7RjofofV@ITofjZogozWBt8ayozWBRjof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"28D8B7278B9809618004E88C633811DCEA503891B32586D6A1BFC8465FB185D9","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"5bb00aaa-6fdb-4a5f-b81f-6ea9f0712f11","title":"Triangle pose (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:06.178","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":75849006,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/5bb00aaa-6fdb-4a5f-b81f-6ea9f0712f11/thumbnail.jpg","thumbnailBlurhash":"WpQceroJR*aeIoxv_Nt7Rjt7ofV@IAofjZofogaetRayozWBRjof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"EE464D034DDE5CC2AA7FB12E1211C31E2E9D231DE07ABB23E7E6A1C76D9A3B0C","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"97c77058-32ac-4790-944f-c72bf8d8f26e","title":"Tree pose (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:05.341","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77014683,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/97c77058-32ac-4790-944f-c72bf8d8f26e/thumbnail.jpg","thumbnailBlurhash":"WiQm3QjXR*oyIUt7_Nt7WqofoJWBIUogV@j[tRj[x^ayaeayWCof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"822F99CF73F6DD75D1765A14AA953720C5BA9C71752A4D8A8305D9D0CCB6AC77","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"9c39239c-3595-488e-8868-96d4aff75152","title":"Side plank (left).mp4","description":null,"dateUploaded":"2026-07-21T01:28:04.723","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76852382,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/9c39239c-3595-488e-8868-96d4aff75152/thumbnail.jpg","thumbnailBlurhash":"WqQS}4oeR%adM{xu_Nt7RjofofWBIAoMs:ozazV@tRj[kCV@WBoz","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"17C496D1065B542DA8BD44A0E810439AA3968F3B11632821B1296BEB3ACB4677","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"abf7d252-4cb2-457d-8345-cc17e9b1d48c","title":"Sphinx pose.mp4","description":null,"dateUploaded":"2026-07-21T01:28:03.677","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":72951055,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/abf7d252-4cb2-457d-8345-cc17e9b1d48c/thumbnail.jpg","thumbnailBlurhash":"WkQ,H@oIIUjZNHxu_Nt7WCozjZV@Dioft7oMWVa|%NayRjWBofof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"14021E26A646C1419DDFA7D82EF511858380B589E815A267075A148621C33DAF","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"318441b6-ade8-4994-9e6a-203aaa2ba716","title":"Side plank (right).mp4","description":null,"dateUploaded":"2026-07-21T01:28:03.001","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76795339,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/318441b6-ade8-4994-9e6a-203aaa2ba716/thumbnail.jpg","thumbnailBlurhash":"WqQS}3adR*t7M{t6_Nt7RjoLofWBIAs;s:aebHoftRWBofofWBWB","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"35E0FDCF3DC0999DE52948AF04C4D09976472D217DBDFAEA4973C40F77B4CC34","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"9e3b8b47-3d3d-4b5b-92ff-03394b9a6904","title":"Cat cow pose.mp4","description":null,"dateUploaded":"2026-07-21T01:28:01.727","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":76068970,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/9e3b8b47-3d3d-4b5b-92ff-03394b9a6904/thumbnail.jpg","thumbnailBlurhash":"WnQm6ZadM{t7M{t7_Nt8RjjZofayD$oft7ofa}ayx]WBa}j]WBay","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"402CA2798D1ED68B90F74D5763ECC54D127195FCD8BBDF14E6C397A3C12068F8","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"49a6f226-7073-437a-badb-3ca2882d0dfc","title":"Plank pose.mp4","description":null,"dateUploaded":"2026-07-21T01:28:00.954","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":74967469,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/49a6f226-7073-437a-badb-3ca2882d0dfc/thumbnail.jpg","thumbnailBlurhash":"WqQceradNGt7NGt7_Nt8RjjsofWBD%oft7f7azj[tRWBkCofaeWB","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"4128BEA48CDA3750299B37FDE888FE6EF613C4A00788F6B7EE6BAD7AB60A461A","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"70046d76-8f74-4122-9b44-e99310d7294d","title":"Mountain pose.mp4","description":null,"dateUploaded":"2026-07-21T01:28:00.453","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":73069268,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/70046d76-8f74-4122-9b44-e99310d7294d/thumbnail.jpg","thumbnailBlurhash":"WhQm6YoIM{ofIUt7_Nt7kCoff5WBIAofjZofozay%gayV@ayfkkC","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"5F1D5C29273B71093978786A6728E046AF56B2563FD9A6DDC4550D3E12C76BA5","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"b7460e6b-a7e7-427b-ba53-7a89c1ebf32c","title":"Low lunge (right).mp4","description":null,"dateUploaded":"2026-07-21T01:27:58.842","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":75286900,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/b7460e6b-a7e7-427b-ba53-7a89c1ebf32c/thumbnail.jpg","thumbnailBlurhash":"WnQvq9odM{V@Rkx]_NogR*t7oJRjD$oft7ofWCfPx]j[WCV@ofoz","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"6289F67449023077658A1BF0ACF0204EFA57752DECB9B2C560B5D5B67B061413","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"48bc2f07-87be-4ad1-b659-c17673fd2d52","title":"Low lunge (left).mp4","description":null,"dateUploaded":"2026-07-21T01:27:58.06","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":75067369,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/48bc2f07-87be-4ad1-b659-c17673fd2d52/thumbnail.jpg","thumbnailBlurhash":"WmQ,E*ocM{V@Rkx]_NogWBt7j?RjD$oft7ofWCfPx]fkWBWAofog","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"AEA83537649F1D235BD3A396A1A1A360041606B7E4D9515536F7C47B5335DD73","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"a1cbcc04-57e7-48d9-b04b-f77b5d8867b8","title":"Happy baby pose.mp4","description":null,"dateUploaded":"2026-07-21T01:27:57.332","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"480p,720p,240p,1080p,360p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":73063235,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/a1cbcc04-57e7-48d9-b04b-f77b5d8867b8/thumbnail.jpg","thumbnailBlurhash":"WlQ,E*jYM_ofM{t7_Nt7WBofofWBDioft7kCWVf6%MaxR*fRjZj[","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"F5E139AD6F3CE1882301F22DB16CD804AAE2CD6DA22B2A5783F06E9059F05A1E","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"5d8f85eb-8292-4f78-8a16-0b6f8fd61044","title":"Half moon (right).mp4","description":null,"dateUploaded":"2026-07-21T01:27:56.812","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":77764692,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/5d8f85eb-8292-4f78-8a16-0b6f8fd61044/thumbnail.jpg","thumbnailBlurhash":"WmQJZUt6R*RiM|%M_Nt7WBt7jsRjMxoLV@t7ogWAtRj[ofV@WBt7","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"A57DDF080CD2F2BFB022FE02BBF73248DEB63795754694DD8910377F9AADBD49","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"63a2920f-51c4-47da-8891-58072556f124","title":"Half moon (left).mp4","description":null,"dateUploaded":"2026-07-21T01:27:54.416","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":78354440,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/63a2920f-51c4-47da-8891-58072556f124/thumbnail.jpg","thumbnailBlurhash":"WnQS^_xtM{M{Wqxu_Nofayt7WAWAMxjZWBt8j[WBtRofa}Rjofof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"92A9B18952360849644529E349D7EFE9B3D5B6C3C3CBD04F2E5BE15162D637B6","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"2ee78497-965d-4b31-afc7-b85ef74f50cf","title":"Downward facing dog.mp4","description":null,"dateUploaded":"2026-07-21T01:27:53.301","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"480p,720p,240p,1080p,360p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":75427387,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/2ee78497-965d-4b31-afc7-b85ef74f50cf/thumbnail.jpg","thumbnailBlurhash":"WnQm6ZocM{WBM{xu_Nt7Rkt7ofRjD%ofofofj]WBxvf6j[WBWBt7","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"135401982D0A350D057F90D28EF2EA6394AB93DA996C8A43A03F89CDCD7B1D80","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"c1717126-f943-4e29-9803-4d39d5422315","title":"Cow pose.mp4","description":null,"dateUploaded":"2026-07-21T01:27:52.954","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":73311722,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/c1717126-f943-4e29-9803-4d39d5422315/thumbnail.jpg","thumbnailBlurhash":"WmQ,E*jYM{jsM{xu_Nt7R*ofofWAD$oft7ofayWBx]ayazWBaeog","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"6296F001229FB41B34D308805245AA2FDF556B3FD1FC36DB583B681ED99A2308","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"c177e80f-6ab5-4740-9d76-9263c66d230f","title":"Cobra pose.mp4","description":null,"dateUploaded":"2026-07-21T01:27:51.765","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"480p,720p,240p,1080p,360p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":74013882,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/c177e80f-6ab5-4740-9d76-9263c66d230f/thumbnail.jpg","thumbnailBlurhash":"WlQ,BwoIM{axNGxv_Nt7WBozoeRjDioft7ofWVWU%MayWBWBj@oz","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"F626D33517F9BD1D7EE30EBE84AB5DEE142E2555F32EDDC49C99C838CA5C2080","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"ec6acb1d-65d1-4370-af8a-378aa663116a","title":"Child's pose.mp4","description":null,"dateUploaded":"2026-07-21T01:27:50.354","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"480p,720p,240p,1080p,360p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":74234370,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/ec6acb1d-65d1-4370-af8a-378aa663116a/thumbnail.jpg","thumbnailBlurhash":"WkQ]ydadIUt7NGoz_Nt8WBayoLjsDioft7ofWVWB%gaxRjayoLof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"7B368FB6704BC1A8BD4CECDE742DFB60761E05A92247788A1237B87388853355","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"7b26569e-a00d-4e0a-9fbb-6764d666aaff","title":"Cat pose.mp4","description":null,"dateUploaded":"2026-07-21T01:27:49.196","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":74468808,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/7b26569e-a00d-4e0a-9fbb-6764d666aaff/thumbnail.jpg","thumbnailBlurhash":"WnQvq9jYNFj?M{xu_Nt7RjofofWAD$oft7ofa}ayx]aya}aeWBof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"32601E6FDF7E34639CF8089A06E224538C3F770D39D6F95A2B468E16E95B5E9F","hasHighQualityPreview":true},{"videoLibraryId":709339,"guid":"aacd124c-f5f2-4bcc-a796-03b60947d043","title":"Bridge pose.mp4","description":null,"dateUploaded":"2026-07-21T01:27:48.293","views":0,"isPublic":false,"length":30,"status":4,"framerate":30,"rotation":0,"width":1920,"height":1080,"availableResolutions":"360p,480p,720p,240p,1080p","outputCodecs":"x264","thumbnailCount":15,"encodeProgress":100,"storageSize":73781843,"captions":[],"hasMP4Fallback":true,"collectionId":"","thumbnailFileName":"thumbnail.jpg","thumbnailUrl":"https://vz-3d635cd8-505.b-cdn.net/aacd124c-f5f2-4bcc-a796-03b60947d043/thumbnail.jpg","thumbnailBlurhash":"WmQvq9jrM{kBM{xu_Nt7WBofofWADioft7ofayayx]ayWBWCayof","averageWatchTime":0,"totalWatchTime":0,"category":"unknown","chapters":[],"moments":[],"metaTags":[],"transcodingMessages":[],"jitEncodingEnabled":false,"smartGenerateStatus":null,"smartGenerateFeaturesStatus":null,"hasOriginal":true,"originalHash":"04EA9CE9CBB684F8CD73FAEF5E4CFD33B836DDA33AF84C4FD055A179E8406F89","hasHighQualityPreview":true}]};
+
+    let currentVideos = cachedData.items || [];
+    let activeLibraryId = "709339";
+    let activeApiKey = "15e83594-eb5e-41a8-b3a802820541-d143-4524";
+
+    // Load credentials from localStorage if present
+    if (localStorage.getItem('bunny_library_id')) {
+      activeLibraryId = localStorage.getItem('bunny_library_id');
+      document.getElementById('input-library-id').value = activeLibraryId;
+      document.getElementById('stat-library').textContent = activeLibraryId;
+    }
+    if (localStorage.getItem('bunny_api_key')) {
+      activeApiKey = localStorage.getItem('bunny_api_key');
+      document.getElementById('input-api-key').value = activeApiKey;
+    }
+
+    function toggleCredsModal() {
+      const modal = document.getElementById('creds-modal');
+      modal.classList.toggle('hidden');
+    }
+
+    function saveCredsAndRefresh() {
+      const libId = document.getElementById('input-library-id').value.trim();
+      const apiKey = document.getElementById('input-api-key').value.trim();
+      if (!libId || !apiKey) {
+        alert("Please enter both fields.");
+        return;
+      }
+      localStorage.setItem('bunny_library_id', libId);
+      localStorage.setItem('bunny_api_key', apiKey);
+      activeLibraryId = libId;
+      activeApiKey = apiKey;
+      document.getElementById('stat-library').textContent = libId;
+      toggleCredsModal();
+      fetchLiveVideos();
+    }
+
+    // Format bytes
+    function formatBytes(bytes, decimals = 2) {
+      if (!bytes) return '0 Bytes';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    // Format length
+    function formatDuration(seconds) {
+      if (!seconds) return '0:00';
+      const m = Math.floor(seconds / 60);
+      const s = Math.round(seconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateStats(items) {
+      document.getElementById('stat-total').textContent = items.length;
+      
+      const totalBytes = items.reduce((acc, v) => acc + (v.storageSize || 0), 0);
+      document.getElementById('stat-storage').textContent = formatBytes(totalBytes);
+      
+      const totalLength = items.reduce((acc, v) => acc + (v.length || 0), 0);
+      const avgLength = items.length ? totalLength / items.length : 0;
+      document.getElementById('stat-length').textContent = formatDuration(avgLength);
+    }
+
+    function renderVideos(items) {
+      const grid = document.getElementById('video-grid');
+      const emptyState = document.getElementById('empty-state');
+      grid.innerHTML = '';
+      
+      if (items.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      
+      emptyState.classList.add('hidden');
+      
+      items.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'glass rounded-xl overflow-hidden glass-hover flex flex-col cursor-pointer transition';
+        card.onclick = () => openModal(video);
+        
+        // Generate best preview URL
+        // Typically, Bunny previews are served from: https://vz-{libraryID}-cdn.b-cdn.net/{videoGUID}/thumbnail.jpg
+        const host = video.thumbnailUrl ? new URL(video.thumbnailUrl).hostname : 'vz-3d635cd8-505.b-cdn.net';
+        const thumbUrl = `https://${host}/${video.guid}/thumbnail.jpg`;
+        
+        card.innerHTML = `
+          <div class="relative aspect-video bg-stone-950 overflow-hidden group">
+            <img src="${thumbUrl}" alt="${video.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.onerror=null; this.src='https://placehold.co/640x360/1c1917/f0821e?text=Video+Thumbnail';">
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition duration-300 flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-bunny-500/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-90 group-hover:scale-100 transition duration-350 shadow-lg shadow-bunny-500/30">
+                <svg class="w-6 h-6 fill-current translate-x-0.5" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="absolute bottom-2 right-2 px-2 py-0.5 bg-black/75 rounded text-xs font-semibold text-stone-200 tracking-wider">
+              ${formatDuration(video.length)}
+            </div>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <h4 class="font-medium text-sm text-stone-100 line-clamp-2 mb-2" title="${video.title}">${video.title}</h4>
+            <div class="flex items-center justify-between text-xs text-stone-400 mt-auto border-t border-stone-800/40 pt-2.5">
+              <span>${formatBytes(video.storageSize)}</span>
+              <span class="px-2 py-0.5 bg-stone-800 rounded-full text-[10px] text-stone-300 font-mono uppercase">${video.availableResolutions.split(',')[0]}</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterVideos() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const filtered = currentVideos.filter(v => v.title.toLowerCase().includes(query));
+      renderVideos(filtered);
+    }
+
+    async function fetchLiveVideos() {
+      const btn = document.getElementById('fetch-live-btn');
+      const btnText = document.getElementById('fetch-btn-text');
+      const icon = document.getElementById('fetch-icon');
+      const badge = document.getElementById('source-badge');
+
+      btn.disabled = true;
+      btnText.textContent = "Fetching...";
+      icon.classList.add('animate-spin');
+
+      try {
+        const res = await fetch(`https://video.bunnycdn.com/library/${activeLibraryId}/videos?page=1&itemsPerPage=100`, {
+          method: 'GET',
+          headers: {
+            'AccessKey': activeApiKey,
+            'accept': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`API returned status ${res.status}`);
+        }
+
+        const data = await res.json();
+        currentVideos = data.items || [];
+        
+        badge.textContent = "Live API Mode";
+        badge.className = "px-3 h-7 inline-flex items-center text-xs font-medium rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20";
+        
+        updateStats(currentVideos);
+        renderVideos(currentVideos);
+        
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch live API. This is likely due to browser CORS security restrictions when querying the Bunny Stream API from a local file.\n\nWe are falling back to the cached snapshot data, which contains the complete list of 51 videos.");
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = "Fetch Live API";
+        icon.classList.remove('animate-spin');
+      }
+    }
+
+    function openModal(video) {
+      document.getElementById('modal-title').textContent = video.title;
+      document.getElementById('modal-video-id').textContent = video.guid;
+      document.getElementById('modal-resolutions').textContent = video.availableResolutions;
+      document.getElementById('modal-date').textContent = new Date(video.dateUploaded).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const iframe = document.getElementById('modal-iframe');
+      iframe.src = `https://iframe.mediadelivery.net/embed/${activeLibraryId}/${video.guid}?autoplay=true&loop=false&muted=false&preload=true`;
+      
+      document.getElementById('video-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('video-modal').classList.add('hidden');
+      document.getElementById('modal-iframe').src = '';
+    }
+
+    // Close modal on click outside content
+    document.getElementById('video-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Close credentials modal on click outside
+    document.getElementById('creds-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        toggleCredsModal();
+      }
+    });
+
+    // Initial render
+    updateStats(currentVideos);
+    renderVideos(currentVideos);
+  </script>
+</body>
+</html>
