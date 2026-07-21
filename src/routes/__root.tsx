@@ -26,7 +26,77 @@ import { BottomTabBar } from "../components/BottomTabBar";
 import { NameCapture } from "../components/NameCapture";
 import { useAutoCheckIn } from "@/hooks/useAutoCheckIn";
 import { useAccess } from "@/hooks/useAccess";
-// Single-session enforcement disabled, allow multiple concurrent devices.
+// ─── Capacitor Asset URL Resolver Patch ─────────────────────────────────────
+if (typeof window !== "undefined") {
+  const isCapacitor = () =>
+    window.location.origin.startsWith("capacitor:") ||
+    (window as any).Capacitor?.isNativePlatform?.();
+
+  // 1. Intercept setAttribute
+  const originalSetAttribute = Element.prototype.setAttribute;
+  Element.prototype.setAttribute = function (name, value) {
+    let resolvedValue = value;
+    if (typeof value === "string" && value.startsWith("/__l5e/assets-v1/") && isCapacitor()) {
+      resolvedValue = `https://onyxperformance.app${value}`;
+    } else if (name === "style" && typeof value === "string" && value.includes("/__l5e/assets-v1/") && isCapacitor()) {
+      resolvedValue = value.replace(/\/__l5e\/assets-v1\//g, "https://onyxperformance.app/__l5e/assets-v1/");
+    }
+    return originalSetAttribute.call(this, name, resolvedValue);
+  };
+
+  // 2. Intercept element.src setters
+  const patchSrcProperty = (prototype: any) => {
+    const desc = Object.getOwnPropertyDescriptor(prototype, "src");
+    if (desc && desc.set) {
+      const originalSet = desc.set;
+      Object.defineProperty(prototype, "src", {
+        ...desc,
+        set: function (value) {
+          let resolvedValue = value;
+          if (typeof value === "string" && value.startsWith("/__l5e/assets-v1/") && isCapacitor()) {
+            resolvedValue = `https://onyxperformance.app${value}`;
+          }
+          return originalSet.call(this, resolvedValue);
+        }
+      });
+    }
+  };
+
+  patchSrcProperty(HTMLImageElement.prototype);
+  patchSrcProperty(HTMLVideoElement.prototype);
+  patchSrcProperty(HTMLSourceElement.prototype);
+  patchSrcProperty(HTMLAudioElement.prototype);
+
+  // 3. Intercept CSS style property setters
+  const originalSetProperty = CSSStyleDeclaration.prototype.setProperty;
+  CSSStyleDeclaration.prototype.setProperty = function (property, value, priority) {
+    let resolvedValue = value;
+    if (typeof value === "string" && value.includes("/__l5e/assets-v1/") && isCapacitor()) {
+      resolvedValue = value.replace(/\/__l5e\/assets-v1\//g, "https://onyxperformance.app/__l5e/assets-v1/");
+    }
+    return originalSetProperty.call(this, property, resolvedValue, priority);
+  };
+
+  const patchStyleProperty = (prop: string) => {
+    const desc = Object.getOwnPropertyDescriptor(CSSStyleDeclaration.prototype, prop);
+    if (desc && desc.set) {
+      const originalSet = desc.set;
+      Object.defineProperty(CSSStyleDeclaration.prototype, prop, {
+        ...desc,
+        set: function (value) {
+          let resolvedValue = value;
+          if (typeof value === "string" && value.includes("/__l5e/assets-v1/") && isCapacitor()) {
+            resolvedValue = value.replace(/\/__l5e\/assets-v1\//g, "https://onyxperformance.app/__l5e/assets-v1/");
+          }
+          return originalSet.call(this, resolvedValue);
+        }
+      });
+    }
+  };
+  patchStyleProperty("backgroundImage");
+  patchStyleProperty("background");
+}
+
 
 function NotFoundComponent() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
