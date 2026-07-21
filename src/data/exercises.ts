@@ -30,7 +30,8 @@ export type Category =
   | "Calves"
   | "Core"
   | "Cardio & Conditioning"
-  | "Hyrox";
+  | "Hyrox"
+  | "Yoga & Stretching";
 
 export interface CategoryInfo {
   id: Category;
@@ -56,6 +57,7 @@ export const categories: CategoryInfo[] = [
   { id: "Core", label: "Core", blurb: "Crunches, planks, raises and rotation - our biggest category.", accent: "bg-sky-400/10 text-sky-300 border-sky-400/30" },
   { id: "Cardio & Conditioning", label: "Cardio", blurb: "Treadmill, bike, rower and machine conditioning.", accent: "bg-green-400/10 text-green-300 border-green-400/30" },
   { id: "Hyrox", label: "Hyrox / Functional", blurb: "Sleds, ropes, burpees and box jumps - race-prep work.", accent: "bg-orange-400/10 text-orange-300 border-orange-400/30" },
+  { id: "Yoga & Stretching", label: "Yoga & Stretching", blurb: "Quiet poses and deep stretches for flexibility and recovery.", accent: "bg-sky-400/10 text-sky-300 border-sky-400/30" },
 ];
 
 export interface Exercise {
@@ -542,6 +544,7 @@ const hyrox: Mini[] = [
 ];
 
 import { bunnyVideoMap, bunnyExtrasByCategory, getBunnyEmbedUrl, getBunnyThumbnail } from "./bunnyVideos";
+import { poses as yogaPoses } from "./yogaPoses";
 
 // Build extras from Bunny library (videos that don't match any hand-authored exercise).
 type ForceLite = ForceType;
@@ -588,17 +591,54 @@ const thumbnailOverrides: Record<string, string> = {
 // Keep ONLY exercises that have a matching Bunny video (the 400 in the library).
 // Dedupe by slug, attach video + thumbnail URL.
 const seen = new Set<string>();
-export const exercises: Exercise[] = all
-  .filter((e) => {
-    if (seen.has(e.slug)) return false;
-    seen.add(e.slug);
-    return true;
-  })
-  .flatMap<Exercise>((e) => {
-    const guid = bunnyVideoMap[e.slug];
-    if (!guid) return [];
-    return [{ ...e, videoUrl: getBunnyEmbedUrl(guid), thumbnailUrl: thumbnailOverrides[e.slug] ?? getBunnyThumbnail(guid) }];
-  });
+const mappedYogaExercises: Exercise[] = yogaPoses.map((p) => {
+  let primaryMuscle: MuscleGroup = "Full Body";
+  const focus = p.focus.toLowerCase();
+  if (focus.includes("neck")) primaryMuscle = "Shoulders";
+  else if (focus.includes("hip")) primaryMuscle = "Glutes";
+  else if (focus.includes("hamstring")) primaryMuscle = "Hamstrings";
+  else if (focus.includes("calf")) primaryMuscle = "Calves";
+  else if (focus.includes("forearm")) primaryMuscle = "Forearms";
+  else if (focus.includes("shoulder")) primaryMuscle = "Shoulders";
+  else if (focus.includes("back") || focus.includes("spine")) primaryMuscle = "Back";
+  else if (focus.includes("core")) primaryMuscle = "Core";
+
+  return {
+    slug: `yoga-${p.guid}`,
+    name: p.name,
+    category: "Yoga & Stretching",
+    shortDescription: p.description,
+    primaryMuscle,
+    secondaryMuscles: [],
+    exerciseType: "Mobility",
+    equipment: "Bodyweight",
+    mechanics: "Isolation",
+    forceType: "Static",
+    level: p.level === "Beginner–Intermediate" ? "Intermediate" : p.level,
+    videoUrl: `https://iframe.mediadelivery.net/embed/709339/${p.guid}?autoplay=false&loop=false&muted=true&preload=true`,
+    thumbnailUrl: `https://vz-3d635cd8-505.b-cdn.net/${p.guid}/thumbnail.jpg`,
+    overview: p.description,
+    steps: p.steps.map((s, idx) => ({ title: `Step ${idx + 1}`, body: s })),
+    proTips: p.modifications || [],
+    commonMistakes: p.mistakes || [],
+    alternatives: [],
+  };
+});
+
+export const exercises: Exercise[] = [
+  ...all
+    .filter((e) => {
+      if (seen.has(e.slug)) return false;
+      seen.add(e.slug);
+      return true;
+    })
+    .flatMap<Exercise>((e) => {
+      const guid = bunnyVideoMap[e.slug];
+      if (!guid) return [];
+      return [{ ...e, videoUrl: getBunnyEmbedUrl(guid), thumbnailUrl: thumbnailOverrides[e.slug] ?? getBunnyThumbnail(guid) }];
+    }),
+  ...mappedYogaExercises,
+];
 
 
 export const muscleGroups: MuscleGroup[] = [

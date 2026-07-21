@@ -65,12 +65,12 @@ export function CustomProgramTrainingDialog({
   const program = useMemo(() => (cp ? customToProgram(cp) : null), [cp]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[95dvh] overflow-y-auto overscroll-contain p-0 bg-background border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+      <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[95dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-background border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
         <button
           type="button"
           onClick={() => onOpenChange(false)}
           aria-label="Close"
-          className="absolute top-3 right-3 z-40 h-9 w-9 grid place-items-center rounded-full border border-white/20 bg-black/70 backdrop-blur-sm text-white hover:text-electric hover:border-electric/60 transition-colors"
+          className="absolute top-[calc(12px+env(safe-area-inset-top,0px))] sm:top-3 right-3 z-40 h-9 w-9 grid place-items-center rounded-full border border-white/20 bg-black/70 backdrop-blur-sm text-white hover:text-electric hover:border-electric/60 transition-colors"
         >
           <X className="h-4 w-4" strokeWidth={2.5} />
         </button>

@@ -62,6 +62,7 @@ const categoryMuscles: Record<Category, MuscleGroup[]> = {
   Core: ["Core"],
   "Cardio & Conditioning": ["Cardio"],
   Hyrox: ["Full Body"],
+  "Yoga & Stretching": [],
 };
 
 function matchesCategory(e: (typeof exercises)[number], cat: Category) {

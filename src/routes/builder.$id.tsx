@@ -447,7 +447,7 @@ function ExercisePicker({ onClose, onPickMany }: { onClose: () => void; onPickMa
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-4" onClick={onClose}>
       <div
-        className="flex h-[100dvh] max-h-[100dvh] w-full min-w-0 flex-col overflow-hidden rounded-none border border-border bg-onyx-50 p-3 sm:h-auto sm:max-h-[85vh] sm:max-w-4xl sm:rounded-2xl sm:p-5"
+        className="flex h-[100dvh] max-h-[100dvh] w-full min-w-0 flex-col overflow-hidden rounded-none border border-border bg-onyx-50 px-3 pb-3 pt-[calc(12px+env(safe-area-inset-top,0px))] sm:h-auto sm:max-h-[85vh] sm:max-w-4xl sm:rounded-2xl sm:p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
@@ -542,7 +542,7 @@ function ExercisePicker({ onClose, onPickMany }: { onClose: () => void; onPickMa
             <li className="col-span-full py-8 text-center text-sm text-muted-foreground">{t("builder.noExercisesMatch")}</li>
           )}
         </ul>
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3 pb-[env(safe-area-inset-bottom,0px)]">
           <span className="text-xs text-muted-foreground">{count} {t("builder.selected")}</span>
           <div className="flex gap-2">
             <button

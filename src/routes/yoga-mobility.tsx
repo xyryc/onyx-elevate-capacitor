@@ -277,7 +277,7 @@ function PoseCard({ pose: p }: { pose: Pose }) {
         </article>
       </DialogTrigger>
 
-      <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+      <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
         <DialogCloseX className="absolute right-3 top-[calc(12px+env(safe-area-inset-top,0px))] sm:top-3 z-50" />
         <div className="relative aspect-[16/9] overflow-hidden rounded-none sm:rounded-t-2xl bg-black border-b border-border/60">
           <iframe
@@ -569,7 +569,7 @@ function YogaMobilityPage() {
                 See all →
               </button>
             </DialogTrigger>
-            <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-5xl h-[100dvh] sm:h-[92dvh] max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+            <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-5xl h-[100dvh] sm:h-[92dvh] max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
               <DialogHeader className="relative sticky top-0 z-10 bg-onyx-50/95 backdrop-blur border-b border-border/60 px-4 sm:px-6 pb-4 pt-[calc(16px+env(safe-area-inset-top,0px))] sm:pt-4 text-left">
                 <DialogTitle className="font-display text-xl md:text-2xl font-bold">
                   Yoga & Stretching Library
@@ -659,7 +659,7 @@ function YogaMobilityPage() {
                   </article>
                 </DialogTrigger>
 
-                <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+                <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
                   <DialogCloseX className="absolute right-3 top-[calc(12px+env(safe-area-inset-top,0px))] sm:top-3 z-50" />
                   <div className="relative aspect-[16/9] overflow-hidden rounded-none sm:rounded-t-2xl bg-onyx-100">
                     <img

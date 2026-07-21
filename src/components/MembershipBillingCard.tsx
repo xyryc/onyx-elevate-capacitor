@@ -139,8 +139,8 @@ export function MembershipBillingCard() {
   // ── iOS Apple subscription panel ─────────────────────────────────────────
   if (onIOS) {
     const rcLoading = rcInfo === undefined;
-    const rcTier = rcInfo?.tier ?? null;
     const rcActive = rcInfo?.isActive === true;
+    const rcTier = rcActive ? (rcInfo?.tier ?? null) : null;
     const rcTierBadge =
       rcTier === "lifetime" ? t("Lifetime")
       : rcTier === "yearly" ? t("Yearly")
@@ -151,7 +151,7 @@ export function MembershipBillingCard() {
       : rcTier === "yearly" ? t("1-year subscription")
       : rcTier === "monthly" ? t("1-month subscription")
       : t("No active subscription");
-    const expiryDate = rcInfo?.expirationDate ? new Date(rcInfo.expirationDate) : null;
+    const expiryDate = rcActive && rcInfo?.expirationDate ? new Date(rcInfo.expirationDate) : null;
 
     return (
       <section className="mt-8 rounded-xl border border-border bg-onyx-100 p-6">

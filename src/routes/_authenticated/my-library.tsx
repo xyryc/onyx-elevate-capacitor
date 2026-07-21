@@ -74,9 +74,17 @@ function SeeAllDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border/40 px-4 py-3 bg-onyx-50/95 backdrop-blur">
+      <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+        <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border/40 px-4 pb-3 pt-[calc(12px+env(safe-area-inset-top,0px))] sm:pt-3 bg-onyx-50/95 backdrop-blur">
           <h2 className="font-display text-lg font-bold">{title}</h2>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            aria-label="Close"
+            className="h-8 w-8 grid place-items-center rounded-full border border-border bg-onyx-100 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
         <div className="p-4">
           <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">{children}</div>
