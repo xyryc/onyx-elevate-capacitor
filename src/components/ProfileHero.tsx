@@ -151,18 +151,9 @@ export function ProfileHero({
       // This stabilizes the iOS view hierarchy and prevents RunningBoard (RBS) errors.
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Create a timeout promise to reset the loading state if the native iOS coordinator hangs/fails.
-      let hasTimedOut = false;
-      const timeoutPromise = new Promise<boolean>((resolve) => {
-        setTimeout(() => {
-          hasTimedOut = true;
-          resolve(false);
-        }, 8000); // 8 seconds
-      });
-
       try {
-        console.log("[HealthKit] Starting authorization race with 8s timeout...");
-        const authorized = await Promise.race([hkRequestPermissions(), timeoutPromise]);
+        console.log("[HealthKit] Starting authorization...");
+        const authorized = await hkRequestPermissions();
 
         if (authorized) {
           await hkSetEnabled(true);
@@ -171,22 +162,12 @@ export function ProfileHero({
             t("profile.healthkit.success") || "Apple Health sync enabled successfully! ✅",
           );
         } else {
-          if (hasTimedOut) {
-            console.warn(
-              "[HealthKit] Request timed out. Incomplete Xcode HealthKit capabilities/plist setup is the typical cause.",
-            );
-            toast.error(
-              "Sync timed out. Please ensure you have added the 'HealthKit' Capability in Xcode under 'Signing & Capabilities'.",
-              { duration: 8000 },
-            );
-          } else {
-            toast.error(
-              t("profile.healthkit.error") || "Permission to access Apple Health was denied.",
-            );
-          }
+          toast.error(
+            t("profile.healthkit.error") || "Permission to access Apple Health was denied.",
+          );
         }
       } catch (err) {
-        console.error("[HealthKit] Authorization race threw error:", err);
+        console.error("[HealthKit] Authorization threw error:", err);
         toast.error("Failed to connect to Apple Health.");
       } finally {
         setSyncingHk(false);
@@ -197,6 +178,7 @@ export function ProfileHero({
       toast.success(t("profile.healthkit.disabled") || "Apple Health sync disabled.");
     }
   };
+
 
   const initial = (name || "A").trim().charAt(0).toUpperCase();
   const dayLabels = (() => {
