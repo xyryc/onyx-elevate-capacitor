@@ -21,10 +21,7 @@ export const Route = createFileRoute("/verify-device")({
   },
   component: VerifyDevicePage,
   head: () => ({
-    meta: [
-      { title: "Verify this device · Onyx Elevate" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "Verify this device · Onyx Elevate" }, { name: "robots", content: "noindex" }],
   }),
 });
 
@@ -59,12 +56,16 @@ function VerifyDevicePage() {
         setError(e?.message ?? "Failed to send code");
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [ensureFn, navigate, redirectTo]);
 
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault();
-    setBusy(true); setError(null); setInfo(null);
+    setBusy(true);
+    setError(null);
+    setInfo(null);
     try {
       const res = await verifyFn({
         data: {
@@ -95,7 +96,9 @@ function VerifyDevicePage() {
   }
 
   async function handleResend() {
-    setBusy(true); setError(null); setInfo(null);
+    setBusy(true);
+    setError(null);
+    setInfo(null);
     try {
       const res = await ensureFn({
         data: { deviceHash: getDeviceHash(), deviceLabel: getDeviceLabel() },
@@ -175,8 +178,8 @@ function VerifyDevicePage() {
         </div>
 
         <p className="mt-8 text-xs text-muted-foreground border-t border-border pt-4">
-          Didn't try to sign in? Someone may have your password.{" "}
-          Sign out, then reset your password immediately from the sign-in page.
+          Didn't try to sign in? Someone may have your password. Sign out, then reset your password
+          immediately from the sign-in page.
         </p>
       </div>
     </div>

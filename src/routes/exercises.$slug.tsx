@@ -9,7 +9,6 @@ import { MembershipModal } from "@/components/MembershipModal";
 import { useT } from "@/i18n/LanguageProvider";
 import { isFreePreviewExercise } from "@/lib/exercisePreview";
 
-
 export const Route = createFileRoute("/exercises/$slug")({
   loader: ({ params }): { exercise: Exercise } => {
     const exercise = findExercise(params.slug);
@@ -21,7 +20,8 @@ export const Route = createFileRoute("/exercises/$slug")({
     if (!e) return {};
     const suffix = " · Onyx";
     const maxNameLen = 60 - suffix.length;
-    const trimmedName = e.name.length > maxNameLen ? `${e.name.slice(0, maxNameLen - 1).trimEnd()}…` : e.name;
+    const trimmedName =
+      e.name.length > maxNameLen ? `${e.name.slice(0, maxNameLen - 1).trimEnd()}…` : e.name;
     const title = `${trimmedName}${suffix}`;
     const desc = e.shortDescription;
     const url = `https://onyxperformance.app/exercises/${params.slug}`;
@@ -43,14 +43,21 @@ export const Route = createFileRoute("/exercises/$slug")({
     <div className="container-onyx py-24 text-center">
       <h1 className="font-display text-3xl font-bold">Exercise not found</h1>
       <p className="text-muted-foreground mt-3">We don't have that one in the library - yet.</p>
-      <Link to="/exercises" className="mt-6 inline-block text-electric font-semibold">← Back to library</Link>
+      <Link to="/exercises" className="mt-6 inline-block text-electric font-semibold">
+        ← Back to library
+      </Link>
     </div>
   ),
   errorComponent: ({ error, reset }) => (
     <div className="container-onyx py-24 text-center">
       <h1 className="font-display text-2xl font-bold">Couldn't load this exercise.</h1>
       <p className="text-muted-foreground mt-2 text-sm">{error.message}</p>
-      <button onClick={reset} className="mt-6 rounded-md bg-electric px-4 py-2 text-sm font-semibold text-onyx-50">Try again</button>
+      <button
+        onClick={reset}
+        className="mt-6 rounded-md bg-electric px-4 py-2 text-sm font-semibold text-onyx-50"
+      >
+        Try again
+      </button>
     </div>
   ),
   component: ExerciseDetail,
@@ -62,7 +69,8 @@ function ExerciseDetail() {
   const router = useRouter();
   const t = useT();
   const access = useAccess();
-  const locked = !access.loading && !(access.hasBundle || access.hasSubscription) && !isFreePreviewExercise(e);
+  const locked =
+    !access.loading && !(access.hasBundle || access.hasSubscription) && !isFreePreviewExercise(e);
   const alternatives = e.alternatives
     .map((s: string) => exercises.find((x) => x.slug === s))
     .filter((x): x is Exercise => Boolean(x));
@@ -81,11 +89,21 @@ function ExerciseDetail() {
       {/* Breadcrumb */}
       <div className="container-onyx hidden pt-8 md:block">
         <nav className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
-          <Link to="/" className="hover:text-foreground">Home</Link>
+          <Link to="/" className="hover:text-foreground">
+            Home
+          </Link>
           <span className="text-border">/</span>
-          <Link to="/exercises" className="hover:text-foreground">Exercises</Link>
+          <Link to="/exercises" className="hover:text-foreground">
+            Exercises
+          </Link>
           <span className="text-border">/</span>
-          <Link to="/exercises" search={{ muscle: e.primaryMuscle }} className="hover:text-foreground">{e.primaryMuscle}</Link>
+          <Link
+            to="/exercises"
+            search={{ muscle: e.primaryMuscle }}
+            className="hover:text-foreground"
+          >
+            {e.primaryMuscle}
+          </Link>
           <span className="text-border">/</span>
           <span className="text-foreground">{e.name}</span>
         </nav>
@@ -110,7 +128,9 @@ function ExerciseDetail() {
                     <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-electric/15 border border-electric/50">
                       <Lock className="h-5 w-5 text-electric" />
                     </div>
-                    <p className="font-display text-base font-bold">{t("Unlock every video with membership")}</p>
+                    <p className="font-display text-base font-bold">
+                      {t("Unlock every video with membership")}
+                    </p>
                     <MembershipModal
                       trigger={
                         <button
@@ -144,9 +164,13 @@ function ExerciseDetail() {
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               ) : (
-                <div className="absolute inset-0 grid place-items-center text-sm text-muted-foreground">Video coming soon</div>
+                <div className="absolute inset-0 grid place-items-center text-sm text-muted-foreground">
+                  Video coming soon
+                </div>
               )}
-              <span className="absolute top-3 left-3 text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-onyx-50/70 backdrop-blur border border-border z-10">HD video</span>
+              <span className="absolute top-3 left-3 text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-onyx-50/70 backdrop-blur border border-border z-10">
+                HD video
+              </span>
             </div>
           </div>
         </div>
@@ -159,8 +183,12 @@ function ExerciseDetail() {
           ← {t("common.back")}
         </button>
         <div className="mt-4 max-w-3xl md:mt-0">
-          <span className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{e.exerciseType} · {e.mechanics}</span>
-          <h1 className="mt-3 font-display text-4xl md:text-6xl font-bold leading-[1.05]">{e.name}</h1>
+          <span className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+            {e.exerciseType} · {e.mechanics}
+          </span>
+          <h1 className="mt-3 font-display text-4xl md:text-6xl font-bold leading-[1.05]">
+            {e.name}
+          </h1>
           <p className="mt-4 text-lg text-muted-foreground">{e.shortDescription}</p>
           <div className="mt-5">
             <ShareToChatButton
@@ -176,12 +204,19 @@ function ExerciseDetail() {
           </div>
         </div>
 
-
         {/* Video */}
         <div className="mt-8 hidden surface-card rounded-2xl overflow-hidden glow-ring md:block">
           <div
             className="relative aspect-video bg-onyx-200"
-            style={e.thumbnailUrl ? { backgroundImage: `url(${e.thumbnailUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+            style={
+              e.thumbnailUrl
+                ? {
+                    backgroundImage: `url(${e.thumbnailUrl})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : undefined
+            }
           >
             {e.thumbnailUrl && !locked && (
               <img
@@ -203,9 +238,13 @@ function ExerciseDetail() {
                     <Lock className="h-6 w-6 text-electric" />
                   </div>
                   <div>
-                    <p className="font-display text-xl md:text-2xl font-bold">{t("Unlock every video with membership")}</p>
+                    <p className="font-display text-xl md:text-2xl font-bold">
+                      {t("Unlock every video with membership")}
+                    </p>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      {t("The full exercise library, programs, quick workouts and nutrition tracker are all included.")}
+                      {t(
+                        "The full exercise library, programs, quick workouts and nutrition tracker are all included.",
+                      )}
                     </p>
                   </div>
                   <MembershipModal
@@ -231,24 +270,44 @@ function ExerciseDetail() {
               />
             ) : (
               <>
-                <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, oklch(0.7 0.22 240 / 0.18), transparent 65%)" }} />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at center, oklch(0.7 0.22 240 / 0.18), transparent 65%)",
+                  }}
+                />
                 <div className="absolute inset-0 grid place-items-center">
                   <div className="flex items-center gap-4 rounded-full border border-border bg-onyx-50/60 backdrop-blur-md px-6 py-3">
                     <span className="grid h-12 w-12 place-items-center rounded-full bg-onyx-100 text-muted-foreground">
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                      <svg
+                        className="h-5 w-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 8v4M12 16h.01" />
+                      </svg>
                     </span>
                     <span className="text-left">
-                      <span className="block font-display text-sm font-semibold">Video coming soon</span>
-                      <span className="block text-xs text-muted-foreground">Full step-by-step demo on the way</span>
+                      <span className="block font-display text-sm font-semibold">
+                        Video coming soon
+                      </span>
+                      <span className="block text-xs text-muted-foreground">
+                        Full step-by-step demo on the way
+                      </span>
                     </span>
                   </div>
                 </div>
               </>
             )}
-            <span className="absolute top-4 left-4 text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-onyx-50/70 backdrop-blur border border-border z-10">HD video</span>
+            <span className="absolute top-4 left-4 text-[10px] uppercase tracking-wider px-2 py-1 rounded-md bg-onyx-50/70 backdrop-blur border border-border z-10">
+              HD video
+            </span>
           </div>
         </div>
-
       </section>
 
       <div className="container-onyx grid lg:grid-cols-[1fr_360px] gap-10">
@@ -256,7 +315,9 @@ function ExerciseDetail() {
           {/* Overview */}
           <section>
             <SectionHeader eyebrow="01 · Overview" title="What it is & why it matters" />
-            <p className="mt-5 text-base md:text-lg text-foreground/85 leading-relaxed">{e.overview}</p>
+            <p className="mt-5 text-base md:text-lg text-foreground/85 leading-relaxed">
+              {e.overview}
+            </p>
           </section>
 
           {/* Steps */}
@@ -264,7 +325,10 @@ function ExerciseDetail() {
             <SectionHeader eyebrow="02 · Execution" title="Step-by-step instructions" />
             <ol className="mt-6 space-y-4">
               {e.steps.map((s, i) => (
-                <li key={s.title} className="surface-card rounded-xl p-5 flex gap-5 group hover:border-electric/30 transition-colors">
+                <li
+                  key={s.title}
+                  className="surface-card rounded-xl p-5 flex gap-5 group hover:border-electric/30 transition-colors"
+                >
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-electric/10 border border-electric/30 font-display font-bold text-electric">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -284,7 +348,15 @@ function ExerciseDetail() {
               <ul className="space-y-3">
                 {e.proTips.map((tip) => (
                   <li key={tip} className="flex gap-3 text-sm md:text-base">
-                    <svg className="h-5 w-5 text-electric shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6L12 2z"/></svg>
+                    <svg
+                      className="h-5 w-5 text-electric shrink-0 mt-0.5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6L12 2z" />
+                    </svg>
                     <span className="text-foreground/85">{tip}</span>
                   </li>
                 ))}
@@ -297,8 +369,13 @@ function ExerciseDetail() {
             <SectionHeader eyebrow="04 · Avoid" title="Common mistakes" />
             <div className="mt-6 grid sm:grid-cols-2 gap-3">
               {e.commonMistakes.map((m) => (
-                <div key={m} className="surface-card rounded-xl p-4 flex gap-3 items-start border-l-2 border-l-destructive/70">
-                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-destructive/15 text-destructive text-xs font-bold">✕</span>
+                <div
+                  key={m}
+                  className="surface-card rounded-xl p-4 flex gap-3 items-start border-l-2 border-l-destructive/70"
+                >
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-destructive/15 text-destructive text-xs font-bold">
+                    ✕
+                  </span>
                   <p className="text-sm text-foreground/85">{m}</p>
                 </div>
               ))}
@@ -310,19 +387,40 @@ function ExerciseDetail() {
         <aside className="space-y-6 lg:sticky lg:top-24 h-fit">
           <div className="surface-card rounded-xl overflow-hidden">
             <div className="p-5 border-b border-border">
-              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Exercise profile</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+                Exercise profile
+              </p>
             </div>
             <dl className="divide-y divide-border text-sm">
-              <ProfileRow label="Primary muscle" value={
-                <Link to="/exercises" search={{ muscle: e.primaryMuscle }} className="text-electric hover:text-electric-glow">{e.primaryMuscle}</Link>
-              } />
-              <ProfileRow label="Secondary" value={
-                <span className="flex flex-wrap gap-1.5 justify-end">
-                  {e.secondaryMuscles.map((m) => (
-                    <Link key={m} to="/exercises" search={{ muscle: m }} className="rounded border border-border bg-onyx-100 px-1.5 py-0.5 text-xs hover:border-electric/40 hover:text-electric">{m}</Link>
-                  ))}
-                </span>
-              } />
+              <ProfileRow
+                label="Primary muscle"
+                value={
+                  <Link
+                    to="/exercises"
+                    search={{ muscle: e.primaryMuscle }}
+                    className="text-electric hover:text-electric-glow"
+                  >
+                    {e.primaryMuscle}
+                  </Link>
+                }
+              />
+              <ProfileRow
+                label="Secondary"
+                value={
+                  <span className="flex flex-wrap gap-1.5 justify-end">
+                    {e.secondaryMuscles.map((m) => (
+                      <Link
+                        key={m}
+                        to="/exercises"
+                        search={{ muscle: m }}
+                        className="rounded border border-border bg-onyx-100 px-1.5 py-0.5 text-xs hover:border-electric/40 hover:text-electric"
+                      >
+                        {m}
+                      </Link>
+                    ))}
+                  </span>
+                }
+              />
               <ProfileRow label="Type" value={e.exerciseType} />
               <ProfileRow label="Equipment" value={e.equipment} />
               <ProfileRow label="Mechanics" value={e.mechanics} />
@@ -338,7 +436,9 @@ function ExerciseDetail() {
         <section className="container-onyx mt-20">
           <SectionHeader eyebrow="Alternatives" title="Train this pattern differently" />
           <div className="mt-6 grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            {alternatives.map((a) => <ExerciseCard key={a.slug} exercise={a} />)}
+            {alternatives.map((a) => (
+              <ExerciseCard key={a.slug} exercise={a} />
+            ))}
           </div>
         </section>
       )}
@@ -349,7 +449,6 @@ function ExerciseDetail() {
     </div>
   );
 }
-
 
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
@@ -368,4 +467,3 @@ function ProfileRow({ label, value }: { label: string; value: React.ReactNode })
     </div>
   );
 }
-

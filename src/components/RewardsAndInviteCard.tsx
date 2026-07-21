@@ -34,7 +34,9 @@ export function RewardsAndInviteCard() {
         if (typeof window !== "undefined") {
           window.localStorage.setItem("onyx.rewardCode", result.code);
         }
-        toast.success(t("rewards.toastDiscount").replace("{{percent}}", String(result.discountPercent)));
+        toast.success(
+          t("rewards.toastDiscount").replace("{{percent}}", String(result.discountPercent)),
+        );
         qc.invalidateQueries({ queryKey: ["my-rewards"] });
       }
       setCode("");
@@ -51,9 +53,10 @@ export function RewardsAndInviteCard() {
     });
   }
 
-  const shareLink = typeof window !== "undefined" && invite?.code
-    ? `${window.location.origin}/auth?invite=${encodeURIComponent(invite.code)}`
-    : "";
+  const shareLink =
+    typeof window !== "undefined" && invite?.code
+      ? `${window.location.origin}/auth?invite=${encodeURIComponent(invite.code)}`
+      : "";
 
   return (
     <section className="mt-8 rounded-xl border border-border bg-onyx-100 p-6">
@@ -61,9 +64,7 @@ export function RewardsAndInviteCard() {
         <Gift className="h-4 w-4 text-electric" />
         <h2 className="font-display text-xl font-bold">{t("rewards.title")}</h2>
       </div>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {t("rewards.subtitle")}
-      </p>
+      <p className="mt-1 text-sm text-muted-foreground">{t("rewards.subtitle")}</p>
 
       {/* Redeem input */}
       <div className="mt-5">
@@ -103,7 +104,10 @@ export function RewardsAndInviteCard() {
           </div>
           {invite.redeemedInvite.redeemedAt && (
             <p className="mt-2 text-xs text-muted-foreground">
-              {t("rewards.redeemedOnOnce").replace("{{date}}", new Date(invite.redeemedInvite.redeemedAt).toLocaleDateString())}
+              {t("rewards.redeemedOnOnce").replace(
+                "{{date}}",
+                new Date(invite.redeemedInvite.redeemedAt).toLocaleDateString(),
+              )}
             </p>
           )}
         </div>
@@ -124,8 +128,12 @@ export function RewardsAndInviteCard() {
                 <div>
                   <div className="font-mono text-sm font-bold">{r.code}</div>
                   <div className="text-xs text-muted-foreground">
-                    {t("rewards.discountFrom").replace("{{percent}}", String(r.discount_percent)).replace("{{challenge}}", r.challenge_slug)}
-                    {r.redeemed_at ? ` · ${t("rewards.usedOn").replace("{{date}}", new Date(r.redeemed_at).toLocaleDateString())}` : ""}
+                    {t("rewards.discountFrom")
+                      .replace("{{percent}}", String(r.discount_percent))
+                      .replace("{{challenge}}", r.challenge_slug)}
+                    {r.redeemed_at
+                      ? ` · ${t("rewards.usedOn").replace("{{date}}", new Date(r.redeemed_at).toLocaleDateString())}`
+                      : ""}
                   </div>
                 </div>
                 {!r.redeemed_at && (
@@ -133,7 +141,11 @@ export function RewardsAndInviteCard() {
                     onClick={() => copy(r.code)}
                     className="inline-flex items-center gap-1 text-xs text-electric font-semibold hover:underline"
                   >
-                    {copiedCode === r.code ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                    {copiedCode === r.code ? (
+                      <Check className="h-3 w-3" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
                     {copiedCode === r.code ? t("rewards.copied") : t("rewards.copy")}
                   </button>
                 )}
@@ -151,9 +163,7 @@ export function RewardsAndInviteCard() {
         {invite?.hasPurchase && invite.code ? (
           invite.redeemedAt ? (
             <>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t("rewards.inviteUsed")}
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{t("rewards.inviteUsed")}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <div className="flex-1 min-w-[180px] rounded-md border border-border bg-onyx-50 px-3 py-2 font-mono text-sm font-bold line-through opacity-60">
                   {invite.code}
@@ -163,41 +173,40 @@ export function RewardsAndInviteCard() {
                 </span>
               </div>
               <p className="mt-3 text-xs text-electric font-semibold">
-                {t("rewards.inviteRedeemedNote").replace("{{date}}", new Date(invite.redeemedAt).toLocaleDateString())}
+                {t("rewards.inviteRedeemedNote").replace(
+                  "{{date}}",
+                  new Date(invite.redeemedAt).toLocaleDateString(),
+                )}
               </p>
             </>
           ) : (
             <>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t("rewards.shareInvite")}
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{t("rewards.shareInvite")}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <div className="flex-1 min-w-[180px] rounded-md border border-border bg-onyx-50 px-3 py-2 font-mono text-sm font-bold">
                   {invite.code}
                 </div>
-                <Button
-                  variant="outline"
-                  onClick={() => copy(invite.code!)}
-                  className="gap-1"
-                >
-                  {copiedCode === invite.code ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                <Button variant="outline" onClick={() => copy(invite.code!)} className="gap-1">
+                  {copiedCode === invite.code ? (
+                    <Check className="h-3 w-3" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
                   {t("rewards.copyCode")}
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => copy(shareLink)}
-                  className="gap-1"
-                >
-                  {copiedCode === shareLink ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                <Button variant="outline" onClick={() => copy(shareLink)} className="gap-1">
+                  {copiedCode === shareLink ? (
+                    <Check className="h-3 w-3" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
                   {t("rewards.copyLink")}
                 </Button>
               </div>
             </>
           )
         ) : (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t("rewards.unlockInvite")}
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">{t("rewards.unlockInvite")}</p>
         )}
       </div>
     </section>

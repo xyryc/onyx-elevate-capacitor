@@ -4,9 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export type ImageOverrideMap = Record<string, string>;
 
 async function fetchOverrides(): Promise<ImageOverrideMap> {
-  const { data, error } = await supabase
-    .from("image_overrides")
-    .select("slot_key,image_url");
+  const { data, error } = await supabase.from("image_overrides").select("slot_key,image_url");
   if (error) return {};
   const map: ImageOverrideMap = {};
   for (const row of data ?? []) map[row.slot_key] = row.image_url;

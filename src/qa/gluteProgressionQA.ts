@@ -126,7 +126,6 @@ function findMainLiftReps(programSlug: string, liftName: string): string | null 
   return wavey ?? candidates[0] ?? null;
 }
 
-
 export function runGluteProgressionQA(): QAReport {
   const perLift: QALiftReport[] = [];
   let totalIssues = 0;

@@ -67,7 +67,11 @@ export const scanFoodPhoto = createServerFn({ method: "POST" })
     if (countErr) throw countErr;
     const used = count ?? 0;
     if (used >= DAILY_LIMIT) {
-      return { ok: false, reason: `Daily scan limit reached (${DAILY_LIMIT}/day). Try again tomorrow or log manually.`, remaining: 0 };
+      return {
+        ok: false,
+        reason: `Daily scan limit reached (${DAILY_LIMIT}/day). Try again tomorrow or log manually.`,
+        remaining: 0,
+      };
     }
 
     const apiKey = process.env.LOVABLE_API_KEY;
@@ -101,8 +105,14 @@ Response when NOT food or unclear:
             {
               role: "user",
               content: [
-                { type: "text", text: "Identify the foods in this photo and estimate their macros. Return JSON only." },
-                { type: "image_url", image_url: { url: `data:${data.mimeType};base64,${data.imageBase64}` } },
+                {
+                  type: "text",
+                  text: "Identify the foods in this photo and estimate their macros. Return JSON only.",
+                },
+                {
+                  type: "image_url",
+                  image_url: { url: `data:${data.mimeType};base64,${data.imageBase64}` },
+                },
               ],
             },
           ],
@@ -116,8 +126,18 @@ Response when NOT food or unclear:
     }
 
     if (!res.ok) {
-      if (res.status === 429) return { ok: false, reason: "AI is busy, try again in a moment.", remaining: DAILY_LIMIT - used };
-      if (res.status === 402) return { ok: false, reason: "AI credits exhausted. Please contact support.", remaining: DAILY_LIMIT - used };
+      if (res.status === 429)
+        return {
+          ok: false,
+          reason: "AI is busy, try again in a moment.",
+          remaining: DAILY_LIMIT - used,
+        };
+      if (res.status === 402)
+        return {
+          ok: false,
+          reason: "AI credits exhausted. Please contact support.",
+          remaining: DAILY_LIMIT - used,
+        };
       const txt = await res.text().catch(() => "");
       console.error("[scanFoodPhoto] AI error", res.status, txt.slice(0, 500));
       throw new Error(`AI error ${res.status}: ${txt.slice(0, 200)}`);
@@ -139,7 +159,11 @@ Response when NOT food or unclear:
     try {
       parsed = JSON.parse(cleaned);
     } catch {
-      return { ok: false, reason: "Couldn't read that photo. Try better lighting or log manually.", remaining: DAILY_LIMIT - used };
+      return {
+        ok: false,
+        reason: "Couldn't read that photo. Try better lighting or log manually.",
+        remaining: DAILY_LIMIT - used,
+      };
     }
 
     const responseSchema = z.union([
@@ -163,7 +187,11 @@ Response when NOT food or unclear:
     ]);
     const val = responseSchema.safeParse(parsed);
     if (!val.success) {
-      return { ok: false, reason: "AI returned an unexpected result. Try another photo.", remaining: DAILY_LIMIT - used };
+      return {
+        ok: false,
+        reason: "AI returned an unexpected result. Try another photo.",
+        remaining: DAILY_LIMIT - used,
+      };
     }
     if (!val.data.ok) {
       return {

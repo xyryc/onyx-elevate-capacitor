@@ -37,12 +37,15 @@ import {
 import { InstallToPhoneCard } from "@/components/InstallToPhoneCard";
 import { useT } from "@/i18n/LanguageProvider";
 
-
 export const Route = createFileRoute("/app")({
   head: () => ({
     meta: [
       { title: "The Onyx App - Coming Soon | Onyx Elevate" },
-      { name: "description", content: "The Onyx Elevate app is coming soon. Expert coaching, 200+ recipes, AI-powered programs, and a community built for every athlete." },
+      {
+        name: "description",
+        content:
+          "The Onyx Elevate app is coming soon. Expert coaching, 200+ recipes, AI-powered programs, and a community built for every athlete.",
+      },
       { property: "og:title", content: "The Onyx App - Coming Soon" },
       { property: "og:description", content: "Your entire training ecosystem, in your pocket." },
     ],
@@ -71,17 +74,35 @@ function AppPage() {
   ];
 
   const communityCards = [
-    { icon: <Trophy className="w-8 h-8 text-electric mx-auto" />, title: t("app.community.card.monthlyTitle"), label: t("app.community.card.challenges") },
-    { icon: <Users className="w-8 h-8 text-electric mx-auto" />, title: t("app.community.card.teamTitle"), label: t("app.community.card.events") },
-    { icon: <Target className="w-8 h-8 text-electric mx-auto" />, title: t("app.community.card.goalTitle"), label: t("app.community.card.tracking") },
-    { icon: <Heart className="w-8 h-8 text-electric mx-auto" />, title: t("app.community.card.supportTitle"), label: t("app.community.card.community") },
+    {
+      icon: <Trophy className="w-8 h-8 text-electric mx-auto" />,
+      title: t("app.community.card.monthlyTitle"),
+      label: t("app.community.card.challenges"),
+    },
+    {
+      icon: <Users className="w-8 h-8 text-electric mx-auto" />,
+      title: t("app.community.card.teamTitle"),
+      label: t("app.community.card.events"),
+    },
+    {
+      icon: <Target className="w-8 h-8 text-electric mx-auto" />,
+      title: t("app.community.card.goalTitle"),
+      label: t("app.community.card.tracking"),
+    },
+    {
+      icon: <Heart className="w-8 h-8 text-electric mx-auto" />,
+      title: t("app.community.card.supportTitle"),
+      label: t("app.community.card.community"),
+    },
   ];
 
-  const detailItems = (base: string, count: number) => Array.from({ length: count }, (_, index) => t(`${base}.${index + 1}`));
-  const weekRows = (base: string, count: number) => Array.from({ length: count }, (_, index) => ({
-    day: t(`${base}.${index + 1}.day`),
-    focus: t(`${base}.${index + 1}.focus`),
-  }));
+  const detailItems = (base: string, count: number) =>
+    Array.from({ length: count }, (_, index) => t(`${base}.${index + 1}`));
+  const weekRows = (base: string, count: number) =>
+    Array.from({ length: count }, (_, index) => ({
+      day: t(`${base}.${index + 1}.day`),
+      focus: t(`${base}.${index + 1}.focus`),
+    }));
 
   const programCards = [
     {
@@ -146,13 +167,14 @@ function AppPage() {
               <Sparkles className="w-3.5 h-3.5" />
               {t("app.badge.comingSoon")}
             </div>
-            <p className="mt-4 text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("app.hero.eyebrow")}</p>
-            <h1 className="mt-2 font-display text-4xl md:text-6xl font-bold leading-[1.05]">
-              {t("app.hero.titlePrefix")} <span className="text-gradient-electric">{t("app.hero.titleAccent")}</span>
-            </h1>
-            <p className="mt-5 text-muted-foreground text-lg">
-              {t("app.hero.description")}
+            <p className="mt-4 text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              {t("app.hero.eyebrow")}
             </p>
+            <h1 className="mt-2 font-display text-4xl md:text-6xl font-bold leading-[1.05]">
+              {t("app.hero.titlePrefix")}{" "}
+              <span className="text-gradient-electric">{t("app.hero.titleAccent")}</span>
+            </h1>
+            <p className="mt-5 text-muted-foreground text-lg">{t("app.hero.description")}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
                 <DialogTrigger asChild>
@@ -171,19 +193,17 @@ function AppPage() {
                       <Sparkles className="w-5 h-5 text-electric" />
                       {t("app.dialog.title")}
                     </DialogTitle>
-                    <DialogDescription>
-                      {t("app.dialog.description")}
-                    </DialogDescription>
+                    <DialogDescription>{t("app.dialog.description")}</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 pt-2">
-                    <p className="text-sm text-muted-foreground">
-                      {t("app.dialog.body")}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{t("app.dialog.body")}</p>
                     <button
                       type="button"
                       onClick={() => {
                         setShowComingSoon(false);
-                        document.getElementById("install-to-phone-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                        document
+                          .getElementById("install-to-phone-card")
+                          ?.scrollIntoView({ behavior: "smooth", block: "center" });
                       }}
                       className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-electric px-4 py-3 text-sm font-bold text-onyx-50 hover:bg-electric-glow transition-all"
                     >
@@ -206,15 +226,16 @@ function AppPage() {
         </div>
       </section>
 
-
-
       {/* Mission */}
       <section className="border-t border-border">
         <div className="container-onyx py-20 md:py-28">
           <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("app.mission.eyebrow")}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              {t("app.mission.eyebrow")}
+            </p>
             <h2 className="mt-3 font-display text-3xl md:text-5xl font-bold leading-tight">
-              {t("app.mission.titlePrefix")} <span className="text-gradient-electric">{t("app.mission.titleAccent")}</span>
+              {t("app.mission.titlePrefix")}{" "}
+              <span className="text-gradient-electric">{t("app.mission.titleAccent")}</span>
             </h2>
             <p className="mt-6 text-muted-foreground text-lg leading-relaxed">
               {t("app.mission.body1")}
@@ -239,8 +260,13 @@ function AppPage() {
       <section className="border-t border-border">
         <div className="container-onyx py-20 md:py-28">
           <div className="text-center max-w-2xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("app.includes.eyebrow")}</p>
-            <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold">{t("app.includes.titlePrefix")} <span className="text-gradient-electric">{t("app.includes.titleAccent")}</span></h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              {t("app.includes.eyebrow")}
+            </p>
+            <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold">
+              {t("app.includes.titlePrefix")}{" "}
+              <span className="text-gradient-electric">{t("app.includes.titleAccent")}</span>
+            </h2>
           </div>
 
           <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -346,9 +372,12 @@ function AppPage() {
         <div className="container-onyx py-20 md:py-28">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("app.community.eyebrow")}</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+                {t("app.community.eyebrow")}
+              </p>
               <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold">
-                {t("app.community.titlePrefix")} <span className="text-gradient-electric">{t("app.community.titleAccent")}</span>
+                {t("app.community.titlePrefix")}{" "}
+                <span className="text-gradient-electric">{t("app.community.titleAccent")}</span>
               </h2>
               <p className="mt-5 text-muted-foreground text-lg leading-relaxed">
                 {t("app.community.body")}
@@ -364,7 +393,10 @@ function AppPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               {communityCards.map((card) => (
-                <div key={`${card.title}-${card.label}`} className="surface-card rounded-xl p-6 text-center">
+                <div
+                  key={`${card.title}-${card.label}`}
+                  className="surface-card rounded-xl p-6 text-center"
+                >
                   {card.icon}
                   <div className="mt-3 font-display text-2xl font-bold">{card.title}</div>
                   <div className="text-sm text-muted-foreground">{card.label}</div>
@@ -379,13 +411,14 @@ function AppPage() {
       <section className="border-t border-border">
         <div className="container-onyx py-20 md:py-28">
           <div className="text-center max-w-2xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("app.programs.eyebrow")}</p>
-            <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold">
-              {t("app.programs.titlePrefix")} <span className="text-gradient-electric">{t("app.programs.titleAccent")}</span>
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              {t("app.programs.description")}
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              {t("app.programs.eyebrow")}
             </p>
+            <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold">
+              {t("app.programs.titlePrefix")}{" "}
+              <span className="text-gradient-electric">{t("app.programs.titleAccent")}</span>
+            </h2>
+            <p className="mt-4 text-muted-foreground">{t("app.programs.description")}</p>
           </div>
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {programCards.map((p) => (
@@ -394,7 +427,9 @@ function AppPage() {
                   <button className="text-left surface-card rounded-xl p-6 flex items-start gap-4 hover:border-electric/40 hover:bg-electric/5 transition-colors group">
                     <div className="mt-0.5 text-electric">{p.icon}</div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-foreground group-hover:text-electric transition-colors">{p.title}</h3>
+                      <h3 className="font-semibold text-foreground group-hover:text-electric transition-colors">
+                        {p.title}
+                      </h3>
                       <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
                       <p className="mt-3 text-xs text-electric font-medium inline-flex items-center gap-1">
                         {t("app.programs.readMore")} <ArrowRight className="w-3 h-3" />
@@ -406,10 +441,16 @@ function AppPage() {
                   <DialogHeader>
                     <div className="flex items-center gap-3">
                       <div className="text-electric">{p.icon}</div>
-                      <Badge variant="outline" className="border-electric/30 text-electric text-xs">{t("app.programs.badge")}</Badge>
+                      <Badge variant="outline" className="border-electric/30 text-electric text-xs">
+                        {t("app.programs.badge")}
+                      </Badge>
                     </div>
-                    <DialogTitle className="font-display text-3xl md:text-4xl">{p.title}</DialogTitle>
-                    <DialogDescription className="text-base text-muted-foreground">{p.tagline}</DialogDescription>
+                    <DialogTitle className="font-display text-3xl md:text-4xl">
+                      {p.title}
+                    </DialogTitle>
+                    <DialogDescription className="text-base text-muted-foreground">
+                      {p.tagline}
+                    </DialogDescription>
                   </DialogHeader>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
@@ -419,23 +460,37 @@ function AppPage() {
                       { label: t("app.programs.level"), value: p.level },
                       { label: t("app.programs.equipment"), value: p.equipment },
                     ].map((s) => (
-                      <div key={s.label} className="rounded-lg border border-border bg-background/50 p-3">
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.label}</p>
+                      <div
+                        key={s.label}
+                        className="rounded-lg border border-border bg-background/50 p-3"
+                      >
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                          {s.label}
+                        </p>
                         <p className="mt-1 text-sm font-medium text-foreground">{s.value}</p>
                       </div>
                     ))}
                   </div>
 
                   <div className="mt-6">
-                    <h4 className="text-xs uppercase tracking-[0.18em] text-electric font-semibold">{t("app.programs.overview")}</h4>
-                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{p.overview}</p>
+                    <h4 className="text-xs uppercase tracking-[0.18em] text-electric font-semibold">
+                      {t("app.programs.overview")}
+                    </h4>
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                      {p.overview}
+                    </p>
                   </div>
 
                   <div className="mt-6">
-                    <h4 className="text-xs uppercase tracking-[0.18em] text-electric font-semibold">{t("app.programs.whatYouGet")}</h4>
+                    <h4 className="text-xs uppercase tracking-[0.18em] text-electric font-semibold">
+                      {t("app.programs.whatYouGet")}
+                    </h4>
                     <ul className="mt-3 space-y-2">
                       {p.youGet.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <li
+                          key={item}
+                          className="flex items-start gap-2 text-sm text-muted-foreground"
+                        >
                           <CheckCircle2 className="w-4 h-4 text-electric mt-0.5 shrink-0" />
                           <span>{item}</span>
                         </li>
@@ -444,7 +499,9 @@ function AppPage() {
                   </div>
 
                   <div className="mt-6">
-                    <h4 className="text-xs uppercase tracking-[0.18em] text-electric font-semibold">{t("app.programs.sampleWeek")}</h4>
+                    <h4 className="text-xs uppercase tracking-[0.18em] text-electric font-semibold">
+                      {t("app.programs.sampleWeek")}
+                    </h4>
                     <div className="mt-3 rounded-lg border border-border overflow-hidden">
                       {p.weekStructure.map((d, i) => (
                         <div
@@ -468,15 +525,18 @@ function AppPage() {
                   <div className="mt-6 rounded-lg border border-border bg-background/40 p-4 flex items-start gap-3">
                     <Sparkles className="w-5 h-5 text-electric mt-0.5 shrink-0" />
                     <div className="text-sm">
-                      <p className="font-semibold text-foreground">{t("app.programs.launchingTitle")}</p>
-                      <p className="text-muted-foreground mt-1">{t("app.programs.launchingBody")}</p>
+                      <p className="font-semibold text-foreground">
+                        {t("app.programs.launchingTitle")}
+                      </p>
+                      <p className="text-muted-foreground mt-1">
+                        {t("app.programs.launchingBody")}
+                      </p>
                     </div>
                   </div>
                 </DialogContent>
               </Dialog>
             ))}
           </div>
-
         </div>
       </section>
 
@@ -485,9 +545,13 @@ function AppPage() {
         <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
         <div className="container-onyx relative py-20 md:py-28">
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("app.why.eyebrow")}</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              {t("app.why.eyebrow")}
+            </p>
             <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold">
-              {t("app.why.titlePrefix")} <span className="text-gradient-electric">{t("app.why.titleAccent")}</span> {t("app.why.titleSuffix")}
+              {t("app.why.titlePrefix")}{" "}
+              <span className="text-gradient-electric">{t("app.why.titleAccent")}</span>{" "}
+              {t("app.why.titleSuffix")}
             </h2>
             <p className="mt-6 text-muted-foreground text-lg leading-relaxed">
               {t("app.why.body1")}
@@ -508,7 +572,8 @@ function AppPage() {
               {t("app.badge.comingSoon")}
             </div>
             <h2 className="mt-5 font-display text-3xl md:text-5xl font-bold">
-              {t("app.final.titlePrefix")} <span className="text-gradient-electric">{t("app.final.titleAccent")}</span>
+              {t("app.final.titlePrefix")}{" "}
+              <span className="text-gradient-electric">{t("app.final.titleAccent")}</span>
             </h2>
             <p className="mt-5 text-muted-foreground text-lg max-w-2xl mx-auto">
               {t("app.final.description")}
@@ -595,7 +660,9 @@ function AppPreviewSlideshow() {
       <div className="absolute inset-0 bg-gradient-to-t from-onyx-50/80 via-transparent to-transparent pointer-events-none" />
       <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
         <div className="relative h-12 flex-1">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">{t("app.slide.eyebrow")}</div>
+          <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">
+            {t("app.slide.eyebrow")}
+          </div>
           {SLIDES.map((s, idx) => (
             <div
               key={s.src}

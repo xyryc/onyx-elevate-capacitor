@@ -44,8 +44,12 @@ export const capacitorStorage: StorageAdapter = {
     try {
       const { Preferences } = await loadPreferences();
       const { value } = await Preferences.get({ key });
+      console.log(
+        `[Storage] getItem for key: ${key}, value size: ${value ? value.length : 0} bytes`,
+      );
       return value ?? null;
-    } catch {
+    } catch (e) {
+      console.error(`[Storage] Failed to getItem for key: ${key}:`, e);
       return null;
     }
   },
@@ -53,16 +57,28 @@ export const capacitorStorage: StorageAdapter = {
     try {
       const { Preferences } = await loadPreferences();
       await Preferences.set({ key, value });
-    } catch {
-      // Silently fail — storage is non-critical for SSR/edge cases
+      console.log(`[Storage] setItem native Preferences saved for key: ${key}`);
+      // Also write synchronously to localStorage as a fallback/mirror for instant route-gate validation
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(key, value);
+        console.log(`[Storage] setItem mirrored to localStorage for key: ${key}`);
+      }
+    } catch (e) {
+      console.error(`[Storage] Failed to setItem for key: ${key}:`, e);
     }
   },
   async removeItem(key: string): Promise<void> {
     try {
       const { Preferences } = await loadPreferences();
       await Preferences.remove({ key });
-    } catch {
-      // Silently fail
+      console.log(`[Storage] removeItem native Preferences removed for key: ${key}`);
+      // Also remove synchronously from localStorage
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(key);
+        console.log(`[Storage] removeItem cleared from localStorage for key: ${key}`);
+      }
+    } catch (e) {
+      console.error(`[Storage] Failed to removeItem for key: ${key}:`, e);
     }
   },
 };
@@ -72,4 +88,81 @@ export const capacitorStorage: StorageAdapter = {
  */
 export function isCapacitorNative(): boolean {
   return Capacitor.isNativePlatform();
+}
+
+export function hasSavedBrowserSession(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (!key || !key.startsWith("sb-") || !key.endsWith("-auth-token")) continue;
+      const raw = window.localStorage.getItem(key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw) as {
+        access_token?: string;
+        expires_at?: number;
+        currentSession?: { access_token?: string; expires_at?: number };
+      };
+      const session = parsed.currentSession ?? parsed;
+      if (!session.access_token) continue;
+      if (session.expires_at && session.expires_at * 1000 < Date.now()) continue;
+      console.log("[Auth] Synchronous localStorage session check succeeded for key:", key);
+      return true;
+    }
+  } catch (e) {
+    console.error("[Auth] Error parsing localStorage:", e);
+    return false;
+  }
+  return false;
+}
+
+export async function hasSavedSession(): Promise<boolean> {
+  console.log("[Auth] Starting session validation...");
+  // 1. First try synchronous localStorage check (instant fallback)
+  if (hasSavedBrowserSession()) {
+    return true;
+  }
+
+  // 2. If running natively and localStorage is empty/purged, check Capacitor native preferences
+  if (typeof window !== "undefined" && isCapacitorNative()) {
+    console.log("[Auth] Local storage empty, attempting native preferences read...");
+    try {
+      const { Preferences } = await import("@capacitor/preferences");
+      const { keys } = await Preferences.keys();
+      console.log("[Auth] Retrieved native preferences keys:", keys);
+      for (const key of keys) {
+        if (!key.startsWith("sb-") || !key.endsWith("-auth-token")) continue;
+        const { value } = await Preferences.get({ key });
+        if (!value) {
+          console.log("[Auth] Native key has empty value:", key);
+          continue;
+        }
+
+        const parsed = JSON.parse(value) as {
+          access_token?: string;
+          expires_at?: number;
+          currentSession?: { access_token?: string; expires_at?: number };
+        };
+        const session = parsed.currentSession ?? parsed;
+        if (!session.access_token) {
+          console.log("[Auth] Native session missing access_token");
+          continue;
+        }
+        if (session.expires_at && session.expires_at * 1000 < Date.now()) {
+          console.log("[Auth] Native session has expired");
+          continue;
+        }
+
+        // Found valid native session! Mirror it to localStorage to prevent future checks
+        console.log("[Auth] Valid native session found! Restoring to localStorage:", key);
+        window.localStorage.setItem(key, value);
+        return true;
+      }
+    } catch (e) {
+      console.error("[Auth] Failed to parse native session:", e);
+    }
+  }
+
+  console.log("[Auth] No active session found.");
+  return false;
 }

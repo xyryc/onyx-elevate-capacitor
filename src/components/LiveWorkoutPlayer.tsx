@@ -13,7 +13,6 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-
 type BunnyPlayer = {
   on: (event: string, callback: (data?: any) => void) => void;
   off: (event?: string, callback?: (data?: any) => void) => void;
@@ -40,10 +39,14 @@ function loadBunnyPlayerJs() {
   if (window.playerjs?.Player) return Promise.resolve();
   if (!bunnyPlayerJsPromise) {
     bunnyPlayerJsPromise = new Promise((resolve, reject) => {
-      const existing = document.querySelector<HTMLScriptElement>('script[data-bunny-playerjs="true"]');
+      const existing = document.querySelector<HTMLScriptElement>(
+        'script[data-bunny-playerjs="true"]',
+      );
       if (existing) {
         existing.addEventListener("load", () => resolve(), { once: true });
-        existing.addEventListener("error", () => reject(new Error("Bunny player failed to load")), { once: true });
+        existing.addEventListener("error", () => reject(new Error("Bunny player failed to load")), {
+          once: true,
+        });
         return;
       }
       const script = document.createElement("script");
@@ -60,10 +63,106 @@ function loadBunnyPlayerJs() {
 
 // Inline strings so the player is fully localized without new dictionary keys.
 const LIVE_STRINGS = {
-  en: { work: "Work", rest: "Rest", set: "Set", exercise: "Exercise", reps: "Reps", sec: "Seconds", target: "Target time", upNext: "Up next", finish: "Finish & log workout", noVideo: "No demo video", doneTitle: "Workout complete!", doneBody: "Amazing job — you showed up and finished strong. Log this session to add it to your training history, and save it as a favorite so it's one tap away next time.", log: "Log workout", logging: "Logging…", close: "Close", logged: "Workout logged, great work!", getReady: "Get ready", paused: "Paused", start: "Start", saveFav: "Save as favorite", amrapFull: "As many reps as possible", amrapHint: "Tap AMRAP for info" },
-  no: { work: "Jobb", rest: "Pause", set: "Sett", exercise: "Øvelse", reps: "Reps", sec: "Sekunder", target: "Måltid", upNext: "Neste", finish: "Fullfør og logg økten", noVideo: "Ingen demovideo", doneTitle: "Økten er ferdig!", doneBody: "Fantastisk jobbet — du møtte opp og fullførte sterkt. Logg denne økten for å legge den til i treningshistorikken din, og lagre den som favoritt så den er ett trykk unna neste gang.", log: "Logg økten", logging: "Logger…", close: "Lukk", logged: "Økt logget, godt jobbet!", getReady: "Gjør deg klar", paused: "Pauset", start: "Start", saveFav: "Lagre som favoritt", amrapFull: "Så mange reps som mulig", amrapHint: "Trykk AMRAP for info" },
-  es: { work: "Trabajo", rest: "Descanso", set: "Serie", exercise: "Ejercicio", reps: "Reps", sec: "Segundos", target: "Tiempo objetivo", upNext: "Siguiente", finish: "Terminar y registrar", noVideo: "Sin video", doneTitle: "¡Entrenamiento completo!", doneBody: "Increíble trabajo — apareciste y terminaste con fuerza. Registra esta sesión para añadirla a tu historial y guárdala como favorita para tenerla a un toque la próxima vez.", log: "Registrar", logging: "Registrando…", close: "Cerrar", logged: "Entrenamiento registrado, ¡bien hecho!", getReady: "Prepárate", paused: "Pausado", start: "Empezar", saveFav: "Guardar como favorito", amrapFull: "Tantas repeticiones como sea posible", amrapHint: "Toca AMRAP para info" },
-  pt: { work: "Trabalho", rest: "Descanso", set: "Série", exercise: "Exercício", reps: "Reps", sec: "Segundos", target: "Tempo alvo", upNext: "Próximo", finish: "Concluir e registrar", noVideo: "Sem vídeo", doneTitle: "Treino concluído!", doneBody: "Trabalho incrível — você apareceu e terminou forte. Registre esta sessão para adicioná-la ao seu histórico e salve como favorito para tê-la a um toque na próxima vez.", log: "Registrar treino", logging: "Registrando…", close: "Fechar", logged: "Treino registrado, ótimo trabalho!", getReady: "Prepare-se", paused: "Pausado", start: "Começar", saveFav: "Salvar como favorito", amrapFull: "O máximo de repetições possível", amrapHint: "Toque AMRAP para info" },
+  en: {
+    work: "Work",
+    rest: "Rest",
+    set: "Set",
+    exercise: "Exercise",
+    reps: "Reps",
+    sec: "Seconds",
+    target: "Target time",
+    upNext: "Up next",
+    finish: "Finish & log workout",
+    noVideo: "No demo video",
+    doneTitle: "Workout complete!",
+    doneBody:
+      "Amazing job — you showed up and finished strong. Log this session to add it to your training history, and save it as a favorite so it's one tap away next time.",
+    log: "Log workout",
+    logging: "Logging…",
+    close: "Close",
+    logged: "Workout logged, great work!",
+    getReady: "Get ready",
+    paused: "Paused",
+    start: "Start",
+    saveFav: "Save as favorite",
+    amrapFull: "As many reps as possible",
+    amrapHint: "Tap AMRAP for info",
+  },
+  no: {
+    work: "Jobb",
+    rest: "Pause",
+    set: "Sett",
+    exercise: "Øvelse",
+    reps: "Reps",
+    sec: "Sekunder",
+    target: "Måltid",
+    upNext: "Neste",
+    finish: "Fullfør og logg økten",
+    noVideo: "Ingen demovideo",
+    doneTitle: "Økten er ferdig!",
+    doneBody:
+      "Fantastisk jobbet — du møtte opp og fullførte sterkt. Logg denne økten for å legge den til i treningshistorikken din, og lagre den som favoritt så den er ett trykk unna neste gang.",
+    log: "Logg økten",
+    logging: "Logger…",
+    close: "Lukk",
+    logged: "Økt logget, godt jobbet!",
+    getReady: "Gjør deg klar",
+    paused: "Pauset",
+    start: "Start",
+    saveFav: "Lagre som favoritt",
+    amrapFull: "Så mange reps som mulig",
+    amrapHint: "Trykk AMRAP for info",
+  },
+  es: {
+    work: "Trabajo",
+    rest: "Descanso",
+    set: "Serie",
+    exercise: "Ejercicio",
+    reps: "Reps",
+    sec: "Segundos",
+    target: "Tiempo objetivo",
+    upNext: "Siguiente",
+    finish: "Terminar y registrar",
+    noVideo: "Sin video",
+    doneTitle: "¡Entrenamiento completo!",
+    doneBody:
+      "Increíble trabajo — apareciste y terminaste con fuerza. Registra esta sesión para añadirla a tu historial y guárdala como favorita para tenerla a un toque la próxima vez.",
+    log: "Registrar",
+    logging: "Registrando…",
+    close: "Cerrar",
+    logged: "Entrenamiento registrado, ¡bien hecho!",
+    getReady: "Prepárate",
+    paused: "Pausado",
+    start: "Empezar",
+    saveFav: "Guardar como favorito",
+    amrapFull: "Tantas repeticiones como sea posible",
+    amrapHint: "Toca AMRAP para info",
+  },
+  pt: {
+    work: "Trabalho",
+    rest: "Descanso",
+    set: "Série",
+    exercise: "Exercício",
+    reps: "Reps",
+    sec: "Segundos",
+    target: "Tempo alvo",
+    upNext: "Próximo",
+    finish: "Concluir e registrar",
+    noVideo: "Sem vídeo",
+    doneTitle: "Treino concluído!",
+    doneBody:
+      "Trabalho incrível — você apareceu e terminou forte. Registre esta sessão para adicioná-la ao seu histórico e salve como favorito para tê-la a um toque na próxima vez.",
+    log: "Registrar treino",
+    logging: "Registrando…",
+    close: "Fechar",
+    logged: "Treino registrado, ótimo trabalho!",
+    getReady: "Prepare-se",
+    paused: "Pausado",
+    start: "Começar",
+    saveFav: "Salvar como favorito",
+    amrapFull: "O máximo de repetições possível",
+    amrapHint: "Toque AMRAP para info",
+  },
 } as const;
 
 function formatRestLabel(seconds: number): string {
@@ -74,13 +173,11 @@ function formatRestLabel(seconds: number): string {
   return s === 0 ? `${m} min` : `${m}:${String(s).padStart(2, "0")}`;
 }
 
-
 function useLive() {
   const { lang } = useLang();
   const key = (lang || "en").toString().slice(0, 2) as keyof typeof LIVE_STRINGS;
   return LIVE_STRINGS[key] || LIVE_STRINGS.en;
 }
-
 
 /**
  * Live guided workout player. Auto-advances through every set of every
@@ -185,9 +282,7 @@ function buildSteps(workout: QuickWorkout): FlatStep[] {
       const meters = distance ? distanceMeters(ex.reps) : 0;
       const longEffort = meters >= 500;
       const parsedRest = parseSeconds(ex.rest, longEffort ? 120 : 20);
-      const restSeconds = longEffort
-        ? Math.max(parsedRest, 120)
-        : Math.min(parsedRest, 45);
+      const restSeconds = longEffort ? Math.max(parsedRest, 120) : Math.min(parsedRest, 45);
       for (let i = 0; i < setCount; i++) {
         steps.push({
           blockIndex: bi,
@@ -209,7 +304,6 @@ function buildSteps(workout: QuickWorkout): FlatStep[] {
   });
   return steps;
 }
-
 
 export function LiveWorkoutPlayer({
   workout,
@@ -242,8 +336,10 @@ export function LiveWorkoutPlayer({
   const step = steps[idx];
   const nextStep = steps[idx + 1];
   const exObj = step?.exerciseSlug ? findExercise(step.exerciseSlug) : undefined;
-  const previewStep = phase === "rest" ? nextStep ?? step : step;
-  const previewExercise = previewStep?.exerciseSlug ? findExercise(previewStep.exerciseSlug) : exObj;
+  const previewStep = phase === "rest" ? (nextStep ?? step) : step;
+  const previewExercise = previewStep?.exerciseSlug
+    ? findExercise(previewStep.exerciseSlug)
+    : exObj;
   const posterSrc = previewExercise?.thumbnailUrl || exObj?.thumbnailUrl;
 
   // For distance cardio (run/row/sled push X km/m) plus other "just look at
@@ -253,7 +349,6 @@ export function LiveWorkoutPlayer({
   const isThumbnailOnly = !!step?.isThumbnailOnly;
   const videoMounted = running && (phase === "prep" || phase === "work") && !isThumbnailOnly;
   const videoActive = running && phase === "work" && !isThumbnailOnly;
-
 
   // Build a live-only autoplay embed URL. The exercise library keeps its normal press-and-play video.
   const buildLiveSrc = (url: string | undefined, tag: string, autoplay: boolean) => {
@@ -286,7 +381,8 @@ export function LiveWorkoutPlayer({
   const shouldPreloadNext =
     running && phase === "rest" && !!nextStep && !nextStep.isThumbnailOnly && !!nextExObj?.videoUrl;
   const preloadSrc = useMemo(
-    () => (shouldPreloadNext ? buildLiveSrc(nextExObj?.videoUrl, `pre-${idx + 1}`, false) : undefined),
+    () =>
+      shouldPreloadNext ? buildLiveSrc(nextExObj?.videoUrl, `pre-${idx + 1}`, false) : undefined,
     [LOOP_START_SECONDS, nextExObj?.videoUrl, idx, muted, workout.slug, shouldPreloadNext],
   );
 
@@ -442,7 +538,10 @@ export function LiveWorkoutPlayer({
       setRemaining((r) => r - 1);
       // light beep on last 3 seconds
       if (remaining <= 4 && remaining > 1 && beepRef.current) {
-        try { beepRef.current.currentTime = 0; beepRef.current.play().catch(() => {}); } catch {}
+        try {
+          beepRef.current.currentTime = 0;
+          beepRef.current.play().catch(() => {});
+        } catch {}
       }
     }, 1000);
     return () => clearTimeout(id);
@@ -476,8 +575,7 @@ export function LiveWorkoutPlayer({
     if (step && step.restSeconds > 0) {
       setPhase("rest");
       setRemaining(step.restSeconds);
-    }
-    else goNext();
+    } else goNext();
   }
 
   const queryClient = useQueryClient();
@@ -499,7 +597,11 @@ export function LiveWorkoutPlayer({
     setLogging(true);
     try {
       const today = todayISO();
-      const result = await markSingleTrainingDayComplete(`qw-${workout.slug}`, `live-${today}`, workout.title);
+      const result = await markSingleTrainingDayComplete(
+        `qw-${workout.slug}`,
+        `live-${today}`,
+        workout.title,
+      );
       // Refresh profile / stats / activity feed so the log appears immediately
       queryClient.invalidateQueries({ queryKey: ["training-logged-today"] });
       queryClient.invalidateQueries({ queryKey: ["program-progress"] });
@@ -535,20 +637,31 @@ export function LiveWorkoutPlayer({
         finishAndLog();
       }
     })();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, user, workout.slug]);
 
-
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-hidden sm:overflow-y-auto overscroll-none touch-pan-y p-0 border-border/60 rounded-none sm:rounded-2xl text-white" style={{ backgroundColor: "hsl(220 20% 4%)" }}>
-
-        <VisuallyHidden asChild><DialogTitle>{t(workout.title)}</DialogTitle></VisuallyHidden>
-        <VisuallyHidden asChild><DialogDescription>{L.exercise}</DialogDescription></VisuallyHidden>
+      <DialogContent
+        showClose={false}
+        className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-hidden sm:overflow-y-auto overscroll-none touch-pan-y p-0 border-border/60 rounded-none sm:rounded-2xl text-white"
+        style={{ backgroundColor: "hsl(220 20% 4%)" }}
+      >
+        <VisuallyHidden asChild>
+          <DialogTitle>{t(workout.title)}</DialogTitle>
+        </VisuallyHidden>
+        <VisuallyHidden asChild>
+          <DialogDescription>{L.exercise}</DialogDescription>
+        </VisuallyHidden>
         {/* Beep for last-3-second cue */}
-        <audio ref={beepRef} src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAA" preload="auto" />
+        <audio
+          ref={beepRef}
+          src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAA"
+          preload="auto"
+        />
 
         {/* Close */}
         <button
@@ -560,7 +673,12 @@ export function LiveWorkoutPlayer({
         </button>
 
         {phase === "done" ? (
-          <DoneView workout={workout} onFinish={finishAndLog} logging={logging} onClose={() => onOpenChange(false)} />
+          <DoneView
+            workout={workout}
+            onFinish={finishAndLog}
+            logging={logging}
+            onClose={() => onOpenChange(false)}
+          />
         ) : step ? (
           <div className="flex flex-col h-[100dvh] sm:h-auto sm:min-h-0 pt-[env(safe-area-inset-top)]">
             {/* Video */}
@@ -602,7 +720,9 @@ export function LiveWorkoutPlayer({
                     />
                   )}
                   {!videoActive && (
-                    <div className={`absolute inset-0 grid place-items-center ${isThumbnailOnly && running && phase === "work" ? "bg-black/30" : "bg-black/55"}`}>
+                    <div
+                      className={`absolute inset-0 grid place-items-center ${isThumbnailOnly && running && phase === "work" ? "bg-black/30" : "bg-black/55"}`}
+                    >
                       <div className="flex flex-col items-center gap-3 text-center">
                         {!running ? (
                           <button
@@ -623,7 +743,8 @@ export function LiveWorkoutPlayer({
                               {t(step.reps)}
                             </span>
                             <span className="font-display text-5xl font-bold tabular-nums text-white drop-shadow-[0_2px_10px_rgba(0,180,255,0.55)]">
-                              {Math.floor(Math.max(0, remaining) / 60)}:{String(Math.max(0, remaining) % 60).padStart(2, "0")}
+                              {Math.floor(Math.max(0, remaining) / 60)}:
+                              {String(Math.max(0, remaining) % 60).padStart(2, "0")}
                             </span>
                             <span className="text-[10px] uppercase tracking-[0.24em] text-white/70">
                               {L.target}
@@ -632,7 +753,11 @@ export function LiveWorkoutPlayer({
                         ) : (
                           <>
                             <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-electric">
-                              {phase === "prep" ? L.getReady : phase === "rest" ? L.getReady : L.work}
+                              {phase === "prep"
+                                ? L.getReady
+                                : phase === "rest"
+                                  ? L.getReady
+                                  : L.work}
                             </span>
                             {phase === "prep" && (
                               <span className="font-display text-5xl font-bold tabular-nums text-white">
@@ -654,7 +779,6 @@ export function LiveWorkoutPlayer({
                       </div>
                     </div>
                   )}
-
                 </>
               ) : (
                 <div className="absolute inset-0 grid place-items-center text-white/60 text-sm">
@@ -662,7 +786,9 @@ export function LiveWorkoutPlayer({
                 </div>
               )}
               {/* Phase badge */}
-              <span className={`absolute left-3 bottom-3 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] ${phase === "rest" || phase === "prep" ? "bg-sky-400 text-onyx-950" : "bg-electric text-onyx-50"}`}>
+              <span
+                className={`absolute left-3 bottom-3 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] ${phase === "rest" || phase === "prep" ? "bg-sky-400 text-onyx-950" : "bg-electric text-onyx-50"}`}
+              >
                 {phase === "rest" ? L.rest : phase === "prep" ? L.getReady : L.work}
               </span>
             </div>
@@ -743,7 +869,12 @@ export function LiveWorkoutPlayer({
                   >
                     <div className="relative h-full w-full rounded-full bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.06),rgba(0,0,0,0.55)_70%)] ring-1 ring-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_20px_60px_-20px_rgba(0,180,255,0.45)]">
                       {(() => {
-                        const total = phase === "rest" ? step.restSeconds : phase === "prep" ? PREP_SECONDS : step.workSeconds;
+                        const total =
+                          phase === "rest"
+                            ? step.restSeconds
+                            : phase === "prep"
+                              ? PREP_SECONDS
+                              : step.workSeconds;
                         const pct = total > 0 ? Math.max(0, Math.min(1, remaining / total)) : 0;
                         const R = 92;
                         const C = 2 * Math.PI * R;
@@ -754,10 +885,19 @@ export function LiveWorkoutPlayer({
                         return (
                           <>
                             <svg className="absolute inset-0" viewBox="0 0 208 208">
-                              <circle cx="104" cy="104" r={R} stroke="rgba(255,255,255,0.08)" strokeWidth="8" fill="none" />
+                              <circle
+                                cx="104"
+                                cy="104"
+                                r={R}
+                                stroke="rgba(255,255,255,0.08)"
+                                strokeWidth="8"
+                                fill="none"
+                              />
                               <circle
                                 key={`${idx}-${phase}`}
-                                cx="104" cy="104" r={R}
+                                cx="104"
+                                cy="104"
+                                r={R}
                                 stroke={ringColor}
                                 strokeWidth="8"
                                 strokeLinecap="round"
@@ -765,7 +905,10 @@ export function LiveWorkoutPlayer({
                                 strokeDasharray={C}
                                 strokeDashoffset={C * (1 - elapsedPct)}
                                 transform="rotate(-90 104 104)"
-                                style={{ transition: `stroke-dashoffset ${transitionStyle}`, filter: "drop-shadow(0 0 10px rgba(56,189,248,0.75))" }}
+                                style={{
+                                  transition: `stroke-dashoffset ${transitionStyle}`,
+                                  filter: "drop-shadow(0 0 10px rgba(56,189,248,0.75))",
+                                }}
                               />
                             </svg>
 
@@ -797,11 +940,17 @@ export function LiveWorkoutPlayer({
                                       <p className="text-[10px] uppercase tracking-[0.24em] text-white/60 mt-1.5 font-semibold">
                                         {isAmrap ? L.amrapHint : L.reps}
                                       </p>
-                                      <span className="my-2 h-px w-10 bg-gradient-to-r from-transparent via-electric/60 to-transparent" aria-hidden="true" />
+                                      <span
+                                        className="my-2 h-px w-10 bg-gradient-to-r from-transparent via-electric/60 to-transparent"
+                                        aria-hidden="true"
+                                      />
                                       <p className="font-display text-xl font-bold tabular-nums text-sky-300">
-                                        {Math.floor(Math.max(0, remaining) / 60)}:{String(Math.max(0, remaining) % 60).padStart(2, "0")}
+                                        {Math.floor(Math.max(0, remaining) / 60)}:
+                                        {String(Math.max(0, remaining) % 60).padStart(2, "0")}
                                       </p>
-                                      <p className="text-[9px] uppercase tracking-[0.22em] text-white/45 mt-0.5">{L.target}</p>
+                                      <p className="text-[9px] uppercase tracking-[0.22em] text-white/45 mt-0.5">
+                                        {L.target}
+                                      </p>
                                     </div>
                                   );
                                 })()
@@ -813,7 +962,11 @@ export function LiveWorkoutPlayer({
                                       : `${Math.floor(Math.max(0, remaining) / 60)}:${String(Math.max(0, remaining) % 60).padStart(2, "0")}`}
                                   </p>
                                   <p className="text-[10px] uppercase tracking-[0.24em] text-white/55 mt-2">
-                                    {phase === "rest" ? L.rest : phase === "prep" ? L.getReady : L.work}
+                                    {phase === "rest"
+                                      ? L.rest
+                                      : phase === "prep"
+                                        ? L.getReady
+                                        : L.work}
                                   </p>
                                 </div>
                               )}
@@ -871,7 +1024,6 @@ export function LiveWorkoutPlayer({
                       <SkipForward className="h-7 w-7" fill="currentColor" />
                     </button>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -923,9 +1075,7 @@ function DoneView({
           <h2 className="mt-2 font-display text-2xl md:text-3xl font-bold text-white leading-tight">
             {title}
           </h2>
-          <p className="mt-3 text-sm text-white/75 leading-relaxed">
-            {L.doneBody}
-          </p>
+          <p className="mt-3 text-sm text-white/75 leading-relaxed">{L.doneBody}</p>
 
           <div className="mt-6 flex flex-col gap-2.5">
             <button
@@ -956,4 +1106,3 @@ function DoneView({
     </div>
   );
 }
-

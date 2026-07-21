@@ -2,7 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { CheckCircle2, Circle, ChevronDown, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { getLoggedTrainingToday, getProgress, markSingleTrainingDayComplete } from "@/lib/engagement";
+import {
+  getLoggedTrainingToday,
+  getProgress,
+  markSingleTrainingDayComplete,
+} from "@/lib/engagement";
 import { Progress } from "@/components/ui/progress";
 import { isProgramUnlocked } from "@/lib/nutritionAccess";
 import { toast } from "sonner";
@@ -31,7 +35,10 @@ export function ProgressTracker({
   }, [slug]);
 
   useEffect(() => {
-    if (!user) { setLoading(false); return; }
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     let a = true;
     Promise.all([getProgress(slug), getLoggedTrainingToday()])
       .then(([p, todayLog]) => {
@@ -39,19 +46,25 @@ export function ProgressTracker({
         setDone(p?.completed_days ?? []);
         setLoggedToday(Boolean(todayLog));
       })
-      .finally(() => { if (a) setLoading(false); });
-    return () => { a = false; };
+      .finally(() => {
+        if (a) setLoading(false);
+      });
+    return () => {
+      a = false;
+    };
   }, [user, slug]);
 
   const set = useMemo(() => new Set(done), [done]);
   const pct = dayKeys.length ? Math.round((set.size / dayKeys.length) * 100) : 0;
   const nextUnlockKey = useMemo(() => dayKeys.find((k) => !set.has(k)) ?? null, [dayKeys, set]);
 
-
   if (!user) {
     return (
       <div className="rounded-xl border border-border bg-onyx-100/50 p-4 text-sm text-muted-foreground">
-        <Link to="/auth" className="text-electric font-semibold hover:underline">Sign in</Link> to track your progress through this program.
+        <Link to="/auth" className="text-electric font-semibold hover:underline">
+          Sign in
+        </Link>{" "}
+        to track your progress through this program.
       </div>
     );
   }
@@ -70,7 +83,9 @@ export function ProgressTracker({
         className="w-full text-left p-5 flex items-center justify-between gap-3 hover:bg-electric/[0.06] transition-colors"
       >
         <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-semibold">Log your progress</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-semibold">
+            Log your progress
+          </p>
           <p className="mt-1 font-display text-xl font-bold truncate">
             {set.size} / {dayKeys.length} days · {pct}%
           </p>
@@ -79,10 +94,14 @@ export function ProgressTracker({
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-muted-foreground hidden sm:inline">{weekCount} week{weekCount > 1 ? "s" : ""}</span>
+          <span className="text-xs text-muted-foreground hidden sm:inline">
+            {weekCount} week{weekCount > 1 ? "s" : ""}
+          </span>
           <span className="inline-flex items-center gap-1 rounded-md border border-electric/40 bg-electric/10 px-2.5 py-1.5 text-xs font-semibold text-electric">
             {open ? "Hide" : "Log"}
-            <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+            />
           </span>
         </div>
       </button>
@@ -105,7 +124,11 @@ export function ProgressTracker({
                       key={k}
                       onClick={async () => {
                         if (accessLocked) {
-                          toast.error("Free preview ends after week " + freeWeeks + ". Unlock the full program to keep logging.");
+                          toast.error(
+                            "Free preview ends after week " +
+                              freeWeeks +
+                              ". Unlock the full program to keep logging.",
+                          );
                           return;
                         }
                         if (sequenceLocked) {
@@ -135,9 +158,21 @@ export function ProgressTracker({
                             ? "border-electric bg-electric/20 text-electric"
                             : "border-border bg-onyx-100 text-muted-foreground hover:border-electric/50"
                       }`}
-                      title={accessLocked ? "Unlock the full program to log this day" : sequenceLocked ? "Fullfør forrige dag først" : k}
+                      title={
+                        accessLocked
+                          ? "Unlock the full program to log this day"
+                          : sequenceLocked
+                            ? "Fullfør forrige dag først"
+                            : k
+                      }
                     >
-                      {locked ? <Lock className="h-3 w-3" /> : isDone ? <CheckCircle2 className="h-3 w-3" /> : <Circle className="h-3 w-3" />}
+                      {locked ? (
+                        <Lock className="h-3 w-3" />
+                      ) : isDone ? (
+                        <CheckCircle2 className="h-3 w-3" />
+                      ) : (
+                        <Circle className="h-3 w-3" />
+                      )}
                       {k.replace("w", "W").replace("-d", "·D")}
                     </button>
                   );

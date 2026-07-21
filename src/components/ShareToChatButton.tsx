@@ -3,7 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Share2, Send, Loader2, MessageCircle, Users, Check } from "lucide-react";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { listMyRooms, sendMessage, type ChatRoomSummary } from "@/lib/chat.functions";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,10 +35,7 @@ export function ShareToChatButton({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const base =
-    size === "sm"
-      ? "h-8 px-3 text-xs gap-1.5"
-      : "h-10 px-4 text-sm gap-2";
+  const base = size === "sm" ? "h-8 px-3 text-xs gap-1.5" : "h-10 px-4 text-sm gap-2";
   const style =
     variant === "solid"
       ? "bg-electric text-onyx-50 hover:bg-electric-glow"
@@ -108,17 +109,15 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
   });
 
   if (!user) {
-    return (
-      <div className="text-sm text-muted-foreground py-4">
-        Sign in to share to a chat.
-      </div>
-    );
+    return <div className="text-sm text-muted-foreground py-4">Sign in to share to a chat.</div>;
   }
   if (!hasAccess) {
     return (
       <div className="text-sm text-muted-foreground py-4">
         Chat sharing is included with Onyx Pro or All-Access.{" "}
-        <Link to="/app" className="text-electric underline">See options</Link>
+        <Link to="/app" className="text-electric underline">
+          See options
+        </Link>
       </div>
     );
   }
@@ -137,7 +136,9 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
           </div>
         )}
         <div className="min-w-0">
-          <div className="text-[11px] uppercase tracking-wide text-electric font-semibold">{kindLabel(target.kind)}</div>
+          <div className="text-[11px] uppercase tracking-wide text-electric font-semibold">
+            {kindLabel(target.kind)}
+          </div>
           <div className="font-semibold text-sm truncate">{target.title}</div>
           {target.subtitle && (
             <div className="text-xs text-muted-foreground truncate">{target.subtitle}</div>
@@ -163,7 +164,9 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
           <div className="p-6 text-center text-sm text-muted-foreground">
             <MessageCircle className="w-6 h-6 mx-auto mb-2 opacity-60" />
             You don't have any chats yet.{" "}
-            <Link to="/groups" className="text-electric underline">Start one</Link>
+            <Link to="/groups" className="text-electric underline">
+              Start one
+            </Link>
           </div>
         )}
         <ul className="divide-y divide-border/40">
@@ -197,13 +200,18 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
 }
 
 function RoomShareRow({
-  room, sent, busy, onSend,
+  room,
+  sent,
+  busy,
+  onSend,
 }: {
-  room: ChatRoomSummary; sent: boolean; busy: boolean; onSend: () => void;
+  room: ChatRoomSummary;
+  sent: boolean;
+  busy: boolean;
+  onSend: () => void;
 }) {
-  const title = room.kind === "dm"
-    ? (room.peer?.display_name || "Onyx athlete")
-    : (room.name || "Untitled group");
+  const title =
+    room.kind === "dm" ? room.peer?.display_name || "Onyx athlete" : room.name || "Untitled group";
   return (
     <li className="flex items-center gap-3 py-2.5">
       {room.avatar_url || room.peer?.avatar_url ? (
@@ -233,7 +241,13 @@ function RoomShareRow({
             : "bg-electric text-onyx-50 hover:bg-electric-glow disabled:opacity-60"
         }`}
       >
-        {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : sent ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+        {busy ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        ) : sent ? (
+          <Check className="w-3.5 h-3.5" />
+        ) : (
+          <Send className="w-3.5 h-3.5" />
+        )}
         {sent ? "Sent" : "Send"}
       </button>
     </li>
@@ -242,11 +256,17 @@ function RoomShareRow({
 
 function kindLabel(k: ShareTarget["kind"]): string {
   switch (k) {
-    case "exercise": return "Exercise";
-    case "program": return "Program";
-    case "recipe": return "Recipe";
-    case "meal-plan": return "Meal plan";
-    case "custom-program": return "My program";
-    default: return "Link";
+    case "exercise":
+      return "Exercise";
+    case "program":
+      return "Program";
+    case "recipe":
+      return "Recipe";
+    case "meal-plan":
+      return "Meal plan";
+    case "custom-program":
+      return "My program";
+    default:
+      return "Link";
   }
 }

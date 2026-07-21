@@ -21,7 +21,10 @@ export function StarRating({
           type="button"
           disabled={!interactive}
           onClick={() => onChange?.(n)}
-          className={cn(interactive && "cursor-pointer hover:scale-110 transition-transform", !interactive && "cursor-default")}
+          className={cn(
+            interactive && "cursor-pointer hover:scale-110 transition-transform",
+            !interactive && "cursor-default",
+          )}
           aria-label={`${n} star${n > 1 ? "s" : ""}`}
         >
           <Star

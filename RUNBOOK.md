@@ -77,13 +77,13 @@ npx cap open ios
 
 ## Other Commands
 
-| Command                 | What it does                   |
-| ----------------------- | ------------------------------ |
-| `npm run lint`          | Run ESLint                     |
-| `npm run format`        | Format with Prettier           |
+| Command                 | What it does                                       |
+| ----------------------- | -------------------------------------------------- |
+| `npm run lint`          | Run ESLint                                         |
+| `npm run format`        | Format with Prettier                               |
 | `npm run build:cap`     | Build + write placeholder index.html for Capacitor |
-| `npm run build:dev`     | Vite build in development mode |
-| `npm run i18n:generate` | Regenerate translation files   |
+| `npm run build:dev`     | Vite build in development mode                     |
+| `npm run i18n:generate` | Regenerate translation files                       |
 
 ## Environment Variables
 

@@ -1,7 +1,17 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Apple, CreditCard, Crown, ExternalLink, Loader2, RefreshCw, Shield, Sparkles, XCircle } from "lucide-react";
+import {
+  Apple,
+  CreditCard,
+  Crown,
+  ExternalLink,
+  Loader2,
+  RefreshCw,
+  Shield,
+  Sparkles,
+  XCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -35,7 +45,9 @@ function formatMoney(cents: number | null, currency: string | null) {
   if (cents == null) return "-";
   const cur = (currency || "USD").toUpperCase();
   try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
+    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(
+      cents / 100,
+    );
   } catch {
     return `${(cents / 100).toFixed(2)} ${cur}`;
   }
@@ -49,12 +61,18 @@ export function MembershipBillingCard() {
   const { user } = useAuth();
   const onIOS = isIOSNative();
   let env: "sandbox" | "live" | null = null;
-  try { env = getStripeEnvironment(); } catch { env = null; }
+  try {
+    env = getStripeEnvironment();
+  } catch {
+    env = null;
+  }
 
   // On iOS load subscription info from RevenueCat (local cache — no network call)
   useEffect(() => {
     if (!onIOS) return;
-    rcGetSubscriptionInfo().then(setRcInfo).catch(() => setRcInfo(null));
+    rcGetSubscriptionInfo()
+      .then(setRcInfo)
+      .catch(() => setRcInfo(null));
   }, [onIOS]);
 
   const { data: profile } = useQuery({
@@ -123,18 +141,28 @@ export function MembershipBillingCard() {
   const tier = membership?.tier ?? "none";
   const isMember = tier !== "none";
   const durationLabel =
-    tier === "lifetime" ? t("Lifetime access")
-    : tier === "yearly" ? t("1-year subscription")
-    : tier === "monthly" ? t("1-month subscription")
-    : t("No active subscription");
+    tier === "lifetime"
+      ? t("Lifetime access")
+      : tier === "yearly"
+        ? t("1-year subscription")
+        : tier === "monthly"
+          ? t("1-month subscription")
+          : t("No active subscription");
   const tierBadge =
-    tier === "lifetime" ? t("Lifetime")
-    : tier === "yearly" ? t("Yearly")
-    : tier === "monthly" ? t("Monthly")
-    : t("Free");
+    tier === "lifetime"
+      ? t("Lifetime")
+      : tier === "yearly"
+        ? t("Yearly")
+        : tier === "monthly"
+          ? t("Monthly")
+          : t("Free");
 
-  const hasActiveSubscription = !!membership?.stripeSubscriptionId && !membership.cancelAtPeriodEnd
-    && (membership.status === "active" || membership.status === "trialing" || membership.status === "past_due");
+  const hasActiveSubscription =
+    !!membership?.stripeSubscriptionId &&
+    !membership.cancelAtPeriodEnd &&
+    (membership.status === "active" ||
+      membership.status === "trialing" ||
+      membership.status === "past_due");
 
   // ── iOS Apple subscription panel ─────────────────────────────────────────
   if (onIOS) {
@@ -142,15 +170,21 @@ export function MembershipBillingCard() {
     const rcActive = rcInfo?.isActive === true;
     const rcTier = rcActive ? (rcInfo?.tier ?? null) : null;
     const rcTierBadge =
-      rcTier === "lifetime" ? t("Lifetime")
-      : rcTier === "yearly" ? t("Yearly")
-      : rcTier === "monthly" ? t("Monthly")
-      : t("Free");
+      rcTier === "lifetime"
+        ? t("Lifetime")
+        : rcTier === "yearly"
+          ? t("Yearly")
+          : rcTier === "monthly"
+            ? t("Monthly")
+            : t("Free");
     const rcDurationLabel =
-      rcTier === "lifetime" ? t("Lifetime access")
-      : rcTier === "yearly" ? t("1-year subscription")
-      : rcTier === "monthly" ? t("1-month subscription")
-      : t("No active subscription");
+      rcTier === "lifetime"
+        ? t("Lifetime access")
+        : rcTier === "yearly"
+          ? t("1-year subscription")
+          : rcTier === "monthly"
+            ? t("1-month subscription")
+            : t("No active subscription");
     const expiryDate = rcActive && rcInfo?.expirationDate ? new Date(rcInfo.expirationDate) : null;
 
     return (
@@ -166,29 +200,40 @@ export function MembershipBillingCard() {
             {t("Loading subscription info…")}
           </div>
         ) : (
-          <div className={`mt-4 rounded-lg border p-4 flex flex-wrap items-start justify-between gap-3 ${
-            rcActive ? "border-electric/40 bg-electric/5" : "border-border bg-onyx-50"
-          }`}>
+          <div
+            className={`mt-4 rounded-lg border p-4 flex flex-wrap items-start justify-between gap-3 ${
+              rcActive ? "border-electric/40 bg-electric/5" : "border-border bg-onyx-50"
+            }`}
+          >
             <div className="flex items-start gap-3">
-              <Crown className={`h-5 w-5 mt-0.5 ${rcActive ? "text-electric" : "text-muted-foreground"}`} />
+              <Crown
+                className={`h-5 w-5 mt-0.5 ${rcActive ? "text-electric" : "text-muted-foreground"}`}
+              />
               <div>
-                <div className={`text-[11px] uppercase tracking-widest font-bold ${
-                  rcActive ? "text-electric" : "text-muted-foreground"
-                }`}>
+                <div
+                  className={`text-[11px] uppercase tracking-widest font-bold ${
+                    rcActive ? "text-electric" : "text-muted-foreground"
+                  }`}
+                >
                   {rcActive ? t("Active") : t("Inactive")}
                 </div>
                 <div className="font-display text-lg font-bold leading-tight">{displayName}</div>
                 <div className="mt-1 flex flex-wrap items-center gap-2">
-                  <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold uppercase tracking-widest ${
-                    rcActive ? "bg-electric/20 text-electric" : "bg-onyx-200 text-muted-foreground"
-                  }`}>
+                  <span
+                    className={`rounded-md px-2 py-0.5 text-[11px] font-bold uppercase tracking-widest ${
+                      rcActive
+                        ? "bg-electric/20 text-electric"
+                        : "bg-onyx-200 text-muted-foreground"
+                    }`}
+                  >
                     {rcTierBadge}
                   </span>
                   <span className="text-sm text-foreground/85">{rcDurationLabel}</span>
                 </div>
                 {expiryDate && rcTier !== "lifetime" && (
                   <div className="text-xs text-muted-foreground mt-1">
-                    {rcInfo?.willRenew ? t("Renews on") : t("Expires on")} {expiryDate.toLocaleDateString()}
+                    {rcInfo?.willRenew ? t("Renews on") : t("Expires on")}{" "}
+                    {expiryDate.toLocaleDateString()}
                   </div>
                 )}
                 {rcTier === "lifetime" && (
@@ -217,7 +262,11 @@ export function MembershipBillingCard() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => rcGetSubscriptionInfo().then(setRcInfo).catch(() => setRcInfo(null))}
+                onClick={() =>
+                  rcGetSubscriptionInfo()
+                    .then(setRcInfo)
+                    .catch(() => setRcInfo(null))
+                }
                 className="gap-1 text-muted-foreground"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
@@ -228,7 +277,11 @@ export function MembershipBillingCard() {
 
         <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-border bg-onyx-50 p-4 text-xs text-muted-foreground">
           <Shield className="h-4 w-4 mt-0.5 text-electric shrink-0" />
-          <p>{t("Your subscription is managed by Apple. To cancel or change your plan, tap \"Manage in App Store\" above.")}</p>
+          <p>
+            {t(
+              'Your subscription is managed by Apple. To cancel or change your plan, tap "Manage in App Store" above.',
+            )}
+          </p>
         </div>
       </section>
     );
@@ -241,23 +294,32 @@ export function MembershipBillingCard() {
         <h2 className="font-display text-xl font-bold">{t("Membership & Billing")}</h2>
       </div>
 
-      <div className={`mt-4 rounded-lg border p-4 flex flex-wrap items-start justify-between gap-3 ${isMember ? "border-electric/40 bg-electric/5" : "border-border bg-onyx-50"}`}>
+      <div
+        className={`mt-4 rounded-lg border p-4 flex flex-wrap items-start justify-between gap-3 ${isMember ? "border-electric/40 bg-electric/5" : "border-border bg-onyx-50"}`}
+      >
         <div className="flex items-start gap-3">
-          <Crown className={`h-5 w-5 mt-0.5 ${isMember ? "text-electric" : "text-muted-foreground"}`} />
+          <Crown
+            className={`h-5 w-5 mt-0.5 ${isMember ? "text-electric" : "text-muted-foreground"}`}
+          />
           <div>
-            <div className={`text-[11px] uppercase tracking-widest font-bold ${isMember ? "text-electric" : "text-muted-foreground"}`}>
+            <div
+              className={`text-[11px] uppercase tracking-widest font-bold ${isMember ? "text-electric" : "text-muted-foreground"}`}
+            >
               {isMember ? t("Active") : t("Inactive")}
             </div>
             <div className="font-display text-lg font-bold leading-tight">{displayName}</div>
             <div className="mt-1 flex flex-wrap items-center gap-2">
-              <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold uppercase tracking-widest ${isMember ? "bg-electric/20 text-electric" : "bg-onyx-200 text-muted-foreground"}`}>
+              <span
+                className={`rounded-md px-2 py-0.5 text-[11px] font-bold uppercase tracking-widest ${isMember ? "bg-electric/20 text-electric" : "bg-onyx-200 text-muted-foreground"}`}
+              >
                 {tierBadge}
               </span>
               <span className="text-sm text-foreground/85">{durationLabel}</span>
             </div>
             {membership?.currentPeriodEnd && tier !== "lifetime" && tier !== "none" && (
               <div className="text-xs text-muted-foreground mt-1">
-                {membership.cancelAtPeriodEnd ? t("Ends") : t("Renews")} {t("on")} {new Date(membership.currentPeriodEnd).toLocaleDateString()}
+                {membership.cancelAtPeriodEnd ? t("Ends") : t("Renews")} {t("on")}{" "}
+                {new Date(membership.currentPeriodEnd).toLocaleDateString()}
               </div>
             )}
             {tier === "lifetime" && (
@@ -275,7 +337,11 @@ export function MembershipBillingCard() {
               disabled={openPortal.isPending}
               className="gap-1"
             >
-              {openPortal.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ExternalLink className="h-3.5 w-3.5" />}
+              {openPortal.isPending ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <ExternalLink className="h-3.5 w-3.5" />
+              )}
               {t("Manage billing")}
             </Button>
           )}
@@ -293,16 +359,23 @@ export function MembershipBillingCard() {
       </div>
 
       <div className="mt-6">
-        <div className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">{t("Payment history")}</div>
+        <div className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">
+          {t("Payment history")}
+        </div>
         {history.length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">{t("No payments yet.")}</p>
         ) : (
           <ul className="mt-2 divide-y divide-border rounded-md border border-border bg-onyx-50">
             {history.map((h) => (
-              <li key={h.id} className="flex flex-wrap items-center justify-between gap-3 px-3 py-2 text-sm">
+              <li
+                key={h.id}
+                className="flex flex-wrap items-center justify-between gap-3 px-3 py-2 text-sm"
+              >
                 <div>
                   <div className="font-semibold">{h.description}</div>
-                  <div className="text-xs text-muted-foreground">{new Date(h.date).toLocaleString()}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {new Date(h.date).toLocaleString()}
+                  </div>
                 </div>
                 <div className="font-mono text-sm">{formatMoney(h.amountCents, h.currency)}</div>
               </li>
@@ -317,15 +390,22 @@ export function MembershipBillingCard() {
             <AlertDialogTitle>{t("Cancel your Onyx subscription?")}</AlertDialogTitle>
             <AlertDialogDescription>
               {t("You'll keep full access until the end of your current billing period")}
-              {membership?.currentPeriodEnd ? ` (${new Date(membership.currentPeriodEnd).toLocaleDateString()})` : ""}.
-              {" "}{t("After that your membership will not renew.")}
+              {membership?.currentPeriodEnd
+                ? ` (${new Date(membership.currentPeriodEnd).toLocaleDateString()})`
+                : ""}
+              . {t("After that your membership will not renew.")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={cancel.isPending}>{t("Keep subscription")}</AlertDialogCancel>
+            <AlertDialogCancel disabled={cancel.isPending}>
+              {t("Keep subscription")}
+            </AlertDialogCancel>
             <AlertDialogAction
               disabled={cancel.isPending}
-              onClick={(e) => { e.preventDefault(); cancel.mutate(); }}
+              onClick={(e) => {
+                e.preventDefault();
+                cancel.mutate();
+              }}
               className="bg-red-500 hover:bg-red-600 text-white"
             >
               {cancel.isPending ? t("Cancelling…") : t("Yes, cancel")}

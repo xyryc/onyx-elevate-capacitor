@@ -7,7 +7,11 @@ export const Route = createFileRoute("/qa/glute-progression")({
     meta: [
       { title: "Internal QA · Glute Progression" },
       { name: "robots", content: "noindex, nofollow" },
-      { name: "description", content: "Internal QA: verifies every glute program's main-lift reps match the intended RPE wave and deload." },
+      {
+        name: "description",
+        content:
+          "Internal QA: verifies every glute program's main-lift reps match the intended RPE wave and deload.",
+      },
     ],
   }),
 });
@@ -18,24 +22,19 @@ function GluteProgressionQAPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-10 md:px-6 md:py-14">
-      <p className="text-[10px] uppercase tracking-[0.25em] text-electric font-bold">
-        Internal QA
-      </p>
+      <p className="text-[10px] uppercase tracking-[0.25em] text-electric font-bold">Internal QA</p>
       <h1 className="mt-1 font-display text-2xl md:text-3xl font-bold">
         Glute programs · RPE wave + deload check
       </h1>
       <p className="mt-3 text-sm text-muted-foreground max-w-2xl leading-relaxed">
-        Compares every main-lift reps string in each glute program against the
-        wave declared in <code className="text-electric">GluteProgressionTimeline</code>.
-        Flags missing weeks, missing RPE targets, missing DELOAD / 60% call-outs,
-        and missing wave-2 load bumps.
+        Compares every main-lift reps string in each glute program against the wave declared in{" "}
+        <code className="text-electric">GluteProgressionTimeline</code>. Flags missing weeks,
+        missing RPE targets, missing DELOAD / 60% call-outs, and missing wave-2 load bumps.
       </p>
 
       <div
         className={`mt-6 rounded-xl border px-5 py-4 ${
-          ok
-            ? "border-electric/40 bg-electric/10"
-            : "border-red-500/50 bg-red-500/10"
+          ok ? "border-electric/40 bg-electric/10" : "border-red-500/50 bg-red-500/10"
         }`}
       >
         <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">

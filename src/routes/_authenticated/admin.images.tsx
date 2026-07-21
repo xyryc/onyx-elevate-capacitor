@@ -32,7 +32,10 @@ function AdminImagesPage() {
   useEffect(() => {
     (async () => {
       const { data: u } = await supabase.auth.getUser();
-      if (!u.user) { setIsAdmin(false); return; }
+      if (!u.user) {
+        setIsAdmin(false);
+        return;
+      }
       const { data } = await supabase
         .from("user_roles")
         .select("role")
@@ -49,9 +52,11 @@ function AdminImagesPage() {
   }, []);
 
   async function saveSlot(slot: string, url: string) {
-    const { error } = await supabase
-      .from("image_overrides")
-      .upsert({ slot_key: slot, image_url: url, updated_by: (await supabase.auth.getUser()).data.user?.id });
+    const { error } = await supabase.from("image_overrides").upsert({
+      slot_key: slot,
+      image_url: url,
+      updated_by: (await supabase.auth.getUser()).data.user?.id,
+    });
     if (error) return toast.error(error.message);
     setOverrides((o) => ({ ...o, [slot]: url }));
     toast.success("Saved");
@@ -60,7 +65,11 @@ function AdminImagesPage() {
   async function clearSlot(slot: string) {
     const { error } = await supabase.from("image_overrides").delete().eq("slot_key", slot);
     if (error) return toast.error(error.message);
-    setOverrides((o) => { const n = { ...o }; delete n[slot]; return n; });
+    setOverrides((o) => {
+      const n = { ...o };
+      delete n[slot];
+      return n;
+    });
     toast.success("Reset to default");
   }
 
@@ -73,7 +82,9 @@ function AdminImagesPage() {
       contentType: file.type,
     });
     if (up.error) return toast.error(up.error.message);
-    const signed = await supabase.storage.from("site-images").createSignedUrl(path, 60 * 60 * 24 * 365 * 5);
+    const signed = await supabase.storage
+      .from("site-images")
+      .createSignedUrl(path, 60 * 60 * 24 * 365 * 5);
     if (signed.error || !signed.data) return toast.error(signed.error?.message || "Sign failed");
     await saveSlot(slot, signed.data.signedUrl);
   }
@@ -84,10 +95,14 @@ function AdminImagesPage() {
       <div className="container mx-auto max-w-2xl py-20 text-center space-y-4">
         <h1 className="text-2xl font-bold">Admin access required</h1>
         <p className="text-muted-foreground">
-          Your account needs the <code className="px-1 bg-muted rounded">admin</code> role. Add a row in the
-          <code className="px-1 bg-muted rounded">user_roles</code> table with your user id and role=admin.
+          Your account needs the <code className="px-1 bg-muted rounded">admin</code> role. Add a
+          row in the
+          <code className="px-1 bg-muted rounded">user_roles</code> table with your user id and
+          role=admin.
         </p>
-        <Link to="/" className="text-primary underline">Back home</Link>
+        <Link to="/" className="text-primary underline">
+          Back home
+        </Link>
       </div>
     );
   }
@@ -96,7 +111,9 @@ function AdminImagesPage() {
     <div className="container mx-auto max-w-6xl py-10 space-y-6">
       <div>
         <h1 className="text-3xl font-black tracking-tight">Image Manager</h1>
-        <p className="text-muted-foreground">Swap hero and card photos across the site. Upload a file or paste any image URL.</p>
+        <p className="text-muted-foreground">
+          Swap hero and card photos across the site. Upload a file or paste any image URL.
+        </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {SLOTS.map((slot) => (
@@ -115,14 +132,23 @@ function AdminImagesPage() {
 }
 
 function SlotCard({
-  slot, current, onSave, onClear, onUpload,
+  slot,
+  current,
+  onSave,
+  onClear,
+  onUpload,
 }: {
-  slot: Slot; current?: string;
-  onSave: (url: string) => void; onClear: () => void; onUpload: (f: File) => void;
+  slot: Slot;
+  current?: string;
+  onSave: (url: string) => void;
+  onClear: () => void;
+  onUpload: (f: File) => void;
 }) {
   const [url, setUrl] = useState(current ?? "");
   const preview = current || slot.fallback;
-  useEffect(() => { setUrl(current ?? ""); }, [current]);
+  useEffect(() => {
+    setUrl(current ?? "");
+  }, [current]);
   return (
     <Card className="p-4 space-y-3">
       <div className="flex items-center justify-between">
@@ -130,24 +156,40 @@ function SlotCard({
           <div className="font-semibold">{slot.label}</div>
           <code className="text-xs text-muted-foreground">{slot.key}</code>
         </div>
-        {current && <span className="text-xs px-2 py-0.5 rounded bg-primary/15 text-primary">Custom</span>}
+        {current && (
+          <span className="text-xs px-2 py-0.5 rounded bg-primary/15 text-primary">Custom</span>
+        )}
       </div>
-      <img src={preview} alt="" className="w-full aspect-video object-cover rounded-md border border-border" decoding="async" />
+      <img
+        src={preview}
+        alt=""
+        className="w-full aspect-video object-cover rounded-md border border-border"
+        decoding="async"
+      />
       <div className="flex gap-2">
         <Input
           placeholder="Paste image URL or upload below"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <Button onClick={() => onSave(url)} disabled={!url}>Save</Button>
+        <Button onClick={() => onSave(url)} disabled={!url}>
+          Save
+        </Button>
       </div>
       <div className="flex items-center gap-2">
         <Input
           type="file"
           accept="image/*"
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) onUpload(f); }}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) onUpload(f);
+          }}
         />
-        {current && <Button variant="ghost" onClick={onClear}>Reset</Button>}
+        {current && (
+          <Button variant="ghost" onClick={onClear}>
+            Reset
+          </Button>
+        )}
       </div>
     </Card>
   );

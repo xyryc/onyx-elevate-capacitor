@@ -8,10 +8,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/shared-program/$id")({
   component: SharedProgramPage,
   head: () => ({
-    meta: [
-      { title: "Shared program, Onyx Elevate" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "Shared program, Onyx Elevate" }, { name: "robots", content: "noindex" }],
   }),
 });
 
@@ -47,8 +44,12 @@ function SharedProgramPage() {
     return (
       <div className="container-onyx py-16 text-center space-y-3">
         <h1 className="font-display text-2xl font-bold">Program not found</h1>
-        <p className="text-sm text-muted-foreground">This link may have expired or the program was deleted.</p>
-        <Link to="/builder" className="inline-flex items-center gap-1.5 text-electric underline">Go to My Programs</Link>
+        <p className="text-sm text-muted-foreground">
+          This link may have expired or the program was deleted.
+        </p>
+        <Link to="/builder" className="inline-flex items-center gap-1.5 text-electric underline">
+          Go to My Programs
+        </Link>
       </div>
     );
   }
@@ -64,7 +65,9 @@ function SharedProgramPage() {
 
       <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <div className="text-xs uppercase tracking-wider text-electric font-semibold">Shared program</div>
+          <div className="text-xs uppercase tracking-wider text-electric font-semibold">
+            Shared program
+          </div>
           <h1 className="font-display text-3xl md:text-4xl font-bold mt-1">{program.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {program.weeks.length} week{program.weeks.length === 1 ? "" : "s"} ·{" "}
@@ -76,7 +79,11 @@ function SharedProgramPage() {
           disabled={cloneMut.isPending}
           className="inline-flex items-center gap-2 rounded-md bg-electric px-4 py-2.5 text-sm font-semibold text-onyx-50 hover:bg-electric-glow disabled:opacity-50"
         >
-          {cloneMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Copy className="h-4 w-4" />}
+          {cloneMut.isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Copy className="h-4 w-4" />
+          )}
           Save to my library
         </button>
       </div>
@@ -100,7 +107,9 @@ function SharedProgramPage() {
                           e.rpe && `RPE ${e.rpe}`,
                           e.rest && `${e.rest} rest`,
                           e.tempo && `tempo ${e.tempo}`,
-                        ].filter(Boolean).join(" · ");
+                        ]
+                          .filter(Boolean)
+                          .join(" · ");
                         return (
                           <li key={ei} className="py-2.5 first:pt-0 last:pb-0">
                             <Link
@@ -110,11 +119,18 @@ function SharedProgramPage() {
                               title="Watch demo video"
                             >
                               <span className="grid h-6 w-6 place-items-center rounded-full bg-electric/15 border border-electric/30 group-hover:bg-electric/30 transition-colors shrink-0">
-                                <svg className="h-3 w-3 text-electric translate-x-[1px]" viewBox="0 0 24 24" fill="currentColor">
+                                <svg
+                                  className="h-3 w-3 text-electric translate-x-[1px]"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                >
                                   <path d="M8 5v14l11-7z" />
                                 </svg>
                               </span>
-                              <span data-no-translate className="font-semibold text-sm underline-offset-4 group-hover:underline">
+                              <span
+                                data-no-translate
+                                className="font-semibold text-sm underline-offset-4 group-hover:underline"
+                              >
                                 {e.exerciseName}
                               </span>
                             </Link>
@@ -122,14 +138,15 @@ function SharedProgramPage() {
                               <div className="mt-1 pl-8 text-xs text-muted-foreground">{meta}</div>
                             )}
                             {e.notes && (
-                              <div className="mt-0.5 pl-8 text-xs text-muted-foreground italic">{e.notes}</div>
+                              <div className="mt-0.5 pl-8 text-xs text-muted-foreground italic">
+                                {e.notes}
+                              </div>
                             )}
                           </li>
                         );
                       })}
                     </ul>
                   )}
-
                 </div>
               ))}
             </div>

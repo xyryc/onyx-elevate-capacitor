@@ -7,7 +7,6 @@ import { toggleFavorite, type FavoriteType } from "@/lib/engagement";
 import { cn } from "@/lib/utils";
 import { useT } from "@/i18n/LanguageProvider";
 
-
 export function FavoriteButton({
   type,
   slug,
@@ -24,12 +23,16 @@ export function FavoriteButton({
   const [fav, setFav] = useState(false);
   const [busy, setBusy] = useState(false);
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const label = (key: string, fallback: string) => (mounted ? t(key) : fallback);
 
-
   useEffect(() => {
-    if (!user) { setFav(false); return; }
+    if (!user) {
+      setFav(false);
+      return;
+    }
     let active = true;
     supabase
       .from("favorites")
@@ -37,8 +40,12 @@ export function FavoriteButton({
       .eq("item_type", type)
       .eq("item_slug", slug)
       .maybeSingle()
-      .then(({ data }) => { if (active) setFav(!!data); });
-    return () => { active = false; };
+      .then(({ data }) => {
+        if (active) setFav(!!data);
+      });
+    return () => {
+      active = false;
+    };
   }, [user, type, slug]);
 
   if (!user) {
@@ -54,7 +61,6 @@ export function FavoriteButton({
         <Heart className={size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4"} />
         {label("favorite.save", "Save")}
       </Link>
-
     );
   }
 
@@ -64,9 +70,13 @@ export function FavoriteButton({
       disabled={busy}
       onClick={async () => {
         setBusy(true);
-        try { setFav(await toggleFavorite(type, slug, fav)); }
-        catch (e) { console.error(e); }
-        finally { setBusy(false); }
+        try {
+          setFav(await toggleFavorite(type, slug, fav));
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setBusy(false);
+        }
       }}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
@@ -79,7 +89,5 @@ export function FavoriteButton({
       <Heart className={cn(size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4", fav && "fill-current")} />
       {fav ? label("favorite.saved", "Saved") : label("favorite.save", "Save")}
     </button>
-
   );
 }
-

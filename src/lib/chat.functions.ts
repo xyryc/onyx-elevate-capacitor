@@ -57,7 +57,12 @@ async function requirePremium(supabase: any, userId: string): Promise<void> {
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(5),
-    supabase.from("purchases").select("product_kind").eq("user_id", userId).eq("product_kind", "bundle").limit(1),
+    supabase
+      .from("purchases")
+      .select("product_kind")
+      .eq("user_id", userId)
+      .eq("product_kind", "bundle")
+      .limit(1),
   ]);
   const now = new Date();
   const hasSub = (subRes.data ?? []).some((s: any) => {
@@ -101,12 +106,20 @@ export const listMyRooms = createServerFn({ method: "GET" })
       .in("room_id", roomIds);
     const allMembers = (allMembersRaw ?? []) as any[];
 
-    const otherUserIds = Array.from(new Set(allMembers.map((m) => m.user_id).filter((id) => id !== userId)));
+    const otherUserIds = Array.from(
+      new Set(allMembers.map((m) => m.user_id).filter((id) => id !== userId)),
+    );
     const { data: profs } = otherUserIds.length
-      ? await supabase.from("profiles").select("id, display_name, avatar_url").in("id", otherUserIds)
+      ? await supabase
+          .from("profiles")
+          .select("id, display_name, avatar_url")
+          .in("id", otherUserIds)
       : { data: [] as any[] };
     const profileById = new Map<string, { display_name: string | null; avatar_url: string | null }>(
-      (profs ?? []).map((p: any) => [p.id, { display_name: p.display_name, avatar_url: p.avatar_url }]),
+      (profs ?? []).map((p: any) => [
+        p.id,
+        { display_name: p.display_name, avatar_url: p.avatar_url },
+      ]),
     );
 
     // Latest message per room (fetch last N and pick per room).
@@ -141,13 +154,11 @@ export const listMyRooms = createServerFn({ method: "GET" })
       rooms.map(async (r): Promise<ChatRoomSummary> => {
         const roomMembers = allMembers.filter((m) => m.room_id === r.room_id);
         const last = lastByRoom.get(r.room_id);
-        const peerMember = r.chat_rooms.kind === "dm"
-          ? roomMembers.find((m) => m.user_id !== userId)
-          : null;
+        const peerMember =
+          r.chat_rooms.kind === "dm" ? roomMembers.find((m) => m.user_id !== userId) : null;
         const peerProfile = peerMember ? profileById.get(peerMember.user_id) : null;
-        const groupAvatar = r.chat_rooms.kind === "group"
-          ? await signImage(supabase, r.chat_rooms.avatar_url)
-          : null;
+        const groupAvatar =
+          r.chat_rooms.kind === "group" ? await signImage(supabase, r.chat_rooms.avatar_url) : null;
         return {
           id: r.chat_rooms.id,
           kind: r.chat_rooms.kind,
@@ -180,50 +191,60 @@ export const listMyRooms = createServerFn({ method: "GET" })
       const bt = b.last_message?.created_at ?? b.updated_at;
       return bt.localeCompare(at);
     });
-
   });
 
 export const getRoom = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { roomId: string }) => d)
-  .handler(async ({ data, context }): Promise<{
-    room: { id: string; kind: ChatRoomKind; name: string | null; avatar_url: string | null; created_by: string };
-    members: ChatMember[];
-    my_role: "owner" | "member";
-  } | null> => {
-    const { supabase, userId } = context;
-    const { data: room, error: rErr } = await supabase
-      .from("chat_rooms")
-      .select("id, kind, name, avatar_url, created_by")
-      .eq("id", data.roomId)
-      .maybeSingle();
-    if (rErr) throw rErr;
-    if (!room) return null;
-    const { data: members, error: mErr } = await supabase
-      .from("chat_members")
-      .select("user_id, role, last_read_at")
-      .eq("room_id", data.roomId);
-    if (mErr) throw mErr;
-    const ids = (members ?? []).map((m: any) => m.user_id);
-    const { data: profs } = ids.length
-      ? await supabase.from("profiles").select("id, display_name, avatar_url").in("id", ids)
-      : { data: [] as any[] };
-    const pmap = new Map<string, any>((profs ?? []).map((p: any) => [p.id, p]));
-    const mine = (members ?? []).find((m: any) => m.user_id === userId);
-    const signedAvatar = room.kind === "group" ? await signImage(supabase, room.avatar_url) : null;
-    return {
-      room: { ...room, avatar_url: signedAvatar } as any,
-      members: (members ?? []).map((m: any) => ({
-        user_id: m.user_id,
-        role: m.role,
-        display_name: pmap.get(m.user_id)?.display_name ?? null,
-        avatar_url: pmap.get(m.user_id)?.avatar_url ?? null,
-        last_read_at: m.last_read_at,
-      })),
-      my_role: (mine?.role ?? "member") as "owner" | "member",
-    };
-  });
-
+  .handler(
+    async ({
+      data,
+      context,
+    }): Promise<{
+      room: {
+        id: string;
+        kind: ChatRoomKind;
+        name: string | null;
+        avatar_url: string | null;
+        created_by: string;
+      };
+      members: ChatMember[];
+      my_role: "owner" | "member";
+    } | null> => {
+      const { supabase, userId } = context;
+      const { data: room, error: rErr } = await supabase
+        .from("chat_rooms")
+        .select("id, kind, name, avatar_url, created_by")
+        .eq("id", data.roomId)
+        .maybeSingle();
+      if (rErr) throw rErr;
+      if (!room) return null;
+      const { data: members, error: mErr } = await supabase
+        .from("chat_members")
+        .select("user_id, role, last_read_at")
+        .eq("room_id", data.roomId);
+      if (mErr) throw mErr;
+      const ids = (members ?? []).map((m: any) => m.user_id);
+      const { data: profs } = ids.length
+        ? await supabase.from("profiles").select("id, display_name, avatar_url").in("id", ids)
+        : { data: [] as any[] };
+      const pmap = new Map<string, any>((profs ?? []).map((p: any) => [p.id, p]));
+      const mine = (members ?? []).find((m: any) => m.user_id === userId);
+      const signedAvatar =
+        room.kind === "group" ? await signImage(supabase, room.avatar_url) : null;
+      return {
+        room: { ...room, avatar_url: signedAvatar } as any,
+        members: (members ?? []).map((m: any) => ({
+          user_id: m.user_id,
+          role: m.role,
+          display_name: pmap.get(m.user_id)?.display_name ?? null,
+          avatar_url: pmap.get(m.user_id)?.avatar_url ?? null,
+          last_read_at: m.last_read_at,
+        })),
+        my_role: (mine?.role ?? "member") as "owner" | "member",
+      };
+    },
+  );
 
 // ---------- Messages ----------
 export const getMessages = createServerFn({ method: "GET" })
@@ -234,7 +255,9 @@ export const getMessages = createServerFn({ method: "GET" })
     const limit = Math.min(200, Math.max(1, data.limit ?? 80));
     const { data: msgs, error } = await supabase
       .from("chat_messages")
-      .select("id, room_id, sender_id, body, image_path, attachment, created_at, edited_at, deleted_at")
+      .select(
+        "id, room_id, sender_id, body, image_path, attachment, created_at, edited_at, deleted_at",
+      )
       .eq("room_id", data.roomId)
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -244,12 +267,16 @@ export const getMessages = createServerFn({ method: "GET" })
 
     const senderIds = Array.from(new Set(rows.map((r: any) => r.sender_id)));
     const { data: profs } = await supabase
-      .from("profiles").select("id, display_name, avatar_url").in("id", senderIds);
+      .from("profiles")
+      .select("id, display_name, avatar_url")
+      .in("id", senderIds);
     const pmap = new Map<string, any>((profs ?? []).map((p: any) => [p.id, p]));
 
     const msgIds = rows.map((r: any) => r.id);
     const { data: reacts } = await supabase
-      .from("chat_reactions").select("message_id, user_id, emoji").in("message_id", msgIds);
+      .from("chat_reactions")
+      .select("message_id, user_id, emoji")
+      .in("message_id", msgIds);
     const reactsByMsg = new Map<string, Array<{ emoji: string; user_id: string }>>();
     for (const r of reacts ?? []) {
       const arr = reactsByMsg.get(r.message_id) ?? [];
@@ -258,9 +285,7 @@ export const getMessages = createServerFn({ method: "GET" })
     }
 
     // Sign images (parallel).
-    const signed = await Promise.all(
-      rows.map((r: any) => signImage(supabase, r.image_path)),
-    );
+    const signed = await Promise.all(rows.map((r: any) => signImage(supabase, r.image_path)));
 
     return rows.map((r: any, i: number): ChatMessage => {
       const grouped = new Map<string, string[]>();
@@ -304,7 +329,10 @@ export const sendMessage = createServerFn({ method: "POST" })
       .single();
     if (error) throw error;
     // Bump room updated_at
-    await supabase.from("chat_rooms").update({ updated_at: new Date().toISOString() }).eq("id", data.roomId);
+    await supabase
+      .from("chat_rooms")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", data.roomId);
     return { id: row.id };
   });
 
@@ -315,7 +343,12 @@ export const deleteMessage = createServerFn({ method: "POST" })
     const { supabase } = context;
     const { error } = await supabase
       .from("chat_messages")
-      .update({ deleted_at: new Date().toISOString(), body: null, image_path: null, attachment: null })
+      .update({
+        deleted_at: new Date().toISOString(),
+        body: null,
+        image_path: null,
+        attachment: null,
+      })
       .eq("id", data.messageId);
     if (error) throw error;
     return { ok: true };
@@ -387,7 +420,9 @@ async function resolveUserByIdentifier(supabase: any, identifier: string): Promi
     }
     // Fallback: list users and filter (small projects only)
     const { data: list } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
-    const found = list?.users?.find((u: any) => (u.email ?? "").toLowerCase() === cleaned.toLowerCase());
+    const found = list?.users?.find(
+      (u: any) => (u.email ?? "").toLowerCase() === cleaned.toLowerCase(),
+    );
     if (found) return found.id;
   }
   return null;
@@ -513,7 +548,9 @@ export const inviteToRoom = createServerFn({ method: "POST" })
     ]);
     const hasSub = Boolean(liveCheck.data) || Boolean(sandboxCheck.data);
     if (!hasSub) {
-      throw new Error("This person needs an active subscription before they can be added to a group.");
+      throw new Error(
+        "This person needs an active subscription before they can be added to a group.",
+      );
     }
 
     const { error } = await supabaseAdmin
@@ -521,7 +558,10 @@ export const inviteToRoom = createServerFn({ method: "POST" })
       .insert({ room_id: data.roomId, user_id: otherId, role: "member" });
     if (error) throw new Error(error.message);
     const { data: prof } = await supabase
-      .from("profiles").select("display_name").eq("id", otherId).maybeSingle();
+      .from("profiles")
+      .select("display_name")
+      .eq("id", otherId)
+      .maybeSingle();
     return { user_id: otherId, display_name: prof?.display_name ?? null };
   });
 
@@ -533,10 +573,18 @@ export const removeMember = createServerFn({ method: "POST" })
     if (data.userId !== userId) {
       // owner-only path
       const { data: mine } = await supabase
-        .from("chat_members").select("role").eq("room_id", data.roomId).eq("user_id", userId).maybeSingle();
+        .from("chat_members")
+        .select("role")
+        .eq("room_id", data.roomId)
+        .eq("user_id", userId)
+        .maybeSingle();
       if (!mine || mine.role !== "owner") throw new Error("Only the owner can remove members");
     }
-    await supabase.from("chat_members").delete().eq("room_id", data.roomId).eq("user_id", data.userId);
+    await supabase
+      .from("chat_members")
+      .delete()
+      .eq("room_id", data.roomId)
+      .eq("user_id", data.userId);
     return { ok: true };
   });
 
@@ -568,17 +616,25 @@ export const setRoomAvatar = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<{ ok: true; url: string | null }> => {
     const { supabase, userId } = context;
     const { data: mem } = await supabase
-      .from("chat_members").select("role").eq("room_id", data.roomId).eq("user_id", userId).maybeSingle();
+      .from("chat_members")
+      .select("role")
+      .eq("room_id", data.roomId)
+      .eq("user_id", userId)
+      .maybeSingle();
     if (!mem) throw new Error("Not a member of this chat");
     const { data: room } = await supabase
-      .from("chat_rooms").select("kind").eq("id", data.roomId).maybeSingle();
+      .from("chat_rooms")
+      .select("kind")
+      .eq("id", data.roomId)
+      .maybeSingle();
     if (!room || room.kind !== "group") throw new Error("Only group chats have a photo");
-    const { error } = await supabase.from("chat_rooms").update({ avatar_url: data.path }).eq("id", data.roomId);
+    const { error } = await supabase
+      .from("chat_rooms")
+      .update({ avatar_url: data.path })
+      .eq("id", data.roomId);
     if (error) throw error;
     return { ok: true, url: await signImage(supabase, data.path) };
   });
-
-
 
 // ---------- Signed-URL helper for client-side avatar/image loads ----------
 export const signChatImage = createServerFn({ method: "POST" })

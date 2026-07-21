@@ -5,7 +5,10 @@ export const Route = createFileRoute("/refund")({
   head: () => ({
     meta: [
       { title: "Refund Policy - Onyx Elevate" },
-      { name: "description", content: "Our 30-day money-back guarantee for Onyx Elevate purchases." },
+      {
+        name: "description",
+        content: "Our 30-day money-back guarantee for Onyx Elevate purchases.",
+      },
     ],
   }),
   component: RefundPage,
@@ -15,7 +18,9 @@ function RefundPage() {
   const t = useT();
   return (
     <section className="container-onyx py-16 max-w-3xl">
-      <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("legal.eyebrow")}</p>
+      <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+        {t("legal.eyebrow")}
+      </p>
       <h1 className="mt-3 font-display text-4xl md:text-5xl font-bold">{t("refund.title")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{t("legal.lastUpdated")}</p>
 

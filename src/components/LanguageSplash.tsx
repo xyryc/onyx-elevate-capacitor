@@ -7,6 +7,7 @@ import type { Lang } from "@/i18n/translations";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { updateMyProfile } from "@/lib/purchases.functions";
+import { hasSavedSession } from "@/lib/capacitor-storage";
 
 type SplashStrings = {
   flag: string;
@@ -41,76 +42,128 @@ type SplashStrings = {
 
 const STRINGS: Record<Lang, SplashStrings> = {
   en: {
-    flag: "🇺🇸", native: "English", name: "English",
+    flag: "🇺🇸",
+    native: "English",
+    name: "English",
     tagline: "Train hard. Train smart.",
     chooseLabel: "Choose your language",
-    headlineLead: "Train in your", headlineAccent: "language",
+    headlineLead: "Train in your",
+    headlineAccent: "language",
     sub: "Pick a language, then sign in. Everything translates instantly.",
-    welcome: "Welcome to Onyx", welcomeSub: "Sign in to sync your training, or continue as a guest.",
-    signIn: "Sign In", signUp: "Sign Up", createAccount: "Create Account",
-    email: "you@email.com", password: "Password", yourName: "Your name",
-    continueGoogle: "Continue with Google", continueApple: "Continue with Apple",
+    welcome: "Welcome to Onyx",
+    welcomeSub: "Sign in to sync your training, or continue as a guest.",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    createAccount: "Create Account",
+    email: "you@email.com",
+    password: "Password",
+    yourName: "Your name",
+    continueGoogle: "Continue with Google",
+    continueApple: "Continue with Apple",
     or: "OR",
-    newHere: "New to Onyx?", haveAccount: "Already have an account?",
-    signInLink: "Sign in", signUpLink: "Create one",
-    forgotPw: "Forgot password?", pleaseWait: "Please wait…",
+    newHere: "New to Onyx?",
+    haveAccount: "Already have an account?",
+    signInLink: "Sign in",
+    signUpLink: "Create one",
+    forgotPw: "Forgot password?",
+    pleaseWait: "Please wait…",
     continueGuest: "Continue as guest",
     switchHint: "Change language anytime from your profile settings",
-    verifyEmail: (email) => `Check your email at ${email}. Open the verification link, then come back and sign in.`,
+    verifyEmail: (email) =>
+      `Check your email at ${email}. Open the verification link, then come back and sign in.`,
   },
   "pt-BR": {
-    flag: "🇧🇷", native: "Português", name: "Portuguese (Brazil)",
+    flag: "🇧🇷",
+    native: "Português",
+    name: "Portuguese (Brazil)",
     tagline: "Treine forte. Treine inteligente.",
     chooseLabel: "Escolha seu idioma",
-    headlineLead: "Treine no seu", headlineAccent: "idioma",
+    headlineLead: "Treine no seu",
+    headlineAccent: "idioma",
     sub: "Escolha um idioma e faça login. Tudo é traduzido na hora.",
-    welcome: "Bem-vindo à Onyx", welcomeSub: "Entre para sincronizar seu treino, ou continue como visitante.",
-    signIn: "Entrar", signUp: "Cadastrar", createAccount: "Criar Conta",
-    email: "voce@email.com", password: "Senha", yourName: "Seu nome",
-    continueGoogle: "Continuar com Google", continueApple: "Continuar com Apple",
+    welcome: "Bem-vindo à Onyx",
+    welcomeSub: "Entre para sincronizar seu treino, ou continue como visitante.",
+    signIn: "Entrar",
+    signUp: "Cadastrar",
+    createAccount: "Criar Conta",
+    email: "voce@email.com",
+    password: "Senha",
+    yourName: "Seu nome",
+    continueGoogle: "Continuar com Google",
+    continueApple: "Continuar com Apple",
     or: "OU",
-    newHere: "Novo na Onyx?", haveAccount: "Já tem uma conta?",
-    signInLink: "Entrar", signUpLink: "Criar conta",
-    forgotPw: "Esqueceu a senha?", pleaseWait: "Aguarde…",
+    newHere: "Novo na Onyx?",
+    haveAccount: "Já tem uma conta?",
+    signInLink: "Entrar",
+    signUpLink: "Criar conta",
+    forgotPw: "Esqueceu a senha?",
+    pleaseWait: "Aguarde…",
     continueGuest: "Continuar como visitante",
     switchHint: "Altere o idioma a qualquer momento nas configurações do perfil",
-    verifyEmail: (email) => `Verifique seu email em ${email}. Abra o link de verificação, depois volte e entre.`,
+    verifyEmail: (email) =>
+      `Verifique seu email em ${email}. Abra o link de verificação, depois volte e entre.`,
   },
   es: {
-    flag: "🇪🇸", native: "Español", name: "Spanish",
+    flag: "🇪🇸",
+    native: "Español",
+    name: "Spanish",
     tagline: "Entrena fuerte. Entrena inteligente.",
     chooseLabel: "Elige tu idioma",
-    headlineLead: "Entrena en tu", headlineAccent: "idioma",
+    headlineLead: "Entrena en tu",
+    headlineAccent: "idioma",
     sub: "Elige un idioma y accede. Todo se traduce al instante.",
-    welcome: "Bienvenido a Onyx", welcomeSub: "Inicia sesión para sincronizar tu entrenamiento, o continúa como invitado.",
-    signIn: "Iniciar Sesión", signUp: "Registrarse", createAccount: "Crear Cuenta",
-    email: "tu@email.com", password: "Contraseña", yourName: "Tu nombre",
-    continueGoogle: "Continuar con Google", continueApple: "Continuar con Apple",
+    welcome: "Bienvenido a Onyx",
+    welcomeSub: "Inicia sesión para sincronizar tu entrenamiento, o continúa como invitado.",
+    signIn: "Iniciar Sesión",
+    signUp: "Registrarse",
+    createAccount: "Crear Cuenta",
+    email: "tu@email.com",
+    password: "Contraseña",
+    yourName: "Tu nombre",
+    continueGoogle: "Continuar con Google",
+    continueApple: "Continuar con Apple",
     or: "O",
-    newHere: "¿Nuevo en Onyx?", haveAccount: "¿Ya tienes una cuenta?",
-    signInLink: "Iniciar sesión", signUpLink: "Crear una",
-    forgotPw: "¿Olvidaste tu contraseña?", pleaseWait: "Por favor espera…",
+    newHere: "¿Nuevo en Onyx?",
+    haveAccount: "¿Ya tienes una cuenta?",
+    signInLink: "Iniciar sesión",
+    signUpLink: "Crear una",
+    forgotPw: "¿Olvidaste tu contraseña?",
+    pleaseWait: "Por favor espera…",
     continueGuest: "Continuar como invitado",
     switchHint: "Cambia el idioma cuando quieras en la configuración del perfil",
-    verifyEmail: (email) => `Revisa tu correo en ${email}. Abre el enlace de verificación, luego vuelve e inicia sesión.`,
+    verifyEmail: (email) =>
+      `Revisa tu correo en ${email}. Abre el enlace de verificación, luego vuelve e inicia sesión.`,
   },
   no: {
-    flag: "🇳🇴", native: "Norsk", name: "Norwegian",
+    flag: "🇳🇴",
+    native: "Norsk",
+    name: "Norwegian",
     tagline: "Tren hardt. Tren smart.",
     chooseLabel: "Velg språk",
-    headlineLead: "Tren på ditt", headlineAccent: "språk",
+    headlineLead: "Tren på ditt",
+    headlineAccent: "språk",
     sub: "Velg et språk og logg inn. Alt oversettes umiddelbart.",
-    welcome: "Velkommen til Onyx", welcomeSub: "Logg inn for å synkronisere treningen, eller fortsett som gjest.",
-    signIn: "Logg Inn", signUp: "Registrer", createAccount: "Opprett Konto",
-    email: "du@epost.no", password: "Passord", yourName: "Navnet ditt",
-    continueGoogle: "Fortsett med Google", continueApple: "Fortsett med Apple",
+    welcome: "Velkommen til Onyx",
+    welcomeSub: "Logg inn for å synkronisere treningen, eller fortsett som gjest.",
+    signIn: "Logg Inn",
+    signUp: "Registrer",
+    createAccount: "Opprett Konto",
+    email: "du@epost.no",
+    password: "Passord",
+    yourName: "Navnet ditt",
+    continueGoogle: "Fortsett med Google",
+    continueApple: "Fortsett med Apple",
     or: "ELLER",
-    newHere: "Ny på Onyx?", haveAccount: "Har du allerede en konto?",
-    signInLink: "Logg inn", signUpLink: "Opprett en",
-    forgotPw: "Glemt passord?", pleaseWait: "Vennligst vent…",
+    newHere: "Ny på Onyx?",
+    haveAccount: "Har du allerede en konto?",
+    signInLink: "Logg inn",
+    signUpLink: "Opprett en",
+    forgotPw: "Glemt passord?",
+    pleaseWait: "Vennligst vent…",
     continueGuest: "Fortsett som gjest",
     switchHint: "Bytt språk når som helst i profilinnstillingene",
-    verifyEmail: (email) => `Sjekk e-posten din på ${email}. Åpne bekreftelseslenken, kom tilbake og logg inn.`,
+    verifyEmail: (email) =>
+      `Sjekk e-posten din på ${email}. Åpne bekreftelseslenken, kom tilbake og logg inn.`,
   },
 };
 
@@ -133,7 +186,43 @@ function authEmailRedirectTo() {
 
 function hasDismissedSplash() {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(SPLASH_DONE_KEY) === "1" || window.localStorage.getItem(LEGACY_SPLASH_DONE_KEY) === "1";
+  return (
+    window.localStorage.getItem(SPLASH_DONE_KEY) === "1" ||
+    window.localStorage.getItem(LEGACY_SPLASH_DONE_KEY) === "1"
+  );
+}
+
+async function hasDismissedSplashNative(): Promise<boolean> {
+  // On native iOS, localStorage is wiped on restart. Check native preferences.
+  if (typeof window === "undefined") return false;
+  if (hasDismissedSplash()) return true;
+  try {
+    const { Preferences } = await import("@capacitor/preferences");
+    const { value } = await Preferences.get({ key: SPLASH_DONE_KEY });
+    if (value === "1") {
+      // Restore to localStorage for future sync checks
+      window.localStorage.setItem(SPLASH_DONE_KEY, "1");
+      window.localStorage.setItem(LEGACY_SPLASH_DONE_KEY, "1");
+      return true;
+    }
+  } catch {}
+  return false;
+}
+
+async function getStoredLangNative(): Promise<string | null> {
+  // Read lang from localStorage first, fall back to native preferences.
+  const local = typeof window !== "undefined" ? window.localStorage.getItem(LANG_KEY) : null;
+  if (local) return local;
+  try {
+    const { Preferences } = await import("@capacitor/preferences");
+    const { value } = await Preferences.get({ key: LANG_KEY });
+    if (value) {
+      // Restore to localStorage
+      if (typeof window !== "undefined") window.localStorage.setItem(LANG_KEY, value);
+      return value;
+    }
+  } catch {}
+  return null;
 }
 
 function markSplashDismissed() {
@@ -142,16 +231,28 @@ function markSplashDismissed() {
     window.localStorage.setItem(SPLASH_DONE_KEY, "1");
     window.localStorage.setItem(LEGACY_SPLASH_DONE_KEY, "1");
   } catch {}
+  // Also persist to native preferences so it survives iOS localStorage wipes
+  import("@capacitor/preferences")
+    .then(({ Preferences }) => {
+      void Preferences.set({ key: SPLASH_DONE_KEY, value: "1" });
+    })
+    .catch(() => {});
 }
 
 function clearForcedLoginSplash() {
   if (typeof window === "undefined") return;
-  try { window.sessionStorage.removeItem(FORCED_LOGIN_SPLASH_KEY); } catch {}
+  try {
+    window.sessionStorage.removeItem(FORCED_LOGIN_SPLASH_KEY);
+  } catch {}
 }
 
 function isForcedLoginSplashOpen() {
   if (typeof window === "undefined") return false;
-  try { return window.sessionStorage.getItem(FORCED_LOGIN_SPLASH_KEY) === "1"; } catch { return false; }
+  try {
+    return window.sessionStorage.getItem(FORCED_LOGIN_SPLASH_KEY) === "1";
+  } catch {
+    return false;
+  }
 }
 
 export function LanguageSplash() {
@@ -167,7 +268,11 @@ export function LanguageSplash() {
   // auth form
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState(() => {
-    try { return localStorage.getItem(SAVED_EMAIL_KEY) ?? ""; } catch { return ""; }
+    try {
+      return localStorage.getItem(SAVED_EMAIL_KEY) ?? "";
+    } catch {
+      return "";
+    }
   });
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -189,7 +294,9 @@ export function LanguageSplash() {
     // Listen for manual opens (e.g. Login tab in bottom bar)
     const onOpen = () => {
       forcedOpenRef.current = true;
-      try { window.sessionStorage.setItem(FORCED_LOGIN_SPLASH_KEY, "1"); } catch {}
+      try {
+        window.sessionStorage.setItem(FORCED_LOGIN_SPLASH_KEY, "1");
+      } catch {}
       setFading(false);
       setMode("signin");
       setError(null);
@@ -199,13 +306,13 @@ export function LanguageSplash() {
     window.addEventListener("onyx:open-login-splash", onOpen);
 
     (async () => {
+      await hasSavedSession().catch(() => false);
       const { data } = await supabase.auth.getSession();
       if (cancelled) return;
-      const dismissed = hasDismissedSplash();
+      // Read dismissed + lang from native preferences (survives iOS localStorage wipes)
+      const dismissed = await hasDismissedSplashNative();
       const forcedOpen = isForcedLoginSplashOpen();
-      const localStored = typeof window !== "undefined"
-        ? (window.localStorage.getItem(LANG_KEY) as Lang | null)
-        : null;
+      const localStored = (await getStoredLangNative()) as Lang | null;
 
       if (!data.session) {
         // Guest: a manual login open must stay open until the user explicitly
@@ -216,8 +323,18 @@ export function LanguageSplash() {
       setSignedIn(true);
       clearForcedLoginSplash();
 
-      if (dismissed && localStored && STRINGS[localStored]) {
+      // User is signed in — always hide the splash regardless of dismissed flag.
+      // On iOS, localStorage is wiped on restart so dismissed may be false even
+      // for existing users. We never want to show the login screen to someone
+      // who already has a valid session.
+      if (localStored && STRINGS[localStored]) {
         if (localStored !== lang) setLang(localStored);
+        await markSplashDismissed();
+        setShow(false);
+        return;
+      }
+
+      if (dismissed) {
         setShow(false);
         return;
       }
@@ -233,7 +350,15 @@ export function LanguageSplash() {
         }
         window.localStorage.removeItem("onyx.pending.lang");
         if (target) {
-          try { window.localStorage.setItem(LANG_KEY, target); } catch {}
+          try {
+            window.localStorage.setItem(LANG_KEY, target);
+          } catch {}
+          // Also persist to native preferences
+          import("@capacitor/preferences")
+            .then(({ Preferences }) => {
+              void Preferences.set({ key: LANG_KEY, value: target });
+            })
+            .catch(() => {});
           if (target !== lang) setLang(target);
           markSplashDismissed();
           setShow(false);
@@ -313,7 +438,15 @@ export function LanguageSplash() {
   }
 
   const handlePickLang = (code: Lang) => {
-    try { window.localStorage.setItem(LANG_KEY, code); } catch {}
+    try {
+      window.localStorage.setItem(LANG_KEY, code);
+    } catch {}
+    // Also persist to native preferences so lang survives iOS restart
+    import("@capacitor/preferences")
+      .then(({ Preferences }) => {
+        void Preferences.set({ key: LANG_KEY, value: code });
+      })
+      .catch(() => {});
     setLang(code);
     setFading(false);
     setShow(true);
@@ -338,11 +471,13 @@ export function LanguageSplash() {
           ? user.user_metadata.full_name
           : typeof user.user_metadata?.name === "string"
             ? user.user_metadata.name
-            : user.email?.split("@")[0] ?? null;
-      const { error } = await supabase.from("profiles").upsert(
-        { id: user.id, display_name: displayName, preferred_language: code },
-        { onConflict: "id" },
-      );
+            : (user.email?.split("@")[0] ?? null);
+      const { error } = await supabase
+        .from("profiles")
+        .upsert(
+          { id: user.id, display_name: displayName, preferred_language: code },
+          { onConflict: "id" },
+        );
       if (error) throw error;
       return true;
     } catch {
@@ -353,12 +488,15 @@ export function LanguageSplash() {
   async function handleEmail(e: FormEvent) {
     e.preventDefault();
     dbg(`handleEmail mode=${mode} email=${email} password=${password} lang=${lang}`);
-    setBusy(true); setError(null); setInfo(null);
+    setBusy(true);
+    setError(null);
+    setInfo(null);
     try {
       if (mode === "signup") {
         dbg("Signing up...");
         const { data, error: err } = await supabase.auth.signUp({
-          email, password,
+          email,
+          password,
           options: {
             emailRedirectTo: authEmailRedirectTo(),
             data: {
@@ -367,7 +505,10 @@ export function LanguageSplash() {
             },
           },
         });
-        if (err) { dbg(`SignUp ERROR: ${err.message}`); throw err; }
+        if (err) {
+          dbg(`SignUp ERROR: ${err.message}`);
+          throw err;
+        }
         dbg(`SignUp OK session=${!!data.session} user=${data.user?.id}`);
         if (!data.session) {
           setInfo(s.verifyEmail(email));
@@ -379,11 +520,16 @@ export function LanguageSplash() {
       } else {
         dbg("Signing in...");
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-        if (err) { dbg(`SignIn ERROR: ${err.message}`); throw err; }
+        if (err) {
+          dbg(`SignIn ERROR: ${err.message}`);
+          throw err;
+        }
         dbg("SignIn OK");
       }
       dbg("Persisting language...");
-      try { localStorage.setItem(SAVED_EMAIL_KEY, email); } catch {}
+      try {
+        localStorage.setItem(SAVED_EMAIL_KEY, email);
+      } catch {}
       await persistLanguage(lang);
       setSignedIn(true);
       dbg("Done, dismissing...");
@@ -397,9 +543,12 @@ export function LanguageSplash() {
   }
 
   async function handleOAuth(provider: "google" | "apple") {
-    setBusy(true); setError(null);
+    setBusy(true);
+    setError(null);
     try {
-      try { window.localStorage.setItem("onyx.pending.lang", lang); } catch {}
+      try {
+        window.localStorage.setItem("onyx.pending.lang", lang);
+      } catch {}
       const result = await lovable.auth.signInWithOAuth(provider, {
         redirect_uri: window.location.origin,
       });
@@ -460,8 +609,12 @@ export function LanguageSplash() {
           <div className="inline-flex items-center gap-2 sm:gap-2.5">
             <img src={onyxLogo} alt="ONYX" className="h-8 w-8 object-contain sm:h-9 sm:w-9" />
             <div className="text-left">
-              <div className="font-display text-lg font-bold tracking-tight leading-none sm:text-xl">ONYX</div>
-              <div className="text-[9px] font-semibold uppercase tracking-[0.3em] text-electric mt-0.5 sm:text-[10px]">Elevate</div>
+              <div className="font-display text-lg font-bold tracking-tight leading-none sm:text-xl">
+                ONYX
+              </div>
+              <div className="text-[9px] font-semibold uppercase tracking-[0.3em] text-electric mt-0.5 sm:text-[10px]">
+                Elevate
+              </div>
             </div>
           </div>
 
@@ -515,7 +668,24 @@ export function LanguageSplash() {
               disabled={busy}
               className="w-full inline-flex items-center justify-center gap-3 rounded-md border border-border bg-onyx-100 px-4 py-2.5 text-sm font-semibold hover:border-electric/60 hover:bg-onyx-200 transition-all disabled:opacity-50 sm:py-3"
             >
-              <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5 43.5 34.8 43.5 24c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.7z"/><path fill="#4CAF50" d="M24 43.5c5.4 0 10.3-2.1 14-5.4l-6.5-5.5c-2 1.4-4.6 2.3-7.5 2.3-5.2 0-9.7-3.3-11.3-7.9l-6.6 5.1C9.6 38.9 16.3 43.5 24 43.5z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.5 5.5c-.5.4 7-5 7-15 0-1.2-.1-2.3-.2-3.5z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 48 48">
+                <path
+                  fill="#FFC107"
+                  d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5 43.5 34.8 43.5 24c0-1.2-.1-2.3-.4-3.5z"
+                />
+                <path
+                  fill="#FF3D00"
+                  d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34.5 6.5 29.5 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.7z"
+                />
+                <path
+                  fill="#4CAF50"
+                  d="M24 43.5c5.4 0 10.3-2.1 14-5.4l-6.5-5.5c-2 1.4-4.6 2.3-7.5 2.3-5.2 0-9.7-3.3-11.3-7.9l-6.6 5.1C9.6 38.9 16.3 43.5 24 43.5z"
+                />
+                <path
+                  fill="#1976D2"
+                  d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.5 5.5c-.5.4 7-5 7-15 0-1.2-.1-2.3-.2-3.5z"
+                />
+              </svg>
               {s.continueGoogle}
             </button>
             <button
@@ -523,13 +693,17 @@ export function LanguageSplash() {
               disabled={busy}
               className="w-full inline-flex items-center justify-center gap-3 rounded-md border border-border bg-onyx-100 px-4 py-2.5 text-sm font-semibold hover:border-electric/60 hover:bg-onyx-200 transition-all disabled:opacity-50 sm:py-3"
             >
-              <svg width="16" height="18" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM256.4 84.5c30.1-35.7 27.4-68.2 26.5-79.9-26.6 1.5-57.4 18.1-75 38.5-19.4 21.9-30.8 49-28.4 78.7 28.8 2.2 55.1-12.6 76.9-37.3z"/></svg>
+              <svg width="16" height="18" viewBox="0 0 384 512" fill="currentColor">
+                <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM256.4 84.5c30.1-35.7 27.4-68.2 26.5-79.9-26.6 1.5-57.4 18.1-75 38.5-19.4 21.9-30.8 49-28.4 78.7 28.8 2.2 55.1-12.6 76.9-37.3z" />
+              </svg>
               {s.continueApple}
             </button>
           </div>
 
           <div className="my-3 flex items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-muted-foreground sm:my-4">
-            <div className="h-px flex-1 bg-border" />{s.or}<div className="h-px flex-1 bg-border" />
+            <div className="h-px flex-1 bg-border" />
+            {s.or}
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           <form onSubmit={handleEmail} className="space-y-2 sm:space-y-2.5">
@@ -542,15 +716,20 @@ export function LanguageSplash() {
               />
             )}
             <input
-              type="email" required value={email}
+              type="email"
+              required
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={s.email}
               className="w-full rounded-md border border-border bg-onyx-100 px-3 py-2 text-base focus:outline-none focus:border-electric/60 sm:py-2.5 sm:text-sm"
             />
             <div className="relative">
               <input
-                type={showPassword ? "text" : "password"} required minLength={mode === "signup" ? 8 : 6}
-                value={password} onChange={(e) => setPassword(e.target.value)}
+                type={showPassword ? "text" : "password"}
+                required
+                minLength={mode === "signup" ? 8 : 6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder={s.password}
                 className="w-full rounded-md border border-border bg-onyx-100 px-3 py-2 pr-10 text-base focus:outline-none focus:border-electric/60 sm:py-2.5 sm:text-sm"
               />
@@ -561,19 +740,41 @@ export function LanguageSplash() {
                 tabIndex={-1}
               >
                 {showPassword ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
                   </svg>
                 ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
                 )}
               </button>
             </div>
-            {info && <div className="rounded-md border border-electric/30 bg-electric/10 p-3 text-xs leading-relaxed text-electric">{info}</div>}
+            {info && (
+              <div className="rounded-md border border-electric/30 bg-electric/10 p-3 text-xs leading-relaxed text-electric">
+                {info}
+              </div>
+            )}
             {error && <div className="text-xs text-red-400">{error}</div>}
             <button
               disabled={busy}
@@ -586,7 +787,11 @@ export function LanguageSplash() {
           <div className="mt-2 text-center text-xs text-muted-foreground sm:mt-3">
             {mode === "signin" ? s.newHere : s.haveAccount}{" "}
             <button
-              onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(null); setInfo(null); }}
+              onClick={() => {
+                setMode(mode === "signin" ? "signup" : "signin");
+                setError(null);
+                setInfo(null);
+              }}
               className="text-electric font-semibold hover:underline"
             >
               {mode === "signin" ? s.signUpLink : s.signInLink}
@@ -616,7 +821,9 @@ export function LanguageSplash() {
         {/* Debug log panel — remove when done testing */}
         {debugLogs.length > 0 && (
           <div className="mt-3 max-h-40 overflow-y-auto rounded-md bg-black/80 p-2 text-left font-mono text-[10px] text-green-400">
-            {debugLogs.map((line, i) => <div key={i}>{line}</div>)}
+            {debugLogs.map((line, i) => (
+              <div key={i}>{line}</div>
+            ))}
           </div>
         )}
       </div>

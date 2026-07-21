@@ -32,9 +32,7 @@ export function NameCapture() {
   useEffect(() => {
     if (shouldAsk) {
       const fallback =
-        (user?.user_metadata as any)?.full_name ||
-        (user?.user_metadata as any)?.name ||
-        "";
+        (user?.user_metadata as any)?.full_name || (user?.user_metadata as any)?.name || "";
       setName(looksLikeRealName(fallback) ? fallback : "");
     }
   }, [shouldAsk, user]);
@@ -63,9 +61,7 @@ export function NameCapture() {
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-electric">
           One quick thing
         </div>
-        <h2 className="mt-2 font-display text-xl font-bold">
-          What should we call you?
-        </h2>
+        <h2 className="mt-2 font-display text-xl font-bold">What should we call you?</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           We'll show this on your dashboard and next to your name in groups.
         </p>

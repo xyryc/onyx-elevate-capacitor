@@ -11,8 +11,17 @@ import { goals } from "@/data/goals";
 import { coaches } from "@/data/coaches";
 import { supplements } from "@/data/supplements";
 import { categories as exerciseCategories, exercises } from "@/data/exercises";
-import { poses as yogaPoses, articles as yogaArticles, introCards as yogaIntroCards } from "@/routes/yoga-mobility";
-import { clearPreparedTranslations, hasPreparedTranslations, markPreparedTranslations, translationCacheKey } from "./translationCache";
+import {
+  poses as yogaPoses,
+  articles as yogaArticles,
+  introCards as yogaIntroCards,
+} from "@/routes/yoga-mobility";
+import {
+  clearPreparedTranslations,
+  hasPreparedTranslations,
+  markPreparedTranslations,
+  translationCacheKey,
+} from "./translationCache";
 import generatedNo from "./generated/no.json";
 import generatedEs from "./generated/es.json";
 import generatedPt from "./generated/pt-BR.json";
@@ -29,8 +38,17 @@ function loadGenerated(lang: string): Record<string, string> {
 
 // Tags whose text we never translate
 const SKIP_TAGS = new Set([
-  "SCRIPT", "STYLE", "NOSCRIPT", "CODE", "PRE", "TEXTAREA", "INPUT",
-  "SVG", "PATH", "CANVAS", "IFRAME",
+  "SCRIPT",
+  "STYLE",
+  "NOSCRIPT",
+  "CODE",
+  "PRE",
+  "TEXTAREA",
+  "INPUT",
+  "SVG",
+  "PATH",
+  "CANVAS",
+  "IFRAME",
 ]);
 
 // Attributes we translate on elements
@@ -41,10 +59,7 @@ const HAS_LETTER = /\p{L}{2,}/u;
 
 type CacheMap = Record<string, string>;
 
-const NEVER_TRANSLATE_EXACT = new Set<string>([
-  "Onyx",
-  "Onyx Elevate",
-]);
+const NEVER_TRANSLATE_EXACT = new Set<string>(["Onyx", "Onyx Elevate"]);
 
 function loadCache(lang: string): CacheMap {
   if (typeof window === "undefined") return {};
@@ -94,7 +109,14 @@ function uniqueStrings(values: string[]): string[] {
   const seen = new Set<string>();
   for (const value of values) {
     const text = value.trim();
-    if (!text || NEVER_TRANSLATE_EXACT.has(text) || !HAS_LETTER.test(text) || text.length > 1200 || seen.has(text)) continue;
+    if (
+      !text ||
+      NEVER_TRANSLATE_EXACT.has(text) ||
+      !HAS_LETTER.test(text) ||
+      text.length > 1200 ||
+      seen.has(text)
+    )
+      continue;
     seen.add(text);
     out.push(text);
   }
@@ -103,7 +125,8 @@ function uniqueStrings(values: string[]): string[] {
 
 function collectDeepStrings(value: unknown, out: string[] = [], key = ""): string[] {
   if (typeof value === "string") {
-    if (!/^(slug|image|img|gallery|url|videoUrl|thumbnailUrl|priceId|alternatives|id)$/i.test(key)) out.push(value);
+    if (!/^(slug|image|img|gallery|url|videoUrl|thumbnailUrl|priceId|alternatives|id)$/i.test(key))
+      out.push(value);
     return out;
   }
   if (Array.isArray(value)) {
@@ -126,7 +149,21 @@ function collectStaticCatalogText(): string[] {
   const pushAll = (items?: unknown[]) => items?.forEach(push);
 
   programs.forEach((p) => {
-    [p.title, p.tagline, p.category, p.level, p.duration, p.goal, p.summary, p.nutrition, p.supplementation, p.recovery, p.trainingOverview, p.progression, p.price].forEach(push);
+    [
+      p.title,
+      p.tagline,
+      p.category,
+      p.level,
+      p.duration,
+      p.goal,
+      p.summary,
+      p.nutrition,
+      p.supplementation,
+      p.recovery,
+      p.trainingOverview,
+      p.progression,
+      p.price,
+    ].forEach(push);
     pushAll(p.whoItsFor);
     pushAll(p.whatYouGet);
     pushAll(p.includes);
@@ -168,7 +205,6 @@ function collectStaticCatalogText(): string[] {
   collectDeepStrings(yogaArticles, values);
   collectDeepStrings(yogaIntroCards, values);
 
-
   exerciseCategories.forEach((category) => {
     [category.label, category.blurb].forEach(push);
   });
@@ -204,7 +240,6 @@ export function AutoTranslator() {
   const lastWrittenAttr = useRef(new WeakMap<Element, Record<string, string>>());
   const preloadedCatalogLangs = useRef(new Set<string>());
 
-
   useEffect(() => {
     if (!ctx) return;
     if (typeof window === "undefined") return;
@@ -227,9 +262,8 @@ export function AutoTranslator() {
     //   1. loadCache, persisted AI translations from previous sessions
     //   2. loadGenerated, build-time pre-translated dictionary (baked in)
     //   3. buildSeedCache, hand-verified overrides
-    const cache: CacheMap = lang === "en"
-      ? {}
-      : { ...loadCache(lang), ...loadGenerated(lang), ...buildSeedCache(lang) };
+    const cache: CacheMap =
+      lang === "en" ? {} : { ...loadCache(lang), ...loadGenerated(lang), ...buildSeedCache(lang) };
     // If the build-time dictionary shipped with entries for this language,
     // mark it as prepared so the language switcher never blocks on a splash.
     if (lang !== "en" && Object.keys(loadGenerated(lang)).length > 0) {
@@ -241,7 +275,11 @@ export function AutoTranslator() {
       if (lang === "en") return;
       activeStartedAt = Date.now();
       document.documentElement.dataset.onyxTranslating = lang;
-      window.dispatchEvent(new CustomEvent("onyx:translation-start", { detail: { lang, count, blocking, startedAt: activeStartedAt } }));
+      window.dispatchEvent(
+        new CustomEvent("onyx:translation-start", {
+          detail: { lang, count, blocking, startedAt: activeStartedAt },
+        }),
+      );
     }
 
     function markTranslationReady() {
@@ -249,8 +287,16 @@ export function AutoTranslator() {
       if (document.documentElement.dataset.onyxTranslating === lang) {
         delete document.documentElement.dataset.onyxTranslating;
       }
-      (window as unknown as { __onyxTranslationReady?: { lang: string; at: number; startedAt: number } }).__onyxTranslationReady = { lang, at: readyAt, startedAt: activeStartedAt };
-      window.dispatchEvent(new CustomEvent("onyx:translation-ready", { detail: { lang, at: readyAt, startedAt: activeStartedAt } }));
+      (
+        window as unknown as {
+          __onyxTranslationReady?: { lang: string; at: number; startedAt: number };
+        }
+      ).__onyxTranslationReady = { lang, at: readyAt, startedAt: activeStartedAt };
+      window.dispatchEvent(
+        new CustomEvent("onyx:translation-ready", {
+          detail: { lang, at: readyAt, startedAt: activeStartedAt },
+        }),
+      );
     }
 
     function getOriginalText(n: Text): string {
@@ -284,11 +330,13 @@ export function AutoTranslator() {
       if (el.getAttribute(attr) !== value) {
         el.setAttribute(attr, value);
         let map = lastWrittenAttr.current.get(el);
-        if (!map) { map = {}; lastWrittenAttr.current.set(el, map); }
+        if (!map) {
+          map = {};
+          lastWrittenAttr.current.set(el, map);
+        }
         map[attr] = value;
       }
     }
-
 
     function collect(root: Node): Target[] {
       const out: Target[] = [];
@@ -395,8 +443,6 @@ export function AutoTranslator() {
       return true;
     }
 
-
-
     async function translateTargets(targets: Target[]): Promise<boolean> {
       if (lang === "en") return true;
       const sources = uniqueStrings(targets.map((t) => t.original.trim()));
@@ -426,7 +472,6 @@ export function AutoTranslator() {
       return true;
     }
 
-
     // Main run: restore originals then translate to current lang
     async function run() {
       // Always restore to the English originals first. Otherwise, when the
@@ -439,13 +484,19 @@ export function AutoTranslator() {
         return;
       }
       const targets = collect(document.body);
-      const needsFullPreload = !preloadedCatalogLangs.current.has(lang) && !hasPreparedTranslations(lang);
+      const needsFullPreload =
+        !preloadedCatalogLangs.current.has(lang) && !hasPreparedTranslations(lang);
       markTranslationStart(targets.length, needsFullPreload);
       if (needsFullPreload) {
-        const preloadOk = await ensureCached([...collectStaticCatalogText(), ...uniqueStrings(targets.map((t) => t.original.trim()))]);
+        const preloadOk = await ensureCached([
+          ...collectStaticCatalogText(),
+          ...uniqueStrings(targets.map((t) => t.original.trim())),
+        ]);
         if (!preloadOk && !cancelled) {
           clearPreparedTranslations(lang);
-          window.setTimeout(() => { void run(); }, 1500);
+          window.setTimeout(() => {
+            void run();
+          }, 1500);
           return;
         }
         preloadedCatalogLangs.current.add(lang);
@@ -455,7 +506,9 @@ export function AutoTranslator() {
       }
       const pageOk = await translateTargets(targets);
       if (!pageOk && !cancelled) {
-        window.setTimeout(() => { void run(); }, 1500);
+        window.setTimeout(() => {
+          void run();
+        }, 1500);
         return;
       }
       if (!cancelled) {
@@ -469,7 +522,9 @@ export function AutoTranslator() {
     let runPromise: Promise<void> | null = null;
     function triggerRun() {
       if (runPromise) return;
-      runPromise = run().finally(() => { runPromise = null; });
+      runPromise = run().finally(() => {
+        runPromise = null;
+      });
     }
 
     const initialTimer = window.setTimeout(triggerRun, 0);
@@ -480,7 +535,6 @@ export function AutoTranslator() {
     };
     window.addEventListener("onyx:translation-request", onTranslationRequest as EventListener);
 
-
     // Observe DOM changes for SPA navigation / dynamic content
     let scheduled = false;
     const pendingRoots = new Set<Node>();
@@ -490,9 +544,12 @@ export function AutoTranslator() {
     // Drop any root that's a descendant of another root in the same batch so
     // we don't walk the same subtree twice.
     function dedupeRoots(roots: Iterable<Node>): Node[] {
-      const arr = Array.from(roots).filter((n) => n.nodeType === 1 || n.nodeType === 3 && n.isConnected);
+      const arr = Array.from(roots).filter(
+        (n) => n.nodeType === 1 || (n.nodeType === 3 && n.isConnected),
+      );
       arr.sort((a, b) => {
-        let da = 0, db = 0;
+        let da = 0,
+          db = 0;
         for (let x: Node | null = a; x; x = x.parentNode) da++;
         for (let x: Node | null = b; x; x = x.parentNode) db++;
         return da - db;
@@ -501,8 +558,14 @@ export function AutoTranslator() {
       for (const n of arr) {
         let inside = false;
         for (const k of kept) {
-          if (k === n) { inside = true; break; }
-          if (k.nodeType === 1 && (k as Element).contains(n)) { inside = true; break; }
+          if (k === n) {
+            inside = true;
+            break;
+          }
+          if (k.nodeType === 1 && (k as Element).contains(n)) {
+            inside = true;
+            break;
+          }
         }
         if (!inside) kept.push(n);
       }
@@ -518,12 +581,19 @@ export function AutoTranslator() {
       if (syncRafId) return;
       syncRafId = window.requestAnimationFrame(() => {
         syncRafId = 0;
-        if (cancelled) { pendingSyncRoots.clear(); return; }
+        if (cancelled) {
+          pendingSyncRoots.clear();
+          return;
+        }
         const deduped = dedupeRoots(pendingSyncRoots);
         pendingSyncRoots.clear();
         for (const root of deduped) {
           let targets: Target[] = [];
-          try { targets = collect(root); } catch { continue; }
+          try {
+            targets = collect(root);
+          } catch {
+            continue;
+          }
           for (const t of targets) {
             const src = t.original.trim();
             if (!src || !cache[src]) continue;
@@ -551,13 +621,18 @@ export function AutoTranslator() {
         pendingRoots.clear();
         const all: Target[] = [];
         for (const root of roots) {
-          try { all.push(...collect(root)); } catch {}
+          try {
+            all.push(...collect(root));
+          } catch {}
         }
         if (all.length) {
           markTranslationStart(all.length, false);
           void translateTargets(all).then((ok) => {
             if (!cancelled && ok) markTranslationReady();
-            if (!cancelled && !ok) window.setTimeout(() => { void run(); }, 1500);
+            if (!cancelled && !ok)
+              window.setTimeout(() => {
+                void run();
+              }, 1500);
           });
         } else {
           markTranslationReady();

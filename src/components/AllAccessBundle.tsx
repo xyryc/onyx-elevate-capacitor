@@ -71,7 +71,9 @@ export function AllAccessBundle({ compact = false }: Props) {
             <Sparkles className="h-3 w-3" />
             {eyebrow}
           </div>
-          <h3 className="mt-3 font-display text-2xl lg:text-3xl font-bold leading-tight">{title}</h3>
+          <h3 className="mt-3 font-display text-2xl lg:text-3xl font-bold leading-tight">
+            {title}
+          </h3>
           <p className="mt-2 text-sm lg:text-[15px] text-foreground/80 leading-relaxed">{desc}</p>
 
           {perks.length > 0 && (
@@ -92,15 +94,15 @@ export function AllAccessBundle({ compact = false }: Props) {
               {fromLabel}
             </div>
             <div className="mt-0.5 flex items-baseline gap-2 lg:justify-end">
-              <span className="font-display text-3xl lg:text-4xl font-bold leading-none">{monthlyIntro}</span>
+              <span className="font-display text-3xl lg:text-4xl font-bold leading-none">
+                {monthlyIntro}
+              </span>
               <span className="text-[11px] text-muted-foreground">{firstMonthLabel}</span>
             </div>
             <div className="mt-1 text-[11px] text-muted-foreground lg:text-right">{thenLabel}</div>
           </div>
           <MembershipModal
-            trigger={
-              <ShimmerButton className="w-full lg:w-auto px-6 py-3">{cta}</ShimmerButton>
-            }
+            trigger={<ShimmerButton className="w-full lg:w-auto px-6 py-3">{cta}</ShimmerButton>}
           />
         </div>
       </div>

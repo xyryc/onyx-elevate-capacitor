@@ -39,18 +39,20 @@ export const getMyInviteInfo = createServerFn({ method: "GET" })
     // Only real, paid purchases unlock an invite code.
     const [purchases, subs] = await Promise.all([
       sb.from("purchases").select("id").eq("user_id", userId).limit(1),
-      sb
-        .from("subscriptions")
-        .select("id, product_id, price_id")
-        .eq("user_id", userId),
+      sb.from("subscriptions").select("id, product_id, price_id").eq("user_id", userId),
     ]);
     const paidSubs = (subs.data ?? []).filter(
       (s: any) => s.price_id !== "invite_free_month" && s.product_id !== "invite_free_month",
     );
-    const hasPurchase = ((purchases.data?.length ?? 0) + paidSubs.length) > 0;
+    const hasPurchase = (purchases.data?.length ?? 0) + paidSubs.length > 0;
 
     if (!hasPurchase) {
-      return { hasPurchase: false, code: null as string | null, redeemedAt: null as string | null, redeemedInvite };
+      return {
+        hasPurchase: false,
+        code: null as string | null,
+        redeemedAt: null as string | null,
+        redeemedInvite,
+      };
     }
 
     // Look up existing invite
@@ -71,20 +73,35 @@ export const getMyInviteInfo = createServerFn({ method: "GET" })
 
     let code = makeInviteCode();
     for (let i = 0; i < 4; i++) {
-      const ins = await sbAdmin.from("invite_codes").insert({
-        owner_user_id: userId,
-        code,
-        environment: currentEnv(),
-      }).select("code, redeemed_at").single();
+      const ins = await sbAdmin
+        .from("invite_codes")
+        .insert({
+          owner_user_id: userId,
+          code,
+          environment: currentEnv(),
+        })
+        .select("code, redeemed_at")
+        .single();
       if (!ins.error && ins.data) {
-        return { hasPurchase: true, code: ins.data.code, redeemedAt: ins.data.redeemed_at, redeemedInvite };
+        return {
+          hasPurchase: true,
+          code: ins.data.code,
+          redeemedAt: ins.data.redeemed_at,
+          redeemedInvite,
+        };
       }
       code = makeInviteCode();
     }
     throw new Error("Could not create invite code");
   });
 
-const RedeemInput = z.object({ code: z.string().min(4).max(64).transform(s => s.trim().toUpperCase()) });
+const RedeemInput = z.object({
+  code: z
+    .string()
+    .min(4)
+    .max(64)
+    .transform((s) => s.trim().toUpperCase()),
+});
 
 /**
  * Redeem any code. Returns the kind of redemption so the client can react.
@@ -117,7 +134,8 @@ export const redeemCode = createServerFn({ method: "POST" })
       // caller must not already have an active subscription or bundle
       const purchases = await sb.from("purchases").select("id, product_kind").eq("user_id", userId);
       const hasBundle = (purchases.data ?? []).some((p) => p.product_kind === "bundle");
-      if (hasBundle) throw new Error("You already have All Access, no need to redeem a free month.");
+      if (hasBundle)
+        throw new Error("You already have All Access, no need to redeem a free month.");
       const activeSub = await supabaseAdmin
         .from("subscriptions")
         .select("id")

@@ -11,7 +11,15 @@ import trymAfterAsset from "@/assets/trym-after.png.asset.json";
  * Structure/content is identical to the standalone page (minus the back button,
  * which the dialog replaces with a sticky X).
  */
-export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches = true }: { coach: Coach; showBackLink?: boolean; showOtherCoaches?: boolean }) {
+export function CoachDetailView({
+  coach,
+  showBackLink = false,
+  showOtherCoaches = true,
+}: {
+  coach: Coach;
+  showBackLink?: boolean;
+  showOtherCoaches?: boolean;
+}) {
   const { lang } = useLang();
   const images = coach.gallery && coach.gallery.length > 0 ? coach.gallery : [coach.img];
   const [idx, setIdx] = useState(0);
@@ -29,33 +37,53 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               {showBackLink && (
-                <Link to="/coaches" className="text-xs uppercase tracking-[0.2em] text-electric font-semibold hover:opacity-80">← Back</Link>
+                <Link
+                  to="/coaches"
+                  className="text-xs uppercase tracking-[0.2em] text-electric font-semibold hover:opacity-80"
+                >
+                  ← Back
+                </Link>
               )}
               <span className="inline-flex items-center gap-2 rounded-full border border-electric/30 bg-electric/5 px-3 py-1 text-xs uppercase tracking-[0.18em] text-electric">
-                {coach.tag}{coach.competes && " · Competitor"}
+                {coach.tag}
+                {coach.competes && " · Competitor"}
               </span>
             </div>
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl surface-card max-w-md">
               {images.map((src, i) => (
-                <img key={src} src={src} alt={coach.name} width={800} height={1024}
+                <img
+                  key={src}
+                  src={src}
+                  alt={coach.name}
+                  width={800}
+                  height={1024}
                   className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000"
                   style={{ opacity: i === idx ? 1 : 0 }}
-                  decoding="async" loading={i === 0 ? "eager" : "lazy"} />
+                  decoding="async"
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
               ))}
               {images.length > 1 && (
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
                   {images.map((_, i) => (
-                    <span key={i} className={`h-1.5 w-6 rounded-full transition-all ${i === idx ? "bg-electric" : "bg-white/30"}`} />
+                    <span
+                      key={i}
+                      className={`h-1.5 w-6 rounded-full transition-all ${i === idx ? "bg-electric" : "bg-white/30"}`}
+                    />
                   ))}
                 </div>
               )}
             </div>
           </div>
           <div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.05]">{coach.name}</h1>
+            <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.05]">
+              {coach.name}
+            </h1>
             <p className="mt-3 text-lg text-muted-foreground">{coach.role}</p>
-            <p className="mt-6 text-base leading-relaxed text-foreground/85 max-w-xl">{coach.bio}</p>
-            {coach.slug === 'thiago-deschamps' && (
+            <p className="mt-6 text-base leading-relaxed text-foreground/85 max-w-xl">
+              {coach.bio}
+            </p>
+            {coach.slug === "thiago-deschamps" && (
               <div className="mt-6 max-w-lg">
                 <div className="surface-card rounded-xl overflow-hidden aspect-video">
                   <iframe
@@ -69,20 +97,38 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
                 </div>
               </div>
             )}
-            {coach.slug === 'trym' && (
+            {coach.slug === "trym" && (
               <div className="mt-6 max-w-md">
-                <div className="text-xs uppercase tracking-[0.2em] text-electric font-semibold mb-2">Transformation · 135kg → 85kg</div>
+                <div className="text-xs uppercase tracking-[0.2em] text-electric font-semibold mb-2">
+                  Transformation · 135kg → 85kg
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <figure className="surface-card rounded-xl overflow-hidden">
                     <div className="relative aspect-[3/4] bg-onyx-200">
-                      <img src={trymBeforeAsset.url} alt="Trym before, 135 kg" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
-                      <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-onyx-50/80 backdrop-blur border border-border font-bold">Before · 135kg</span>
+                      <img
+                        src={trymBeforeAsset.url}
+                        alt="Trym before, 135 kg"
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-onyx-50/80 backdrop-blur border border-border font-bold">
+                        Before · 135kg
+                      </span>
                     </div>
                   </figure>
                   <figure className="surface-card rounded-xl overflow-hidden">
                     <div className="relative aspect-[3/4] bg-onyx-200">
-                      <img src={trymAfterAsset.url} alt="Trym after, 85 kg" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
-                      <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-electric text-onyx-50 font-bold">After · 85kg</span>
+                      <img
+                        src={trymAfterAsset.url}
+                        alt="Trym after, 85 kg"
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span className="absolute top-2 left-2 text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-electric text-onyx-50 font-bold">
+                        After · 85kg
+                      </span>
                     </div>
                   </figure>
                 </div>
@@ -92,21 +138,32 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
               <div className="mt-6 grid grid-cols-2 gap-3 max-w-md">
                 {coach.yearsTraining && (
                   <div className="surface-card rounded-lg p-3">
-                    <div className="text-2xl font-display font-bold text-gradient-electric">{coach.yearsTraining}+ yrs</div>
-                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">Training</div>
+                    <div className="text-2xl font-display font-bold text-gradient-electric">
+                      {coach.yearsTraining}+ yrs
+                    </div>
+                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">
+                      Training
+                    </div>
                   </div>
                 )}
                 {coach.weightClass && (
                   <div className="surface-card rounded-lg p-3">
                     <div className="text-sm font-display font-bold">{coach.weightClass}</div>
-                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">Class</div>
+                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">
+                      Class
+                    </div>
                   </div>
                 )}
               </div>
             )}
             <div className="mt-6 flex flex-wrap gap-2">
               {coach.specialties.map((s) => (
-                <span key={s} className="rounded-full border border-border bg-onyx-100 px-3 py-1 text-xs">{s}</span>
+                <span
+                  key={s}
+                  className="rounded-full border border-border bg-onyx-100 px-3 py-1 text-xs"
+                >
+                  {s}
+                </span>
               ))}
             </div>
           </div>
@@ -128,7 +185,13 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
               <ul className="mt-4 space-y-2">
                 {coach.achievements.map((a) => (
                   <li key={a} className="flex gap-3 surface-card rounded-lg p-4 border-electric/20">
-                    <svg className="h-5 w-5 flex-none text-electric mt-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M5 2h14l-1 7a6 6 0 0 1-5 5.91V18h3v2H8v-2h3v-3.09A6 6 0 0 1 6 9L5 2zm2.3 2l.7 5a4 4 0 0 0 8 0l.7-5H7.3z"/></svg>
+                    <svg
+                      className="h-5 w-5 flex-none text-electric mt-0.5"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M5 2h14l-1 7a6 6 0 0 1-5 5.91V18h3v2H8v-2h3v-3.09A6 6 0 0 1 6 9L5 2zm2.3 2l.7 5a4 4 0 0 0 8 0l.7-5H7.3z" />
+                    </svg>
                     <span className="text-sm">{a}</span>
                   </li>
                 ))}
@@ -140,7 +203,9 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
             <section>
               <h2 className="font-display text-2xl font-bold">The story</h2>
               <div className="mt-4 space-y-4 text-base leading-relaxed text-foreground/85">
-                {coach.longBio.map((p, i) => <p key={i}>{p}</p>)}
+                {coach.longBio.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
               </div>
             </section>
           )}
@@ -158,11 +223,17 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
           </section>
 
           <section>
-            <h2 className="font-display text-2xl font-bold">{lang === "no" ? `En uke i ${coach.name} sin trening` : `A week in ${coach.name}'s training`}</h2>
+            <h2 className="font-display text-2xl font-bold">
+              {lang === "no"
+                ? `En uke i ${coach.name} sin trening`
+                : `A week in ${coach.name}'s training`}
+            </h2>
             <div className="mt-4 surface-card rounded-xl overflow-hidden divide-y divide-border">
               {coach.weeklySplit.map((d) => (
                 <div key={d.day} className="grid grid-cols-[80px_1fr] gap-4 p-4">
-                  <div className="text-xs uppercase tracking-wider text-electric font-semibold">{d.day}</div>
+                  <div className="text-xs uppercase tracking-wider text-electric font-semibold">
+                    {d.day}
+                  </div>
                   <div className="text-sm">{d.focus}</div>
                 </div>
               ))}
@@ -170,11 +241,21 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
           </section>
 
           <section>
-            <h2 className="font-display text-2xl font-bold">{lang === "no" ? `${coach.name} sine beste tips` : `${coach.name}'s top tips`}</h2>
+            <h2 className="font-display text-2xl font-bold">
+              {lang === "no" ? `${coach.name} sine beste tips` : `${coach.name}'s top tips`}
+            </h2>
             <ul className="mt-4 space-y-3">
               {coach.tips.map((t) => (
                 <li key={t} className="flex gap-3 surface-card rounded-lg p-4">
-                  <svg className="h-5 w-5 flex-none text-electric mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  <svg
+                    className="h-5 w-5 flex-none text-electric mt-0.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M5 13l4 4L19 7" />
+                  </svg>
                   <span>{t}</span>
                 </li>
               ))}
@@ -183,7 +264,15 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
 
           {coach.instagram && (
             <section>
-              <h2 className="font-display text-2xl font-bold">{lang === "no" ? "Følg på Instagram" : lang === "pt-BR" ? "Siga no Instagram" : lang === "es" ? "Sigue en Instagram" : "Follow on Instagram"}</h2>
+              <h2 className="font-display text-2xl font-bold">
+                {lang === "no"
+                  ? "Følg på Instagram"
+                  : lang === "pt-BR"
+                    ? "Siga no Instagram"
+                    : lang === "es"
+                      ? "Sigue en Instagram"
+                      : "Follow on Instagram"}
+              </h2>
               <a
                 href={coach.instagram}
                 target="_blank"
@@ -194,12 +283,20 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
                   window.open(coach.instagram, "_blank", "noopener,noreferrer");
                 }}
               >
-                <svg className="h-6 w-6 text-electric" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  className="h-6 w-6 text-electric"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <rect x="3" y="3" width="18" height="18" rx="5" />
                   <circle cx="12" cy="12" r="4" />
                   <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
                 </svg>
-                <span className="font-semibold text-sm">@{coach.instagram.replace(/\/$/, "").split("/").pop()}</span>
+                <span className="font-semibold text-sm">
+                  @{coach.instagram.replace(/\/$/, "").split("/").pop()}
+                </span>
               </a>
             </section>
           )}
@@ -207,14 +304,26 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
 
         <aside className="lg:sticky lg:top-24 h-fit">
           <div className="surface-card rounded-2xl p-6 border-electric/40">
-            <span className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Personal Training</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              Personal Training
+            </span>
             <h3 className="mt-2 font-display text-xl font-bold">{coach.coaching.title}</h3>
             <p className="mt-3 text-sm text-muted-foreground">{coach.coaching.summary}</p>
-            <div className="mt-5 text-sm font-semibold text-electric">Coming soon, join the waitlist</div>
+            <div className="mt-5 text-sm font-semibold text-electric">
+              Coming soon, join the waitlist
+            </div>
             <ul className="mt-5 space-y-2 text-sm">
               {coach.coaching.includes.map((i) => (
                 <li key={i} className="flex gap-2">
-                  <svg className="h-4 w-4 flex-none text-electric mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  <svg
+                    className="h-4 w-4 flex-none text-electric mt-0.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M5 13l4 4L19 7" />
+                  </svg>
                   <span>{i}</span>
                 </li>
               ))}
@@ -253,7 +362,9 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
                 </a>
               );
             })()}
-            <p className="mt-2 text-[11px] text-muted-foreground text-center">Limited spots · Reply within 48h · OnyxPerformanceTeam@hotmail.com</p>
+            <p className="mt-2 text-[11px] text-muted-foreground text-center">
+              Limited spots · Reply within 48h · OnyxPerformanceTeam@hotmail.com
+            </p>
           </div>
         </aside>
       </div>
@@ -263,19 +374,32 @@ export function CoachDetailView({ coach, showBackLink = false, showOtherCoaches 
           <div className="container-onyx py-16">
             <h2 className="font-display text-2xl font-bold mb-6">Other Onyx coaches</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {coaches.filter((c) => c.slug !== coach.slug).map((c) => (
-                <Link key={c.slug} to="/coaches/$slug" params={{ slug: c.slug }}
-                  className="group surface-card rounded-xl overflow-hidden hover:border-electric/40 transition-all">
-                  <div className="relative aspect-[4/5]">
-                    <img src={c.img} alt={c.name} width={400} height={500} loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" decoding="async" />
-                  </div>
-                  <div className="p-3">
-                    <p className="font-semibold text-sm">{c.name}</p>
-                    <p className="text-xs text-muted-foreground">{c.tag}</p>
-                  </div>
-                </Link>
-              ))}
+              {coaches
+                .filter((c) => c.slug !== coach.slug)
+                .map((c) => (
+                  <Link
+                    key={c.slug}
+                    to="/coaches/$slug"
+                    params={{ slug: c.slug }}
+                    className="group surface-card rounded-xl overflow-hidden hover:border-electric/40 transition-all"
+                  >
+                    <div className="relative aspect-[4/5]">
+                      <img
+                        src={c.img}
+                        alt={c.name}
+                        width={400}
+                        height={500}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        decoding="async"
+                      />
+                    </div>
+                    <div className="p-3">
+                      <p className="font-semibold text-sm">{c.name}</p>
+                      <p className="text-xs text-muted-foreground">{c.tag}</p>
+                    </div>
+                  </Link>
+                ))}
             </div>
           </div>
         </section>

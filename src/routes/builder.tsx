@@ -12,7 +12,11 @@ export const Route = createFileRoute("/builder")({
   head: () => ({
     meta: [
       { title: "Create Workout, Onyx Elevate" },
-      { name: "description", content: "Build your own custom training program: pick exercises, sets, reps, RPE and more." },
+      {
+        name: "description",
+        content:
+          "Build your own custom training program: pick exercises, sets, reps, RPE and more.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -23,9 +27,14 @@ export const Route = createFileRoute("/builder")({
         <h1 className="font-display text-2xl font-bold">Something went wrong</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button
-          onClick={() => { router.invalidate(); reset(); }}
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
           className="mt-4 inline-flex items-center rounded-md bg-electric px-4 py-2 text-sm font-semibold text-onyx-50"
-        >Try again</button>
+        >
+          Try again
+        </button>
       </div>
     );
   },
@@ -59,18 +68,23 @@ function BuilderLayout() {
       { title: t("builder.gate.f8.title"), desc: t("builder.gate.f8.desc") },
     ];
 
-
     return (
       <div className="bg-onyx-50">
         <div className="mx-auto w-full max-w-[560px] px-6">
           {/* Magazine hero */}
           <div className="relative -mx-6 md:mx-0 md:rounded-2xl overflow-hidden border-b md:border border-white/5 mb-6">
             <div className="relative aspect-[21/11] w-full">
-              <img src={builderHero} alt="Custom program builder" className="absolute inset-0 h-full w-full object-cover" />
+              <img
+                src={builderHero}
+                alt="Custom program builder"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-onyx-50 via-onyx-50/40 to-transparent" />
             </div>
             <div className="absolute inset-x-0 bottom-0 px-6 pb-5">
-              <span className="text-[10px] font-extrabold tracking-[0.25em] text-electric uppercase">{t("builder.gate.eyebrow")}</span>
+              <span className="text-[10px] font-extrabold tracking-[0.25em] text-electric uppercase">
+                {t("builder.gate.eyebrow")}
+              </span>
               <h1 className="font-display text-4xl md:text-5xl font-extrabold tracking-tight leading-none mt-1">
                 BUILDER<span className="text-electric">+</span>
               </h1>
@@ -94,19 +108,26 @@ function BuilderLayout() {
           {/* 01 — Intro */}
           <section className="mb-10">
             <div className="flex items-center gap-4 mb-5">
-              <span className="text-[10px] font-mono font-bold text-muted-foreground/70 tracking-tighter uppercase italic">{t("builder.gate.section1Label")}</span>
+              <span className="text-[10px] font-mono font-bold text-muted-foreground/70 tracking-tighter uppercase italic">
+                {t("builder.gate.section1Label")}
+              </span>
               <div className="h-px flex-1 bg-border/40" />
             </div>
             <p className="font-display text-xl md:text-2xl font-light italic leading-snug text-foreground/85">
               {t("builder.gate.intro1")}{" "}
-              <span className="not-italic font-bold text-foreground">{t("builder.gate.introBrand")}</span>{t("builder.gate.intro2")}
+              <span className="not-italic font-bold text-foreground">
+                {t("builder.gate.introBrand")}
+              </span>
+              {t("builder.gate.intro2")}
             </p>
           </section>
 
           {/* 02 — Blueprint / Features with checkmarks */}
           <section className="mb-10">
             <div className="flex items-center gap-4 mb-6">
-              <span className="text-[10px] font-mono font-bold text-muted-foreground/70 tracking-tighter uppercase italic">{t("builder.gate.section2Label")}</span>
+              <span className="text-[10px] font-mono font-bold text-muted-foreground/70 tracking-tighter uppercase italic">
+                {t("builder.gate.section2Label")}
+              </span>
               <div className="h-px flex-1 bg-border/40" />
             </div>
 
@@ -116,7 +137,9 @@ function BuilderLayout() {
                 <Check className="w-3.5 h-3.5 text-electric" strokeWidth={3} />
               </div>
               <div>
-                <div className="text-sm font-bold text-foreground uppercase tracking-tight">{features[0].title}</div>
+                <div className="text-sm font-bold text-foreground uppercase tracking-tight">
+                  {features[0].title}
+                </div>
                 <p className="text-xs text-muted-foreground mt-0.5">{features[0].desc}</p>
               </div>
             </div>
@@ -125,7 +148,9 @@ function BuilderLayout() {
               {features.slice(1).map((f) => (
                 <li key={f.title} className="flex items-center gap-4">
                   <Check className="w-4 h-4 text-electric/70 flex-none" strokeWidth={3} />
-                  <span className="text-xs font-semibold text-foreground/85 tracking-wide uppercase">{f.title}</span>
+                  <span className="text-xs font-semibold text-foreground/85 tracking-wide uppercase">
+                    {f.title}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -133,7 +158,9 @@ function BuilderLayout() {
 
           {/* Editorial pull-quote */}
           <aside className="relative border-l-2 border-electric bg-onyx-100/40 p-6">
-            <span className="text-[9px] font-bold text-electric uppercase tracking-widest block mb-2">{t("builder.gate.pullEyebrow")}</span>
+            <span className="text-[9px] font-bold text-electric uppercase tracking-widest block mb-2">
+              {t("builder.gate.pullEyebrow")}
+            </span>
             <p className="font-display text-base md:text-lg italic text-foreground/80 leading-relaxed">
               "{t("builder.gate.pull")}"
             </p>

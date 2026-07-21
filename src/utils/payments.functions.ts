@@ -1,9 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import {
-  type StripeEnv,
-  createStripeClient,
-  getStripeErrorMessage,
-} from "@/lib/stripe.server";
+import { type StripeEnv, createStripeClient, getStripeErrorMessage } from "@/lib/stripe.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const ALLOWED_RETURN_ORIGINS = [
@@ -67,7 +63,6 @@ async function ensureRewardCoupon(
   return created.id;
 }
 
-
 async function resolveOrCreateCustomer(
   stripe: ReturnType<typeof createStripeClient>,
   options: { email?: string; userId?: string },
@@ -103,154 +98,165 @@ async function resolveOrCreateCustomer(
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: {
-    priceId: string;
-    quantity?: number;
-    customerEmail?: string;
-    productSlug?: string;
-    returnUrl: string;
-    environment: StripeEnv;
-    firstMonthDiscount?: boolean;
-    rewardCode?: string;
-  }) => {
-    if (!/^[a-zA-Z0-9_-]+$/.test(data.priceId)) throw new Error("Invalid priceId");
-    if (data.rewardCode && !/^[A-Z0-9-]{4,64}$/.test(data.rewardCode)) {
-      throw new Error("Invalid reward code");
-    }
-    if (!isAllowedReturnUrl(data.returnUrl)) {
-      throw new Error("Invalid return URL");
-    }
-    return data;
-  })
-  .handler(async ({ data, context }): Promise<CheckoutSessionResult & { rewardApplied?: number }> => {
-    try {
-      // Trust the verified session user id, never the client.
-      const userId = context.userId;
-      const customerEmail = data.customerEmail ?? context.claims?.email;
-      const stripe = createStripeClient(data.environment);
-
-      const prices = await stripe.prices.list({ lookup_keys: [data.priceId] });
-      if (!prices.data.length) throw new Error("Price not found");
-      const stripePrice = prices.data[0];
-      const isRecurring = stripePrice.type === "recurring";
-      const isMonthly = isRecurring && stripePrice.recurring?.interval === "month";
-      const applyIntroDiscount = data.firstMonthDiscount === true && isMonthly;
-
-      // Prevent purchasing a second membership when one is already active.
-      if (isRecurring) {
-        // Lifetime bundle owners already have full access, block new subs.
-        const { data: bundle } = await context.supabase
-          .from("purchases")
-          .select("id")
-          .eq("user_id", userId)
-          .eq("product_kind", "bundle")
-          .limit(1);
-        if ((bundle?.length ?? 0) > 0) {
-          return { error: "You already have lifetime access, no additional membership is needed." };
-        }
-        const { data: activeSub } = await context.supabase
-          .from("subscriptions")
-          .select("stripe_subscription_id, status, cancel_at_period_end")
-          .eq("user_id", userId)
-          .eq("environment", data.environment)
-          .in("status", ["active", "trialing", "past_due"])
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        if (activeSub?.stripe_subscription_id && !activeSub.cancel_at_period_end) {
-          return { error: "You already have an active membership. Manage or cancel it from Billing before switching plans." };
-        }
+  .inputValidator(
+    (data: {
+      priceId: string;
+      quantity?: number;
+      customerEmail?: string;
+      productSlug?: string;
+      returnUrl: string;
+      environment: StripeEnv;
+      firstMonthDiscount?: boolean;
+      rewardCode?: string;
+    }) => {
+      if (!/^[a-zA-Z0-9_-]+$/.test(data.priceId)) throw new Error("Invalid priceId");
+      if (data.rewardCode && !/^[A-Z0-9-]{4,64}$/.test(data.rewardCode)) {
+        throw new Error("Invalid reward code");
       }
-
-      const customerId = await resolveOrCreateCustomer(stripe, {
-        email: customerEmail,
-        userId,
-      });
-
-      let productDescription: string | undefined;
-      if (!isRecurring) {
-        const productId = typeof stripePrice.product === "string"
-          ? stripePrice.product
-          : stripePrice.product.id;
-        const product = await stripe.products.retrieve(productId);
-        productDescription = product.name;
+      if (!isAllowedReturnUrl(data.returnUrl)) {
+        throw new Error("Invalid return URL");
       }
+      return data;
+    },
+  )
+  .handler(
+    async ({ data, context }): Promise<CheckoutSessionResult & { rewardApplied?: number }> => {
+      try {
+        // Trust the verified session user id, never the client.
+        const userId = context.userId;
+        const customerEmail = data.customerEmail ?? context.claims?.email;
+        const stripe = createStripeClient(data.environment);
 
-      const commonMetadata: Record<string, string> = {
-        userId,
-        ...(data.productSlug && { productSlug: data.productSlug }),
-      };
+        const prices = await stripe.prices.list({ lookup_keys: [data.priceId] });
+        if (!prices.data.length) throw new Error("Price not found");
+        const stripePrice = prices.data[0];
+        const isRecurring = stripePrice.type === "recurring";
+        const isMonthly = isRecurring && stripePrice.recurring?.interval === "month";
+        const applyIntroDiscount = data.firstMonthDiscount === true && isMonthly;
 
-      // Resolve reward code (challenge reward). Rules:
-      //   - Codes only apply to recurring subscriptions (monthly/yearly), never to
-      //     one-time products like the lifetime bundle.
-      //   - "self_discount" codes must be owned by the redeeming user.
-      //   - "friend_share" codes can be redeemed by anyone (except the owner),
-      //     once — enforced by redeemed_at.
-      let rewardPercent: number | undefined;
-      let rewardRowId: string | undefined;
-      if (data.rewardCode) {
-        if (!isRecurring) {
-          return { error: "Reward codes only apply to monthly or yearly memberships, not one-time purchases." };
-        }
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const row = await supabaseAdmin
-          .from("challenge_rewards")
-          .select("id, discount_percent, redeemed_at, user_id, code_kind")
-          .eq("code", data.rewardCode)
-          .maybeSingle();
-        if (row.data && !row.data.redeemed_at) {
-          const kind = (row.data as any).code_kind ?? "self_discount";
-          const ownerOk = row.data.user_id === userId;
-          const shareOk = kind === "friend_share" && row.data.user_id !== userId;
-          if (ownerOk || shareOk) {
-            rewardPercent = row.data.discount_percent;
-            rewardRowId = row.data.id;
-            commonMetadata.rewardCode = data.rewardCode;
+        // Prevent purchasing a second membership when one is already active.
+        if (isRecurring) {
+          // Lifetime bundle owners already have full access, block new subs.
+          const { data: bundle } = await context.supabase
+            .from("purchases")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("product_kind", "bundle")
+            .limit(1);
+          if ((bundle?.length ?? 0) > 0) {
+            return {
+              error: "You already have lifetime access, no additional membership is needed.",
+            };
+          }
+          const { data: activeSub } = await context.supabase
+            .from("subscriptions")
+            .select("stripe_subscription_id, status, cancel_at_period_end")
+            .eq("user_id", userId)
+            .eq("environment", data.environment)
+            .in("status", ["active", "trialing", "past_due"])
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          if (activeSub?.stripe_subscription_id && !activeSub.cancel_at_period_end) {
+            return {
+              error:
+                "You already have an active membership. Manage or cancel it from Billing before switching plans.",
+            };
           }
         }
+
+        const customerId = await resolveOrCreateCustomer(stripe, {
+          email: customerEmail,
+          userId,
+        });
+
+        let productDescription: string | undefined;
+        if (!isRecurring) {
+          const productId =
+            typeof stripePrice.product === "string" ? stripePrice.product : stripePrice.product.id;
+          const product = await stripe.products.retrieve(productId);
+          productDescription = product.name;
+        }
+
+        const commonMetadata: Record<string, string> = {
+          userId,
+          ...(data.productSlug && { productSlug: data.productSlug }),
+        };
+
+        // Resolve reward code (challenge reward). Rules:
+        //   - Codes only apply to recurring subscriptions (monthly/yearly), never to
+        //     one-time products like the lifetime bundle.
+        //   - "self_discount" codes must be owned by the redeeming user.
+        //   - "friend_share" codes can be redeemed by anyone (except the owner),
+        //     once — enforced by redeemed_at.
+        let rewardPercent: number | undefined;
+        let rewardRowId: string | undefined;
+        if (data.rewardCode) {
+          if (!isRecurring) {
+            return {
+              error:
+                "Reward codes only apply to monthly or yearly memberships, not one-time purchases.",
+            };
+          }
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          const row = await supabaseAdmin
+            .from("challenge_rewards")
+            .select("id, discount_percent, redeemed_at, user_id, code_kind")
+            .eq("code", data.rewardCode)
+            .maybeSingle();
+          if (row.data && !row.data.redeemed_at) {
+            const kind = (row.data as any).code_kind ?? "self_discount";
+            const ownerOk = row.data.user_id === userId;
+            const shareOk = kind === "friend_share" && row.data.user_id !== userId;
+            if (ownerOk || shareOk) {
+              rewardPercent = row.data.discount_percent;
+              rewardRowId = row.data.id;
+              commonMetadata.rewardCode = data.rewardCode;
+            }
+          }
+        }
+
+        let couponId: string | undefined;
+        if (applyIntroDiscount) {
+          couponId = await ensureFirstMonthCoupon(stripe);
+        } else if (rewardPercent) {
+          couponId = await ensureRewardCoupon(stripe, rewardPercent);
+        }
+
+        const session = await stripe.checkout.sessions.create({
+          line_items: [{ price: stripePrice.id, quantity: data.quantity || 1 }],
+          mode: isRecurring ? "subscription" : "payment",
+          ui_mode: "embedded_page",
+          return_url: data.returnUrl,
+          ...(customerId && { customer: customerId }),
+          ...(!isRecurring && {
+            payment_intent_data: { description: productDescription, metadata: commonMetadata },
+          }),
+          ...(couponId && { discounts: [{ coupon: couponId }] }),
+          metadata: commonMetadata,
+          ...(isRecurring && { subscription_data: { metadata: commonMetadata } }),
+        });
+
+        // Mark reward as redeemed as soon as session is created, prevents reuse.
+        if (rewardRowId && data.productSlug) {
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          await supabaseAdmin
+            .from("challenge_rewards")
+            .update({
+              redeemed_at: new Date().toISOString(),
+              redeemed_for_slug: data.productSlug,
+              redeemed_by_user_id: userId,
+            })
+            .eq("id", rewardRowId)
+            .is("redeemed_at", null);
+        }
+
+        return { clientSecret: session.client_secret ?? "", rewardApplied: rewardPercent };
+      } catch (error) {
+        return { error: getStripeErrorMessage(error) };
       }
-
-      let couponId: string | undefined;
-      if (applyIntroDiscount) {
-        couponId = await ensureFirstMonthCoupon(stripe);
-      } else if (rewardPercent) {
-        couponId = await ensureRewardCoupon(stripe, rewardPercent);
-      }
-
-      const session = await stripe.checkout.sessions.create({
-        line_items: [{ price: stripePrice.id, quantity: data.quantity || 1 }],
-        mode: isRecurring ? "subscription" : "payment",
-        ui_mode: "embedded_page",
-        return_url: data.returnUrl,
-        ...(customerId && { customer: customerId }),
-        ...(!isRecurring && {
-          payment_intent_data: { description: productDescription, metadata: commonMetadata },
-        }),
-        ...(couponId && { discounts: [{ coupon: couponId }] }),
-        metadata: commonMetadata,
-        ...(isRecurring && { subscription_data: { metadata: commonMetadata } }),
-      });
-
-      // Mark reward as redeemed as soon as session is created, prevents reuse.
-      if (rewardRowId && data.productSlug) {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        await supabaseAdmin
-          .from("challenge_rewards")
-          .update({
-            redeemed_at: new Date().toISOString(),
-            redeemed_for_slug: data.productSlug,
-            redeemed_by_user_id: userId,
-          })
-          .eq("id", rewardRowId)
-          .is("redeemed_at", null);
-      }
-
-      return { clientSecret: session.client_secret ?? "", rewardApplied: rewardPercent };
-    } catch (error) {
-      return { error: getStripeErrorMessage(error) };
-    }
-  });
+    },
+  );
 
 // ────────────────────────────────────────────────────────────
 // Billing: current membership, payment history, cancel/manage
@@ -291,7 +297,9 @@ export const getMyMembership = createServerFn({ method: "GET" })
 
     const { data: sub } = await supabase
       .from("subscriptions")
-      .select("stripe_subscription_id, stripe_customer_id, price_id, status, current_period_end, cancel_at_period_end")
+      .select(
+        "stripe_subscription_id, stripe_customer_id, price_id, status, current_period_end, cancel_at_period_end",
+      )
       .eq("user_id", userId)
       .eq("environment", data.environment)
       .order("created_at", { ascending: false })
@@ -299,7 +307,14 @@ export const getMyMembership = createServerFn({ method: "GET" })
       .maybeSingle();
 
     if (!sub) {
-      return { tier: "none", status: null, currentPeriodEnd: null, cancelAtPeriodEnd: false, stripeSubscriptionId: null, stripeCustomerId: null };
+      return {
+        tier: "none",
+        status: null,
+        currentPeriodEnd: null,
+        cancelAtPeriodEnd: false,
+        stripeSubscriptionId: null,
+        stripeCustomerId: null,
+      };
     }
 
     const status = sub.status ?? "";
@@ -307,8 +322,9 @@ export const getMyMembership = createServerFn({ method: "GET" })
     const now = new Date();
     const stillInPeriod = !endsAt || endsAt > now;
 
-    const isActive = (["active", "trialing", "past_due"].includes(status) && stillInPeriod) ||
-                     (status === "canceled" && endsAt && endsAt > now);
+    const isActive =
+      (["active", "trialing", "past_due"].includes(status) && stillInPeriod) ||
+      (status === "canceled" && endsAt && endsAt > now);
 
     if (!isActive) {
       return {
@@ -390,7 +406,6 @@ export const getMyPaymentHistory = createServerFn({ method: "GET" })
         currency: null,
         kind: "subscription",
       });
-
     }
 
     items.sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -441,30 +456,33 @@ export const createPortalSession = createServerFn({ method: "POST" })
 export const cancelMySubscription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { environment: StripeEnv }) => data)
-  .handler(async ({ data, context }): Promise<{ ok: true; endsAt: string | null } | { error: string }> => {
-    try {
-      const { supabase, userId } = context;
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("stripe_subscription_id")
-        .eq("user_id", userId)
-        .eq("environment", data.environment)
-        .in("status", ["active", "trialing", "past_due"])
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (!sub?.stripe_subscription_id || sub.stripe_subscription_id.startsWith("invite:")) {
-        throw new Error("No active subscription to cancel.");
+  .handler(
+    async ({ data, context }): Promise<{ ok: true; endsAt: string | null } | { error: string }> => {
+      try {
+        const { supabase, userId } = context;
+        const { data: sub } = await supabase
+          .from("subscriptions")
+          .select("stripe_subscription_id")
+          .eq("user_id", userId)
+          .eq("environment", data.environment)
+          .in("status", ["active", "trialing", "past_due"])
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (!sub?.stripe_subscription_id || sub.stripe_subscription_id.startsWith("invite:")) {
+          throw new Error("No active subscription to cancel.");
+        }
+        const stripe = createStripeClient(data.environment);
+        const updated = await stripe.subscriptions.update(sub.stripe_subscription_id, {
+          cancel_at_period_end: true,
+        });
+        const endsAt =
+          (updated.items?.data?.[0] as any)?.current_period_end ??
+          (updated as any).current_period_end ??
+          null;
+        return { ok: true, endsAt: endsAt ? new Date(endsAt * 1000).toISOString() : null };
+      } catch (error) {
+        return { error: getStripeErrorMessage(error) };
       }
-      const stripe = createStripeClient(data.environment);
-      const updated = await stripe.subscriptions.update(sub.stripe_subscription_id, {
-        cancel_at_period_end: true,
-      });
-      const endsAt = (updated.items?.data?.[0] as any)?.current_period_end ?? (updated as any).current_period_end ?? null;
-      return { ok: true, endsAt: endsAt ? new Date(endsAt * 1000).toISOString() : null };
-    } catch (error) {
-      return { error: getStripeErrorMessage(error) };
-    }
-  });
-
-
+    },
+  );

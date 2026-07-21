@@ -43,8 +43,9 @@ export function BottomTabBar() {
     >
       <ul className="grid grid-cols-5">
         {tabs.map((tab) => {
-          const active =
-            tab.exact ? current === "/" : current === norm(tab.to) || current.startsWith(norm(tab.to) + "/");
+          const active = tab.exact
+            ? current === "/"
+            : current === norm(tab.to) || current.startsWith(norm(tab.to) + "/");
           const Icon = tab.icon;
           const isLoginTab = !user && tab.to === "/auth";
           const className = `flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-semibold transition-colors ${
@@ -56,7 +57,9 @@ export function BottomTabBar() {
                 <button
                   type="button"
                   onClick={() => {
-                    try { window.sessionStorage.setItem("onyx.loginSplash.forceOpen", "1"); } catch {}
+                    try {
+                      window.sessionStorage.setItem("onyx.loginSplash.forceOpen", "1");
+                    } catch {}
                     window.dispatchEvent(new CustomEvent("onyx:open-login-splash"));
                   }}
                   className={`w-full ${className}`}
@@ -65,11 +68,7 @@ export function BottomTabBar() {
                   <span className="truncate max-w-[56px]">{tab.label}</span>
                 </button>
               ) : (
-                <Link
-                  to={tab.to as any}
-                  onClick={resetScrollablePage}
-                  className={className}
-                >
+                <Link to={tab.to as any} onClick={resetScrollablePage} className={className}>
                   <Icon className="h-5 w-5" strokeWidth={active ? 2.4 : 2} />
                   <span className="truncate max-w-[56px]">{tab.label}</span>
                 </Link>

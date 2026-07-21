@@ -62,10 +62,7 @@ function loadStored(programSlug: string, lift: string): Stored {
 function saveStored(programSlug: string, lift: string, state: Stored) {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(
-      storageKey(programSlug, lift),
-      JSON.stringify(state),
-    );
+    window.localStorage.setItem(storageKey(programSlug, lift), JSON.stringify(state));
   } catch {
     // storage full or blocked, ignore
   }
@@ -109,23 +106,11 @@ export function WeightSuggestionRow({
     if (isDeloadWeek) {
       return roundToPlate(lastWeightNum * 0.6, state.unit);
     }
-    return suggestNextWeight(
-      lastWeightNum,
-      state.lastRpe,
-      state.targetRpe,
-      state.unit,
-    );
-  }, [
-    lastWeightNum,
-    state.lastRpe,
-    state.targetRpe,
-    state.unit,
-    isDeloadWeek,
-  ]);
+    return suggestNextWeight(lastWeightNum, state.lastRpe, state.targetRpe, state.unit);
+  }, [lastWeightNum, state.lastRpe, state.targetRpe, state.unit, isDeloadWeek]);
 
-  const delta = Number.isFinite(lastWeightNum) && lastWeightNum > 0
-    ? suggestion - lastWeightNum
-    : 0;
+  const delta =
+    Number.isFinite(lastWeightNum) && lastWeightNum > 0 ? suggestion - lastWeightNum : 0;
 
   return (
     <div className="flex h-full flex-col rounded-xl border border-border bg-onyx-100/40 p-4">
@@ -169,9 +154,7 @@ export function WeightSuggestionRow({
             step={state.unit === "kg" ? 2.5 : 5}
             min={0}
             value={state.lastWeight}
-            onChange={(e) =>
-              setState((s) => ({ ...s, lastWeight: e.target.value }))
-            }
+            onChange={(e) => setState((s) => ({ ...s, lastWeight: e.target.value }))}
             placeholder={state.unit === "kg" ? "e.g. 60" : "e.g. 135"}
             className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-electric focus:outline-none"
           />
@@ -183,9 +166,7 @@ export function WeightSuggestionRow({
           </span>
           <select
             value={state.lastRpe}
-            onChange={(e) =>
-              setState((s) => ({ ...s, lastRpe: parseFloat(e.target.value) }))
-            }
+            onChange={(e) => setState((s) => ({ ...s, lastRpe: parseFloat(e.target.value) }))}
             className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-electric focus:outline-none"
           >
             {RPE_OPTIONS.map((r) => (
@@ -202,9 +183,7 @@ export function WeightSuggestionRow({
           </span>
           <select
             value={state.targetRpe}
-            onChange={(e) =>
-              setState((s) => ({ ...s, targetRpe: parseFloat(e.target.value) }))
-            }
+            onChange={(e) => setState((s) => ({ ...s, targetRpe: parseFloat(e.target.value) }))}
             disabled={isDeloadWeek}
             className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-electric focus:outline-none disabled:opacity-50"
           >
@@ -219,9 +198,7 @@ export function WeightSuggestionRow({
 
       <div
         className={`mt-auto rounded-lg border px-4 py-3 flex items-center justify-between gap-3 ${
-          isDeloadWeek
-            ? "border-amber-500/40 bg-amber-500/10"
-            : "border-electric/30 bg-electric/5"
+          isDeloadWeek ? "border-amber-500/40 bg-amber-500/10" : "border-electric/30 bg-electric/5"
         }`}
       >
         <div>
@@ -238,9 +215,7 @@ export function WeightSuggestionRow({
         </div>
         {lastWeightNum > 0 && delta !== 0 && (
           <div
-            className={`text-sm font-semibold ${
-              delta > 0 ? "text-electric" : "text-amber-400"
-            }`}
+            className={`text-sm font-semibold ${delta > 0 ? "text-electric" : "text-amber-400"}`}
           >
             {delta > 0 ? "+" : ""}
             {delta} {state.unit}

@@ -95,7 +95,9 @@ async function handleSubscriptionEvent(event: any) {
   const cancelAtPeriodEnd = eventType === "CANCELLATION";
   const tier = resolveTier(productId);
 
-  console.log(`[rc-webhook] ${eventType} | user=${appUserId} | product=${productId} | env=${environment}`);
+  console.log(
+    `[rc-webhook] ${eventType} | user=${appUserId} | product=${productId} | env=${environment}`,
+  );
 
   // ── Handle lifetime / non-consumable purchases ────────────────────────────
   if (eventType === "NON_RENEWING_PURCHASE" || tier === "lifetime") {
@@ -141,7 +143,8 @@ async function handleSubscriptionEvent(event: any) {
     { onConflict: "rc_original_transaction_id" },
   );
   if (error) console.error("[rc-webhook] subscription upsert failed:", error);
-  else console.log(`[rc-webhook] Subscription ${status} for user ${appUserId}, expires ${periodEnd}`);
+  else
+    console.log(`[rc-webhook] Subscription ${status} for user ${appUserId}, expires ${periodEnd}`);
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────

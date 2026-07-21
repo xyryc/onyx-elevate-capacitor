@@ -1,11 +1,24 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import type { Article } from "@/data/articles";
 import { ArticleDetailView } from "./ArticleDetailView";
 
-export function ArticleDialog({ article, children }: { article: Article; children: React.ReactNode }) {
+export function ArticleDialog({
+  article,
+  children,
+}: {
+  article: Article;
+  children: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>

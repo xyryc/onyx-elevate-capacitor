@@ -7,7 +7,9 @@ const POLL_MS = 20_000;
 function makeId() {
   try {
     if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
   return `s_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
@@ -19,9 +21,15 @@ function getLocalSessionId(userId: string): string {
   try {
     const existing = localStorage.getItem(localKey(userId));
     if (existing) return existing;
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
   const fresh = makeId();
-  try { localStorage.setItem(localKey(userId), fresh); } catch { /* noop */ }
+  try {
+    localStorage.setItem(localKey(userId), fresh);
+  } catch {
+    /* noop */
+  }
   return fresh;
 }
 
@@ -65,18 +73,30 @@ export function useSingleSession() {
         try {
           const status = await checkSession(userId, sessionId);
           if (status === "kicked") {
-            if (interval) { clearInterval(interval); interval = null; }
-            try { localStorage.removeItem(localKey(userId)); } catch { /* noop */ }
+            if (interval) {
+              clearInterval(interval);
+              interval = null;
+            }
+            try {
+              localStorage.removeItem(localKey(userId));
+            } catch {
+              /* noop */
+            }
             toast.error("Signed out, this account was opened on another device.");
             await supabase.auth.signOut();
           }
-        } catch { /* ignore transient errors */ }
+        } catch {
+          /* ignore transient errors */
+        }
       };
       interval = setInterval(tick, POLL_MS);
     }
 
     function stop() {
-      if (interval) { clearInterval(interval); interval = null; }
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
     }
 
     supabase.auth.getSession().then(({ data }) => {
@@ -91,7 +111,11 @@ export function useSingleSession() {
         stop();
         // New sign-in on this browser: mint a fresh session id so it
         // supersedes any other device currently signed into this account.
-        try { localStorage.removeItem(localKey(uid)); } catch { /* noop */ }
+        try {
+          localStorage.removeItem(localKey(uid));
+        } catch {
+          /* noop */
+        }
         void startForUser(uid);
       } else if (evt === "SIGNED_OUT") {
         stop();

@@ -27,7 +27,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     definitions: {
       en: "Rate of Perceived Exertion (1-10). How hard the set felt. RPE 8 = you could do 2 more reps.",
       no: "Opplevd anstrengelse (1-10). Hvor tungt settet føltes. RPE 8 = du kunne tatt 2 reps til.",
-      "pt-BR": "Nível de esforço percebido (1-10). RPE 8 = você conseguiria fazer mais 2 repetições.",
+      "pt-BR":
+        "Nível de esforço percebido (1-10). RPE 8 = você conseguiria fazer mais 2 repetições.",
       es: "Esfuerzo percibido (1-10). RPE 8 = podrías hacer 2 repeticiones más.",
     },
   },
@@ -54,7 +55,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     definitions: {
       en: "Every Minute On the Minute, start a set at the top of each minute, rest with the time you have left.",
       no: "Hvert minutt, på minuttet, start settet ved starten av hvert minutt, hvil resten av minuttet.",
-      "pt-BR": "A cada minuto, no minuto, comece a série no início do minuto e descanse no tempo que sobrar.",
+      "pt-BR":
+        "A cada minuto, no minuto, comece a série no início do minuto e descanse no tempo que sobrar.",
       es: "Cada minuto en el minuto, empieza la serie al inicio del minuto y descansa el tiempo restante.",
     },
   },
@@ -120,7 +122,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     definitions: {
       en: "A big exercise that trains many muscles at once, squat, deadlift, bench, row, overhead press.",
       no: "En stor øvelse som trener mange muskler samtidig, knebøy, markløft, benkpress.",
-      "pt-BR": "Um exercício grande que trabalha vários músculos ao mesmo tempo, agachamento, levantamento terra, supino.",
+      "pt-BR":
+        "Um exercício grande que trabalha vários músculos ao mesmo tempo, agachamento, levantamento terra, supino.",
       es: "Un ejercicio grande que trabaja varios músculos a la vez, sentadilla, peso muerto, press banca.",
     },
   },
@@ -187,7 +190,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     term: "set",
     aliases: ["sets"],
     definitions: {
-      en: "A group of reps done in a row before you rest. e.g. \"3 sets of 10\" = 10 reps, rest, 10 reps, rest, 10 reps.",
+      en: 'A group of reps done in a row before you rest. e.g. "3 sets of 10" = 10 reps, rest, 10 reps, rest, 10 reps.',
       no: "En gruppe reps gjort etter hverandre før du hviler.",
       "pt-BR": "Um grupo de repetições feitas seguidas antes de descansar.",
       es: "Un grupo de repeticiones hechas seguidas antes de descansar.",
@@ -245,7 +248,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     definitions: {
       en: "The correct technique of an exercise, safer joints and better muscle work.",
       no: "Riktig teknikk i øvelsen, trygge ledd og bedre muskelarbeid.",
-      "pt-BR": "A técnica correta do exercício, mais seguro para as articulações e melhor trabalho muscular.",
+      "pt-BR":
+        "A técnica correta do exercício, mais seguro para as articulações e melhor trabalho muscular.",
       es: "La técnica correcta del ejercicio, más seguro para las articulaciones.",
     },
   },
@@ -275,7 +279,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     definitions: {
       en: "Calories on the rower or bike, a workload target. 15 cal = keep going until the machine display shows 15 calories.",
       no: "Kalorier på romaskin eller sykkel, et arbeidsmål. 15 cal = ro/sykle til displayet viser 15 kalorier.",
-      "pt-BR": "Calorias no remo ou bike, uma meta de trabalho. 15 cal = continue até o painel mostrar 15 calorias.",
+      "pt-BR":
+        "Calorias no remo ou bike, uma meta de trabalho. 15 cal = continue até o painel mostrar 15 calorias.",
       es: "Calorías en el remo o la bici, un objetivo de trabajo. 15 cal = sigue hasta que el marcador muestre 15 calorías.",
     },
   },
@@ -285,7 +290,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     definitions: {
       en: "Distance on the rower or sled, 500 m on the rower means row until the screen reads 500 meters.",
       no: "Distanse på romaskin eller slede, 500 m på romaskin betyr å ro til skjermen viser 500 meter.",
-      "pt-BR": "Distância no remo ou sled, 500 m no remo significa remar até o painel marcar 500 metros.",
+      "pt-BR":
+        "Distância no remo ou sled, 500 m no remo significa remar até o painel marcar 500 metros.",
       es: "Distancia en el remo o el trineo, 500 m en el remo significa remar hasta que la pantalla marque 500 metros.",
     },
   },
@@ -305,7 +311,8 @@ export const GLOSSARY: GlossaryEntry[] = [
     definitions: {
       en: "In an EMOM: finish the reps as fast as you can, then rest for whatever time is left before the next minute starts.",
       no: "I EMOM: gjør ferdig repsene så raskt du kan, hvil resten av minuttet før neste minutt starter.",
-      "pt-BR": "No EMOM: complete as reps o mais rápido possível e descanse o tempo que sobrar até o próximo minuto.",
+      "pt-BR":
+        "No EMOM: complete as reps o mais rápido possível e descanse o tempo que sobrar até o próximo minuto.",
       es: "En un EMOM: termina las reps lo más rápido posible y descansa el tiempo que quede hasta el siguiente minuto.",
     },
   },
@@ -314,8 +321,6 @@ export const GLOSSARY: GlossaryEntry[] = [
 export function getGlossaryEntry(term: string): GlossaryEntry | undefined {
   const lower = term.toLowerCase();
   return GLOSSARY.find(
-    (g) =>
-      g.term.toLowerCase() === lower ||
-      g.aliases?.some((a) => a.toLowerCase() === lower),
+    (g) => g.term.toLowerCase() === lower || g.aliases?.some((a) => a.toLowerCase() === lower),
   );
 }

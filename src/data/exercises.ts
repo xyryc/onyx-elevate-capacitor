@@ -45,19 +45,84 @@ export interface CategoryInfo {
 }
 
 export const categories: CategoryInfo[] = [
-  { id: "Home Gym", label: "Home Gym", blurb: "Train anywhere - bodyweight, bands and a single dumbbell.", accent: "bg-emerald-400/10 text-emerald-300 border-emerald-400/30" },
-  { id: "Chest", label: "Chest", blurb: "Press, fly and push every angle of the pecs.", accent: "bg-red-400/10 text-red-300 border-red-400/30" },
-  { id: "Back", label: "Back", blurb: "Build width and thickness with pulls, rows and hinges.", accent: "bg-blue-400/10 text-blue-300 border-blue-400/30" },
-  { id: "Shoulders", label: "Shoulders", blurb: "Caps, rear delts and overhead pressing strength.", accent: "bg-yellow-400/10 text-yellow-300 border-yellow-400/30" },
-  { id: "Biceps", label: "Biceps", blurb: "Every curl pattern to grow the long and short head.", accent: "bg-emerald-400/10 text-emerald-300 border-emerald-400/30" },
-  { id: "Triceps", label: "Triceps", blurb: "Pushdowns, extensions and close-grip pressing.", accent: "bg-orange-400/10 text-orange-300 border-orange-400/30" },
-  { id: "Quads", label: "Quads", blurb: "Squat patterns, lunges and unilateral leg work.", accent: "bg-purple-400/10 text-purple-300 border-purple-400/30" },
-  { id: "Glutes & Hamstrings", label: "Glutes & Hammies", blurb: "Hinge, bridge and abduct to develop the posterior chain.", accent: "bg-amber-400/10 text-amber-300 border-amber-400/30" },
-  { id: "Calves", label: "Calves", blurb: "Standing and seated raises for soleus + gastroc.", accent: "bg-zinc-400/10 text-zinc-300 border-zinc-400/30" },
-  { id: "Core", label: "Core", blurb: "Crunches, planks, raises and rotation - our biggest category.", accent: "bg-sky-400/10 text-sky-300 border-sky-400/30" },
-  { id: "Cardio & Conditioning", label: "Cardio", blurb: "Treadmill, bike, rower and machine conditioning.", accent: "bg-green-400/10 text-green-300 border-green-400/30" },
-  { id: "Hyrox", label: "Hyrox / Functional", blurb: "Sleds, ropes, burpees and box jumps - race-prep work.", accent: "bg-orange-400/10 text-orange-300 border-orange-400/30" },
-  { id: "Yoga & Stretching", label: "Yoga & Stretching", blurb: "Quiet poses and deep stretches for flexibility and recovery.", accent: "bg-sky-400/10 text-sky-300 border-sky-400/30" },
+  {
+    id: "Home Gym",
+    label: "Home Gym",
+    blurb: "Train anywhere - bodyweight, bands and a single dumbbell.",
+    accent: "bg-emerald-400/10 text-emerald-300 border-emerald-400/30",
+  },
+  {
+    id: "Chest",
+    label: "Chest",
+    blurb: "Press, fly and push every angle of the pecs.",
+    accent: "bg-red-400/10 text-red-300 border-red-400/30",
+  },
+  {
+    id: "Back",
+    label: "Back",
+    blurb: "Build width and thickness with pulls, rows and hinges.",
+    accent: "bg-blue-400/10 text-blue-300 border-blue-400/30",
+  },
+  {
+    id: "Shoulders",
+    label: "Shoulders",
+    blurb: "Caps, rear delts and overhead pressing strength.",
+    accent: "bg-yellow-400/10 text-yellow-300 border-yellow-400/30",
+  },
+  {
+    id: "Biceps",
+    label: "Biceps",
+    blurb: "Every curl pattern to grow the long and short head.",
+    accent: "bg-emerald-400/10 text-emerald-300 border-emerald-400/30",
+  },
+  {
+    id: "Triceps",
+    label: "Triceps",
+    blurb: "Pushdowns, extensions and close-grip pressing.",
+    accent: "bg-orange-400/10 text-orange-300 border-orange-400/30",
+  },
+  {
+    id: "Quads",
+    label: "Quads",
+    blurb: "Squat patterns, lunges and unilateral leg work.",
+    accent: "bg-purple-400/10 text-purple-300 border-purple-400/30",
+  },
+  {
+    id: "Glutes & Hamstrings",
+    label: "Glutes & Hammies",
+    blurb: "Hinge, bridge and abduct to develop the posterior chain.",
+    accent: "bg-amber-400/10 text-amber-300 border-amber-400/30",
+  },
+  {
+    id: "Calves",
+    label: "Calves",
+    blurb: "Standing and seated raises for soleus + gastroc.",
+    accent: "bg-zinc-400/10 text-zinc-300 border-zinc-400/30",
+  },
+  {
+    id: "Core",
+    label: "Core",
+    blurb: "Crunches, planks, raises and rotation - our biggest category.",
+    accent: "bg-sky-400/10 text-sky-300 border-sky-400/30",
+  },
+  {
+    id: "Cardio & Conditioning",
+    label: "Cardio",
+    blurb: "Treadmill, bike, rower and machine conditioning.",
+    accent: "bg-green-400/10 text-green-300 border-green-400/30",
+  },
+  {
+    id: "Hyrox",
+    label: "Hyrox / Functional",
+    blurb: "Sleds, ropes, burpees and box jumps - race-prep work.",
+    accent: "bg-orange-400/10 text-orange-300 border-orange-400/30",
+  },
+  {
+    id: "Yoga & Stretching",
+    label: "Yoga & Stretching",
+    blurb: "Quiet poses and deep stretches for flexibility and recovery.",
+    accent: "bg-sky-400/10 text-sky-300 border-sky-400/30",
+  },
 ];
 
 export interface Exercise {
@@ -114,8 +179,20 @@ const inferEquipment = (name: string): string => {
 
 const inferLevel = (name: string): Difficulty => {
   const n = name.toLowerCase();
-  if (n.includes("advanced") || n.includes("hard") || n.includes("weighted") || n.includes("pistol")) return "Advanced";
-  if (n.includes("easy") || n.includes("assisted") || n.includes("on knees") || n.includes("beginner")) return "Beginner";
+  if (
+    n.includes("advanced") ||
+    n.includes("hard") ||
+    n.includes("weighted") ||
+    n.includes("pistol")
+  )
+    return "Advanced";
+  if (
+    n.includes("easy") ||
+    n.includes("assisted") ||
+    n.includes("on knees") ||
+    n.includes("beginner")
+  )
+    return "Beginner";
   return "Intermediate";
 };
 
@@ -131,10 +208,14 @@ interface Mini {
 
 const forceVerb = (f: ForceType) => {
   switch (f) {
-    case "Push": return "press";
-    case "Pull": return "pull";
-    case "Hinge": return "hinge";
-    case "Static": return "hold";
+    case "Push":
+      return "press";
+    case "Pull":
+      return "pull";
+    case "Hinge":
+      return "hinge";
+    case "Static":
+      return "hold";
   }
 };
 
@@ -154,17 +235,44 @@ const make = (m: Mini, category: Category): Exercise => {
   const steps =
     type === "Cardio"
       ? [
-          { title: "Setup", body: `Step onto / mount the ${equipment.toLowerCase()} with a tall posture and a relaxed grip. Set a pace you can hold for the full work interval.` },
-          { title: "Warm-up", body: "Spend the first 2–3 minutes building intensity gradually - never start at full effort cold." },
-          { title: "Work pace", body: "Settle into a rhythm where breathing is controlled (nose-in, mouth-out) and form stays clean." },
-          { title: "Cooldown", body: "Reduce intensity for the final minutes and finish with light mobility for the working joints." },
+          {
+            title: "Setup",
+            body: `Step onto / mount the ${equipment.toLowerCase()} with a tall posture and a relaxed grip. Set a pace you can hold for the full work interval.`,
+          },
+          {
+            title: "Warm-up",
+            body: "Spend the first 2–3 minutes building intensity gradually - never start at full effort cold.",
+          },
+          {
+            title: "Work pace",
+            body: "Settle into a rhythm where breathing is controlled (nose-in, mouth-out) and form stays clean.",
+          },
+          {
+            title: "Cooldown",
+            body: "Reduce intensity for the final minutes and finish with light mobility for the working joints.",
+          },
         ]
       : [
-          { title: "Set up", body: `Take a stable stance and grip the ${equipment.toLowerCase()} with the lift positioned over your base of support. Brace the core and pack the shoulders before the first rep.` },
-          { title: "Initiate the rep", body: `Begin the movement by ${force === "Hinge" ? "sending the hips back" : force === "Pull" ? "driving the elbows" : force === "Static" ? "creating full-body tension and holding the position" : "controlling the descent"}, keeping the target muscle (${primary.toLowerCase()}) loaded throughout.` },
-          { title: "Working range", body: `Move through the full available range without losing position. Avoid bouncing out of the stretched position - use a controlled tempo.` },
-          { title: "Finish the rep", body: `${force === "Static" ? "Hold the brace for the prescribed time, then release with control." : `Return to the start position by reversing the movement under control and squeezing the ${primary.toLowerCase()} at the top.`}` },
-          { title: "Breathing", body: "Inhale and brace before the rep, exhale on the hardest portion of the lift." },
+          {
+            title: "Set up",
+            body: `Take a stable stance and grip the ${equipment.toLowerCase()} with the lift positioned over your base of support. Brace the core and pack the shoulders before the first rep.`,
+          },
+          {
+            title: "Initiate the rep",
+            body: `Begin the movement by ${force === "Hinge" ? "sending the hips back" : force === "Pull" ? "driving the elbows" : force === "Static" ? "creating full-body tension and holding the position" : "controlling the descent"}, keeping the target muscle (${primary.toLowerCase()}) loaded throughout.`,
+          },
+          {
+            title: "Working range",
+            body: `Move through the full available range without losing position. Avoid bouncing out of the stretched position - use a controlled tempo.`,
+          },
+          {
+            title: "Finish the rep",
+            body: `${force === "Static" ? "Hold the brace for the prescribed time, then release with control." : `Return to the start position by reversing the movement under control and squeezing the ${primary.toLowerCase()} at the top.`}`,
+          },
+          {
+            title: "Breathing",
+            body: "Inhale and brace before the rep, exhale on the hardest portion of the lift.",
+          },
         ];
 
   const proTips =
@@ -181,10 +289,10 @@ const make = (m: Mini, category: Category): Exercise => {
           force === "Hinge"
             ? "Keep the bar/dumbbells close to the body to protect the lower back."
             : force === "Pull"
-            ? "Initiate every rep with the back, not the biceps."
-            : force === "Push"
-            ? "Drive through the full foot / planted base, not just the toes."
-            : "Brace 360° around the spine - front, sides and back all engaged.",
+              ? "Initiate every rep with the back, not the biceps."
+              : force === "Push"
+                ? "Drive through the full foot / planted base, not just the toes."
+                : "Brace 360° around the spine - front, sides and back all engaged.",
         ];
 
   const commonMistakes =
@@ -201,10 +309,10 @@ const make = (m: Mini, category: Category): Exercise => {
           force === "Push"
             ? "Flaring the elbows aggressively, stressing the shoulder joint."
             : force === "Pull"
-            ? "Shrugging the shoulders to the ears instead of pulling with the lats."
-            : force === "Hinge"
-            ? "Turning the lift into a squat by bending the knees too much."
-            : "Holding your breath - keep airflow controlled.",
+              ? "Shrugging the shoulders to the ears instead of pulling with the lats."
+              : force === "Hinge"
+                ? "Turning the lift into a squat by bending the knees too much."
+                : "Holding your breath - keep airflow controlled.",
         ];
 
   return {
@@ -227,7 +335,6 @@ const make = (m: Mini, category: Category): Exercise => {
   };
 };
 
-
 // ---------- Hand-authored detail entry ----------
 const romanianDeadlift: Exercise = {
   slug: "romanian-deadlift",
@@ -245,12 +352,30 @@ const romanianDeadlift: Exercise = {
   overview:
     "The Romanian Deadlift (RDL) is a posterior-chain staple that develops the hamstrings, glutes and erector spinae through a controlled hip hinge. Unlike a conventional deadlift, the bar travels along the legs while the knees stay only softly bent, keeping continuous tension on the hamstrings. It builds the kind of hinge strength that transfers directly to sprinting, jumping and heavier pulling variations.",
   steps: [
-    { title: "Starting position", body: "Stand tall with feet hip-width apart, bar over mid-foot. Grip just outside the hips, shoulders packed, ribcage stacked over pelvis." },
-    { title: "Execution", body: "Push the hips back as you lower the bar down the front of the thighs. Keep the bar in contact with the legs and the back flat throughout." },
-    { title: "Bottom position", body: "Stop when you feel a deep stretch in the hamstrings - typically just below the knee. Do not chase floor depth at the cost of a neutral spine." },
-    { title: "Return", body: "Drive the hips forward and squeeze the glutes hard to lock out, finishing tall without hyperextending the lower back." },
-    { title: "Breathing", body: "Inhale and brace at the top, hold pressure through the descent, exhale as you complete the lockout." },
-    { title: "Tempo", body: "Aim for 3 seconds down, a brief pause, and a controlled 1–2 second drive up." },
+    {
+      title: "Starting position",
+      body: "Stand tall with feet hip-width apart, bar over mid-foot. Grip just outside the hips, shoulders packed, ribcage stacked over pelvis.",
+    },
+    {
+      title: "Execution",
+      body: "Push the hips back as you lower the bar down the front of the thighs. Keep the bar in contact with the legs and the back flat throughout.",
+    },
+    {
+      title: "Bottom position",
+      body: "Stop when you feel a deep stretch in the hamstrings - typically just below the knee. Do not chase floor depth at the cost of a neutral spine.",
+    },
+    {
+      title: "Return",
+      body: "Drive the hips forward and squeeze the glutes hard to lock out, finishing tall without hyperextending the lower back.",
+    },
+    {
+      title: "Breathing",
+      body: "Inhale and brace at the top, hold pressure through the descent, exhale as you complete the lockout.",
+    },
+    {
+      title: "Tempo",
+      body: "Aim for 3 seconds down, a brief pause, and a controlled 1–2 second drive up.",
+    },
   ],
   proTips: [
     "Think 'push the wall behind you' with your hips, not 'bend forward'.",
@@ -274,7 +399,12 @@ const homeGym: Mini[] = [
   { name: "Wide Push Ups", primary: "Chest", secondary: ["Shoulders"] },
   { name: "Close Grip Push Ups", primary: "Triceps", secondary: ["Chest"] },
   { name: "Diamond Push Ups", primary: "Triceps", secondary: ["Chest"] },
-  { name: "Negative Push Ups On Knees", primary: "Chest", secondary: ["Triceps"], level: "Beginner" },
+  {
+    name: "Negative Push Ups On Knees",
+    primary: "Chest",
+    secondary: ["Triceps"],
+    level: "Beginner",
+  },
   { name: "Negative Push Ups On Toes", primary: "Chest", secondary: ["Triceps"] },
   { name: "Push Up On Knees", primary: "Chest", secondary: ["Triceps"], level: "Beginner" },
   { name: "Push Up On Toes", primary: "Chest", secondary: ["Triceps"] },
@@ -282,9 +412,27 @@ const homeGym: Mini[] = [
   { name: "Assisted Tricep Dips", primary: "Triceps", level: "Beginner" },
   { name: "Advanced Tricep Bench Dips", primary: "Triceps", level: "Advanced" },
   { name: "Advanced Weighted Tricep Bench Dips", primary: "Triceps", level: "Advanced" },
-  { name: "Assisted Wide Grip Pull Up", primary: "Back", secondary: ["Biceps"], force: "Pull", level: "Beginner" },
-  { name: "Assisted Underhand Chin Up", primary: "Back", secondary: ["Biceps"], force: "Pull", level: "Beginner" },
-  { name: "Assisted Hammer Grip Chin Up", primary: "Back", secondary: ["Biceps"], force: "Pull", level: "Beginner" },
+  {
+    name: "Assisted Wide Grip Pull Up",
+    primary: "Back",
+    secondary: ["Biceps"],
+    force: "Pull",
+    level: "Beginner",
+  },
+  {
+    name: "Assisted Underhand Chin Up",
+    primary: "Back",
+    secondary: ["Biceps"],
+    force: "Pull",
+    level: "Beginner",
+  },
+  {
+    name: "Assisted Hammer Grip Chin Up",
+    primary: "Back",
+    secondary: ["Biceps"],
+    force: "Pull",
+    level: "Beginner",
+  },
   // Lower Body
   { name: "Bodyweight Squats", primary: "Quads", secondary: ["Glutes"] },
   { name: "Bodyweight Sumo Squat", primary: "Quads", secondary: ["Glutes"] },
@@ -293,16 +441,36 @@ const homeGym: Mini[] = [
   { name: "Stationary Bodyweight Alternating Lunges", primary: "Quads", secondary: ["Glutes"] },
   { name: "Split Squats Bodyweight", primary: "Quads", secondary: ["Glutes"] },
   { name: "Step-Ups Bodyweight", primary: "Quads", secondary: ["Glutes"] },
-  { name: "Single-Leg Bodyweight Glute Bridge", primary: "Glutes", secondary: ["Hamstrings"], force: "Hinge" },
+  {
+    name: "Single-Leg Bodyweight Glute Bridge",
+    primary: "Glutes",
+    secondary: ["Hamstrings"],
+    force: "Hinge",
+  },
   { name: "Single Leg Calve Raises", primary: "Calves", mechanics: "Isolation" },
-  { name: "Standing Bodyweight Calve Raises", primary: "Calves", mechanics: "Isolation", level: "Beginner" },
+  {
+    name: "Standing Bodyweight Calve Raises",
+    primary: "Calves",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
   { name: "Donkey Kicks", primary: "Glutes", mechanics: "Isolation", level: "Beginner" },
   { name: "Straight Leg Donkey Kick", primary: "Glutes", mechanics: "Isolation" },
-  { name: "Clamshells With Resistance Band", primary: "Glutes", mechanics: "Isolation", level: "Beginner" },
+  {
+    name: "Clamshells With Resistance Band",
+    primary: "Glutes",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
   { name: "Banded Side Steps", primary: "Glutes", mechanics: "Isolation", level: "Beginner" },
   // Core & Mobility
   { name: "Ab Crunches", primary: "Core", mechanics: "Isolation" },
-  { name: "Assisted Machine Ab Crunch", primary: "Core", mechanics: "Isolation", level: "Beginner" },
+  {
+    name: "Assisted Machine Ab Crunch",
+    primary: "Core",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
   { name: "Weighted Ab Crunch", primary: "Core", mechanics: "Isolation", level: "Advanced" },
   { name: "Bench V-Up", primary: "Core", mechanics: "Isolation" },
   { name: "V-Up", primary: "Core", mechanics: "Isolation" },
@@ -310,8 +478,18 @@ const homeGym: Mini[] = [
   { name: "Side Crunches", primary: "Core", mechanics: "Isolation" },
   { name: "Bicycle Crunches Easy", primary: "Core", mechanics: "Isolation", level: "Beginner" },
   { name: "Bicycle Crunches Hard", primary: "Core", mechanics: "Isolation", level: "Advanced" },
-  { name: "One Sided Bicycle Crunch Easy", primary: "Core", mechanics: "Isolation", level: "Beginner" },
-  { name: "One Sided Bicycle Crunch Hard", primary: "Core", mechanics: "Isolation", level: "Advanced" },
+  {
+    name: "One Sided Bicycle Crunch Easy",
+    primary: "Core",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
+  {
+    name: "One Sided Bicycle Crunch Hard",
+    primary: "Core",
+    mechanics: "Isolation",
+    level: "Advanced",
+  },
   { name: "Reverse Crunch", primary: "Core", mechanics: "Isolation" },
   { name: "Single Leg Reverse Crunch", primary: "Core", mechanics: "Isolation" },
   { name: "Window Wipers Hard", primary: "Core", mechanics: "Isolation", level: "Advanced" },
@@ -333,10 +511,23 @@ const homeGym: Mini[] = [
   { name: "Scissor Leg Lift", primary: "Core", mechanics: "Isolation" },
   { name: "Russian Twist", primary: "Core", mechanics: "Isolation" },
   { name: "Weighted Russian Twist", primary: "Core", mechanics: "Isolation", level: "Advanced" },
-  { name: "Plank", primary: "Core", secondary: ["Shoulders"], force: "Static", mechanics: "Isolation", level: "Beginner" },
+  {
+    name: "Plank",
+    primary: "Core",
+    secondary: ["Shoulders"],
+    force: "Static",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
   { name: "Side Plank", primary: "Core", force: "Static", mechanics: "Isolation" },
   { name: "Plank With Shoulder Tap", primary: "Core", force: "Static", mechanics: "Isolation" },
-  { name: "Mountain Climbers", primary: "Core", secondary: ["Cardio"], type: "Cardio", mechanics: "Compound" },
+  {
+    name: "Mountain Climbers",
+    primary: "Core",
+    secondary: ["Cardio"],
+    type: "Cardio",
+    mechanics: "Compound",
+  },
   { name: "Slow Mountain Climbers", primary: "Core", mechanics: "Isolation", level: "Beginner" },
   { name: "Cross Body Mountain Climbers", primary: "Core", mechanics: "Isolation" },
 ];
@@ -351,7 +542,11 @@ const chest: Mini[] = [
   { name: "Dumbbell Hammer Grip Chest Press", primary: "Chest", secondary: ["Triceps"] },
   { name: "Dumbbell Hammer Grip Incline Chest Press", primary: "Chest", secondary: ["Shoulders"] },
   { name: "Dumbbell Incline Chest Press", primary: "Chest", secondary: ["Shoulders"] },
-  { name: "Incline Dumbbell Single Arm Chest Press", primary: "Chest", secondary: ["Shoulders", "Core"] },
+  {
+    name: "Incline Dumbbell Single Arm Chest Press",
+    primary: "Chest",
+    secondary: ["Shoulders", "Core"],
+  },
   { name: "Dumbbell Single Arm Chest Press", primary: "Chest", secondary: ["Core"] },
   { name: "Dumbbell Incline Alternating Chest Press", primary: "Chest", secondary: ["Shoulders"] },
   { name: "Smith Machine Chest Press", primary: "Chest", secondary: ["Triceps"] },
@@ -367,24 +562,64 @@ const chest: Mini[] = [
 
 // ---------- BACK ----------
 const back: Mini[] = [
-  { name: "Barbell Deadlift", primary: "Back", secondary: ["Hamstrings", "Glutes"], force: "Hinge", level: "Advanced" },
-  { name: "Barbell Sumo Deadlift", primary: "Glutes", secondary: ["Back", "Hamstrings"], force: "Hinge", level: "Advanced" },
+  {
+    name: "Barbell Deadlift",
+    primary: "Back",
+    secondary: ["Hamstrings", "Glutes"],
+    force: "Hinge",
+    level: "Advanced",
+  },
+  {
+    name: "Barbell Sumo Deadlift",
+    primary: "Glutes",
+    secondary: ["Back", "Hamstrings"],
+    force: "Hinge",
+    level: "Advanced",
+  },
   { name: "Rack Pull", primary: "Back", secondary: ["Hamstrings"], force: "Hinge" },
-  { name: "Smith Machine Romanian Deadlift", primary: "Hamstrings", secondary: ["Glutes", "Back"], force: "Hinge" },
-  { name: "Barbell Stiff Leg Deadlift", primary: "Hamstrings", secondary: ["Glutes", "Back"], force: "Hinge" },
+  {
+    name: "Smith Machine Romanian Deadlift",
+    primary: "Hamstrings",
+    secondary: ["Glutes", "Back"],
+    force: "Hinge",
+  },
+  {
+    name: "Barbell Stiff Leg Deadlift",
+    primary: "Hamstrings",
+    secondary: ["Glutes", "Back"],
+    force: "Hinge",
+  },
   { name: "Seated Cable Rope Pullover", primary: "Back", mechanics: "Isolation", force: "Pull" },
   { name: "Incline Cable Rope Pullover", primary: "Back", mechanics: "Isolation", force: "Pull" },
-  { name: "Dumbbell Pull Over", primary: "Back", secondary: ["Chest"], mechanics: "Isolation", force: "Pull" },
+  {
+    name: "Dumbbell Pull Over",
+    primary: "Back",
+    secondary: ["Chest"],
+    mechanics: "Isolation",
+    force: "Pull",
+  },
   { name: "Pull Ups", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Chin Ups", primary: "Back", secondary: ["Biceps"], force: "Pull" },
-  { name: "Assisted Pull Ups", primary: "Back", secondary: ["Biceps"], force: "Pull", level: "Beginner" },
+  {
+    name: "Assisted Pull Ups",
+    primary: "Back",
+    secondary: ["Biceps"],
+    force: "Pull",
+    level: "Beginner",
+  },
   { name: "Seated Cable Row", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Wide Grip Cable Row", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Single Arm Cable Row", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Single Arm Dumbbell Row", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "High Row Machine", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Rear Delt Row", primary: "Shoulders", secondary: ["Back"], force: "Pull" },
-  { name: "Cable Face Pulls", primary: "Shoulders", secondary: ["Back"], force: "Pull", mechanics: "Isolation" },
+  {
+    name: "Cable Face Pulls",
+    primary: "Shoulders",
+    secondary: ["Back"],
+    force: "Pull",
+    mechanics: "Isolation",
+  },
   { name: "Bent Over Smith Row", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Single Dumbbell Bent Over Row", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Lat Pulldown Wide Grip", primary: "Back", secondary: ["Biceps"], force: "Pull" },
@@ -392,10 +627,21 @@ const back: Mini[] = [
   { name: "Lat Pulldown Underhand Grip", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Lat Pulldown With Dual Handles", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Lat Pulldown With V Bar", primary: "Back", secondary: ["Biceps"], force: "Pull" },
-  { name: "Behind The Head Lat Pulldown", primary: "Back", secondary: ["Biceps"], force: "Pull", level: "Advanced" },
+  {
+    name: "Behind The Head Lat Pulldown",
+    primary: "Back",
+    secondary: ["Biceps"],
+    force: "Pull",
+    level: "Advanced",
+  },
   { name: "Alternating Lat Pulldown", primary: "Back", secondary: ["Biceps"], force: "Pull" },
   { name: "Straight Arm Pulldown", primary: "Back", mechanics: "Isolation", force: "Pull" },
-  { name: "Seated Cable Crossover Lat Pulldown", primary: "Back", secondary: ["Biceps"], force: "Pull" },
+  {
+    name: "Seated Cable Crossover Lat Pulldown",
+    primary: "Back",
+    secondary: ["Biceps"],
+    force: "Pull",
+  },
 ];
 
 // ---------- SHOULDERS ----------
@@ -405,7 +651,12 @@ const shoulders: Mini[] = [
   { name: "Dual Cable Shoulder Press", primary: "Shoulders", secondary: ["Triceps"] },
   { name: "Seated Smith Machine Front Press", primary: "Shoulders", secondary: ["Triceps"] },
   { name: "Dumbbell Lateral Raises", primary: "Shoulders", mechanics: "Isolation" },
-  { name: "Barbell Lateral Raises", primary: "Shoulders", mechanics: "Isolation", level: "Advanced" },
+  {
+    name: "Barbell Lateral Raises",
+    primary: "Shoulders",
+    mechanics: "Isolation",
+    level: "Advanced",
+  },
   { name: "Cable Side Raises", primary: "Shoulders", mechanics: "Isolation" },
   { name: "Dumbbell Front Raises", primary: "Shoulders", mechanics: "Isolation" },
   { name: "Cable Front Raises", primary: "Shoulders", mechanics: "Isolation" },
@@ -422,17 +673,52 @@ const shoulders: Mini[] = [
 // ---------- BICEPS ----------
 const biceps: Mini[] = [
   { name: "Barbell Curl", primary: "Biceps", mechanics: "Isolation", force: "Pull" },
-  { name: "Barbell 21s", primary: "Biceps", mechanics: "Isolation", force: "Pull", level: "Advanced" },
+  {
+    name: "Barbell 21s",
+    primary: "Biceps",
+    mechanics: "Isolation",
+    force: "Pull",
+    level: "Advanced",
+  },
   { name: "Barbell Spider Curl", primary: "Biceps", mechanics: "Isolation", force: "Pull" },
   { name: "Dumbbell Spider Curl", primary: "Biceps", mechanics: "Isolation", force: "Pull" },
-  { name: "Dumbbell Alternating Spider Curl", primary: "Biceps", mechanics: "Isolation", force: "Pull" },
-  { name: "Dumbbell Hammer Curls", primary: "Biceps", secondary: ["Forearms"], mechanics: "Isolation", force: "Pull" },
-  { name: "Alternating Dumbbell Hammer Curls", primary: "Biceps", secondary: ["Forearms"], mechanics: "Isolation", force: "Pull" },
-  { name: "Incline Hammer Curls", primary: "Biceps", secondary: ["Forearms"], mechanics: "Isolation", force: "Pull" },
+  {
+    name: "Dumbbell Alternating Spider Curl",
+    primary: "Biceps",
+    mechanics: "Isolation",
+    force: "Pull",
+  },
+  {
+    name: "Dumbbell Hammer Curls",
+    primary: "Biceps",
+    secondary: ["Forearms"],
+    mechanics: "Isolation",
+    force: "Pull",
+  },
+  {
+    name: "Alternating Dumbbell Hammer Curls",
+    primary: "Biceps",
+    secondary: ["Forearms"],
+    mechanics: "Isolation",
+    force: "Pull",
+  },
+  {
+    name: "Incline Hammer Curls",
+    primary: "Biceps",
+    secondary: ["Forearms"],
+    mechanics: "Isolation",
+    force: "Pull",
+  },
   { name: "Cable Curls", primary: "Biceps", mechanics: "Isolation", force: "Pull" },
   { name: "Dual Cable Bicep Curls", primary: "Biceps", mechanics: "Isolation", force: "Pull" },
   { name: "High Cable Curls", primary: "Biceps", mechanics: "Isolation", force: "Pull" },
-  { name: "Squat Cable Bar Curl", primary: "Biceps", mechanics: "Isolation", force: "Pull", level: "Advanced" },
+  {
+    name: "Squat Cable Bar Curl",
+    primary: "Biceps",
+    mechanics: "Isolation",
+    force: "Pull",
+    level: "Advanced",
+  },
 ];
 
 // ---------- TRICEPS ----------
@@ -441,7 +727,12 @@ const triceps: Mini[] = [
   { name: "Dumbbell Skull Crushers", primary: "Triceps", mechanics: "Isolation" },
   { name: "Barbell Skull Crushers", primary: "Triceps", mechanics: "Isolation" },
   { name: "Cable Rope Pushdowns", primary: "Triceps", mechanics: "Isolation" },
-  { name: "Assisted Machine Tricep Pushdown", primary: "Triceps", mechanics: "Isolation", level: "Beginner" },
+  {
+    name: "Assisted Machine Tricep Pushdown",
+    primary: "Triceps",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
   { name: "Cable Overhead Tricep Extensions", primary: "Triceps", mechanics: "Isolation" },
   { name: "Dumbbell Overhead Tricep Extensions", primary: "Triceps", mechanics: "Isolation" },
   { name: "Single Arm Overhead Tricep Extension", primary: "Triceps", mechanics: "Isolation" },
@@ -454,7 +745,12 @@ const quads: Mini[] = [
   { name: "Box Squat", primary: "Quads", secondary: ["Glutes"] },
   { name: "Pistol Box Squat", primary: "Quads", secondary: ["Glutes", "Core"], level: "Advanced" },
   { name: "Dumbbell Bulgarian Split Squat", primary: "Quads", secondary: ["Glutes"] },
-  { name: "Barbell Bulgarian Split Squat", primary: "Quads", secondary: ["Glutes"], level: "Advanced" },
+  {
+    name: "Barbell Bulgarian Split Squat",
+    primary: "Quads",
+    secondary: ["Glutes"],
+    level: "Advanced",
+  },
   { name: "Walking Lunges", primary: "Quads", secondary: ["Glutes"] },
   { name: "Dumbbell Walking Lunges", primary: "Quads", secondary: ["Glutes"] },
   { name: "Dumbbell Reverse Lunge", primary: "Quads", secondary: ["Glutes"] },
@@ -471,33 +767,95 @@ const quads: Mini[] = [
 
 // ---------- GLUTES & HAMSTRINGS ----------
 const glutesHams: Mini[] = [
-  { name: "Barbell Hip Thrust", primary: "Glutes", secondary: ["Hamstrings"], force: "Hinge", level: "Beginner" },
+  {
+    name: "Barbell Hip Thrust",
+    primary: "Glutes",
+    secondary: ["Hamstrings"],
+    force: "Hinge",
+    level: "Beginner",
+  },
   { name: "Dumbbell Hip Thrust", primary: "Glutes", secondary: ["Hamstrings"], force: "Hinge" },
   { name: "Single Leg Hip Thrust", primary: "Glutes", secondary: ["Hamstrings"], force: "Hinge" },
-  { name: "Smith Machine Hip Thrust", primary: "Glutes", secondary: ["Hamstrings"], force: "Hinge" },
-  { name: "Glute Bridge", primary: "Glutes", secondary: ["Hamstrings"], force: "Hinge", level: "Beginner" },
+  {
+    name: "Smith Machine Hip Thrust",
+    primary: "Glutes",
+    secondary: ["Hamstrings"],
+    force: "Hinge",
+  },
+  {
+    name: "Glute Bridge",
+    primary: "Glutes",
+    secondary: ["Hamstrings"],
+    force: "Hinge",
+    level: "Beginner",
+  },
   { name: "Banded Glute Bridge", primary: "Glutes", force: "Hinge", level: "Beginner" },
   { name: "Glute Bridge Pulse", primary: "Glutes", force: "Hinge", level: "Beginner" },
   { name: "Cable Glute Kickbacks", primary: "Glutes", mechanics: "Isolation", force: "Hinge" },
   { name: "Standing Cable Hip Abduction", primary: "Glutes", mechanics: "Isolation" },
-  { name: "Seated Hip Abduction Machine", primary: "Glutes", mechanics: "Isolation", level: "Beginner" },
+  {
+    name: "Seated Hip Abduction Machine",
+    primary: "Glutes",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
   { name: "Lying Hip Abduction", primary: "Glutes", mechanics: "Isolation", level: "Beginner" },
   { name: "Clamshells", primary: "Glutes", mechanics: "Isolation", level: "Beginner" },
-  { name: "Romanian Deadlifts", primary: "Hamstrings", secondary: ["Glutes", "Back"], force: "Hinge" },
-  { name: "Dumbbell Romanian Deadlift", primary: "Hamstrings", secondary: ["Glutes"], force: "Hinge", level: "Beginner" },
+  {
+    name: "Romanian Deadlifts",
+    primary: "Hamstrings",
+    secondary: ["Glutes", "Back"],
+    force: "Hinge",
+  },
+  {
+    name: "Dumbbell Romanian Deadlift",
+    primary: "Hamstrings",
+    secondary: ["Glutes"],
+    force: "Hinge",
+    level: "Beginner",
+  },
   { name: "Single Leg RDL", primary: "Hamstrings", secondary: ["Glutes", "Core"], force: "Hinge" },
-  { name: "Good Morning", primary: "Hamstrings", secondary: ["Glutes", "Back"], force: "Hinge", level: "Advanced" },
-  { name: "Lying Hamstring Curl", primary: "Hamstrings", mechanics: "Isolation", force: "Pull", level: "Beginner" },
-  { name: "Seated Hamstring Curl", primary: "Hamstrings", mechanics: "Isolation", force: "Pull", level: "Beginner" },
+  {
+    name: "Good Morning",
+    primary: "Hamstrings",
+    secondary: ["Glutes", "Back"],
+    force: "Hinge",
+    level: "Advanced",
+  },
+  {
+    name: "Lying Hamstring Curl",
+    primary: "Hamstrings",
+    mechanics: "Isolation",
+    force: "Pull",
+    level: "Beginner",
+  },
+  {
+    name: "Seated Hamstring Curl",
+    primary: "Hamstrings",
+    mechanics: "Isolation",
+    force: "Pull",
+    level: "Beginner",
+  },
   { name: "Back Extensions", primary: "Back", secondary: ["Glutes", "Hamstrings"], force: "Hinge" },
-  { name: "Weighted Back Extensions", primary: "Back", secondary: ["Glutes", "Hamstrings"], force: "Hinge", level: "Advanced" },
+  {
+    name: "Weighted Back Extensions",
+    primary: "Back",
+    secondary: ["Glutes", "Hamstrings"],
+    force: "Hinge",
+    level: "Advanced",
+  },
 ];
 
 // ---------- CALVES ----------
 const calves: Mini[] = [
   { name: "Smith Machine Calve Raises", primary: "Calves", mechanics: "Isolation" },
   { name: "Standing Machine Calve Raises", primary: "Calves", mechanics: "Isolation" },
-  { name: "Seated Calf Raise Machine", primary: "Calves", mechanics: "Isolation", level: "Beginner" },
+  {
+    name: "Seated Calf Raise Machine",
+    primary: "Calves",
+    mechanics: "Isolation",
+    level: "Beginner",
+  },
 ];
 
 // ---------- CORE ----------
@@ -515,35 +873,152 @@ const core: Mini[] = [
 
 // ---------- CARDIO ----------
 const cardio: Mini[] = [
-  { name: "Treadmill Walking", primary: "Cardio", type: "Cardio", mechanics: "Compound", level: "Beginner" },
+  {
+    name: "Treadmill Walking",
+    primary: "Cardio",
+    type: "Cardio",
+    mechanics: "Compound",
+    level: "Beginner",
+  },
   { name: "Treadmill Incline Walking", primary: "Cardio", type: "Cardio", mechanics: "Compound" },
   { name: "Treadmill Jogging", primary: "Cardio", type: "Cardio", mechanics: "Compound" },
   { name: "Treadmill Incline Jogging", primary: "Cardio", type: "Cardio", mechanics: "Compound" },
-  { name: "Treadmill Sprinting", primary: "Cardio", type: "Cardio", mechanics: "Compound", level: "Advanced" },
-  { name: "Stationary Cycle", primary: "Cardio", type: "Cardio", mechanics: "Compound", level: "Beginner" },
-  { name: "Cross Trainer", primary: "Cardio", type: "Cardio", mechanics: "Compound", level: "Beginner" },
+  {
+    name: "Treadmill Sprinting",
+    primary: "Cardio",
+    type: "Cardio",
+    mechanics: "Compound",
+    level: "Advanced",
+  },
+  {
+    name: "Stationary Cycle",
+    primary: "Cardio",
+    type: "Cardio",
+    mechanics: "Compound",
+    level: "Beginner",
+  },
+  {
+    name: "Cross Trainer",
+    primary: "Cardio",
+    type: "Cardio",
+    mechanics: "Compound",
+    level: "Beginner",
+  },
   { name: "Stair Climber", primary: "Cardio", type: "Cardio", mechanics: "Compound" },
-  { name: "Rowing Machine", primary: "Cardio", secondary: ["Back", "Full Body"], type: "Cardio", mechanics: "Compound" },
+  {
+    name: "Rowing Machine",
+    primary: "Cardio",
+    secondary: ["Back", "Full Body"],
+    type: "Cardio",
+    mechanics: "Compound",
+  },
 ];
 
 // ---------- HYROX ----------
 const hyrox: Mini[] = [
-  { name: "Sled Push", primary: "Full Body", secondary: ["Quads", "Glutes"], type: "Power", level: "Advanced" },
-  { name: "Battle Rope Waves", primary: "Shoulders", secondary: ["Cardio", "Core"], type: "Cardio", mechanics: "Compound" },
-  { name: "Battle Rope Alternating", primary: "Shoulders", secondary: ["Cardio"], type: "Cardio", mechanics: "Compound" },
-  { name: "Battle Rope Slams", primary: "Shoulders", secondary: ["Core"], type: "Power", mechanics: "Compound" },
-  { name: "Single Arm Battle Rope", primary: "Shoulders", secondary: ["Core"], type: "Cardio", mechanics: "Compound" },
-  { name: "Box Jumps", primary: "Quads", secondary: ["Glutes", "Calves"], type: "Power", mechanics: "Compound" },
-  { name: "Dumbbell Box Jumps", primary: "Quads", secondary: ["Glutes"], type: "Power", mechanics: "Compound", level: "Advanced" },
-  { name: "Burpees", primary: "Full Body", secondary: ["Cardio"], type: "Cardio", mechanics: "Compound" },
-  { name: "Half Burpees", primary: "Full Body", secondary: ["Cardio"], type: "Cardio", mechanics: "Compound", level: "Beginner" },
-  { name: "Easy Burpees", primary: "Full Body", type: "Cardio", mechanics: "Compound", level: "Beginner" },
-  { name: "Burpee Curl And Press", primary: "Full Body", secondary: ["Shoulders", "Biceps"], type: "Power", mechanics: "Compound", level: "Advanced" },
-  { name: "Commandos", primary: "Core", secondary: ["Shoulders"], force: "Static", mechanics: "Compound" },
-  { name: "Bosu Ball Plank Jumps", primary: "Core", secondary: ["Shoulders"], type: "Power", mechanics: "Compound", level: "Advanced" },
+  {
+    name: "Sled Push",
+    primary: "Full Body",
+    secondary: ["Quads", "Glutes"],
+    type: "Power",
+    level: "Advanced",
+  },
+  {
+    name: "Battle Rope Waves",
+    primary: "Shoulders",
+    secondary: ["Cardio", "Core"],
+    type: "Cardio",
+    mechanics: "Compound",
+  },
+  {
+    name: "Battle Rope Alternating",
+    primary: "Shoulders",
+    secondary: ["Cardio"],
+    type: "Cardio",
+    mechanics: "Compound",
+  },
+  {
+    name: "Battle Rope Slams",
+    primary: "Shoulders",
+    secondary: ["Core"],
+    type: "Power",
+    mechanics: "Compound",
+  },
+  {
+    name: "Single Arm Battle Rope",
+    primary: "Shoulders",
+    secondary: ["Core"],
+    type: "Cardio",
+    mechanics: "Compound",
+  },
+  {
+    name: "Box Jumps",
+    primary: "Quads",
+    secondary: ["Glutes", "Calves"],
+    type: "Power",
+    mechanics: "Compound",
+  },
+  {
+    name: "Dumbbell Box Jumps",
+    primary: "Quads",
+    secondary: ["Glutes"],
+    type: "Power",
+    mechanics: "Compound",
+    level: "Advanced",
+  },
+  {
+    name: "Burpees",
+    primary: "Full Body",
+    secondary: ["Cardio"],
+    type: "Cardio",
+    mechanics: "Compound",
+  },
+  {
+    name: "Half Burpees",
+    primary: "Full Body",
+    secondary: ["Cardio"],
+    type: "Cardio",
+    mechanics: "Compound",
+    level: "Beginner",
+  },
+  {
+    name: "Easy Burpees",
+    primary: "Full Body",
+    type: "Cardio",
+    mechanics: "Compound",
+    level: "Beginner",
+  },
+  {
+    name: "Burpee Curl And Press",
+    primary: "Full Body",
+    secondary: ["Shoulders", "Biceps"],
+    type: "Power",
+    mechanics: "Compound",
+    level: "Advanced",
+  },
+  {
+    name: "Commandos",
+    primary: "Core",
+    secondary: ["Shoulders"],
+    force: "Static",
+    mechanics: "Compound",
+  },
+  {
+    name: "Bosu Ball Plank Jumps",
+    primary: "Core",
+    secondary: ["Shoulders"],
+    type: "Power",
+    mechanics: "Compound",
+    level: "Advanced",
+  },
 ];
 
-import { bunnyVideoMap, bunnyExtrasByCategory, getBunnyEmbedUrl, getBunnyThumbnail } from "./bunnyVideos";
+import {
+  bunnyVideoMap,
+  bunnyExtrasByCategory,
+  getBunnyEmbedUrl,
+  getBunnyThumbnail,
+} from "./bunnyVideos";
 import { poses as yogaPoses } from "./yogaPoses";
 
 // Build extras from Bunny library (videos that don't match any hand-authored exercise).
@@ -635,15 +1110,31 @@ export const exercises: Exercise[] = [
     .flatMap<Exercise>((e) => {
       const guid = bunnyVideoMap[e.slug];
       if (!guid) return [];
-      return [{ ...e, videoUrl: getBunnyEmbedUrl(guid), thumbnailUrl: thumbnailOverrides[e.slug] ?? getBunnyThumbnail(guid) }];
+      return [
+        {
+          ...e,
+          videoUrl: getBunnyEmbedUrl(guid),
+          thumbnailUrl: thumbnailOverrides[e.slug] ?? getBunnyThumbnail(guid),
+        },
+      ];
     }),
   ...mappedYogaExercises,
 ];
 
-
 export const muscleGroups: MuscleGroup[] = [
-  "Hamstrings", "Glutes", "Quads", "Calves", "Chest", "Back",
-  "Shoulders", "Biceps", "Triceps", "Core", "Forearms", "Full Body", "Cardio",
+  "Hamstrings",
+  "Glutes",
+  "Quads",
+  "Calves",
+  "Chest",
+  "Back",
+  "Shoulders",
+  "Biceps",
+  "Triceps",
+  "Core",
+  "Forearms",
+  "Full Body",
+  "Cardio",
 ];
 
 export const equipmentOptions = Array.from(new Set(exercises.map((e) => e.equipment))).sort();
@@ -689,7 +1180,10 @@ const _aliasReplacements: [RegExp, string][] = [
   [/\bbanded front squats?\b/g, "bodyweight-squats"],
   [/\bbanded romanian deadlifts?\b/g, "smith-machine-romanian-deadlift"],
   [/\bbanded push press\b/g, "burpee-with-dumbbell-shoulder-press"],
-  [/\bband(ed)?( )(chest press|overhead press|chest fly|triceps? pushdown|lateral raise|row|face pull|bicep curl|push ups?|pull[\s-]?aparts?)( \(.*\))?\b/g, "banded-side-steps"],
+  [
+    /\bband(ed)?( )(chest press|overhead press|chest fly|triceps? pushdown|lateral raise|row|face pull|bicep curl|push ups?|pull[\s-]?aparts?)( \(.*\))?\b/g,
+    "banded-side-steps",
+  ],
   [/\bdips?\b/g, "bench-tricep-dips"],
   [/\b(dumbbell|db) thrusters?( \(.*\))?\b/g, "burpee-with-dumbbell-shoulder-press"],
   [/\bdumbbell push press\b/g, "burpee-with-dumbbell-shoulder-press"],
@@ -712,14 +1206,15 @@ const _aliasReplacements: [RegExp, string][] = [
   [/\breverse pec deck\b/g, "dual-cable-high-rear-delt-row"],
   [/\bbroad jumps?\b/g, "burpees"],
 
-
-
   // TOP-PRIORITY: Smith-machine + specific glute/hip patterns must fire BEFORE any generic
   // "reverse lunge", "bulgarian split squat", "hip thrust" or "rdl" alias below.
   [/\bsmith machine (alternating )?reverse lunges?\b/g, "smith machine reverse single leg lunges"],
   [/\bsmith machine (dumbbell )?bulgarian split squats?\b/g, "smith machine squats"],
   [/\bsmith machine hip thrusts?\b/g, "barbell glute hip thrusts on bench"],
-  [/\bsmith machine (romanian |stiff[\s-]?leg |rdl )deadlifts?\b/g, "smith machine stiff leg deadlift"],
+  [
+    /\bsmith machine (romanian |stiff[\s-]?leg |rdl )deadlifts?\b/g,
+    "smith machine stiff leg deadlift",
+  ],
   [/\bsmith machine squats?\b/g, "smith machine squats"],
   [/\bchest[\s-]?supported row (machine)?\b/g, "dumbbell hammer grip row"],
   [/\bstraight[\s-]?arm (cable )?pulldowns?\b/g, "straight arm pulldown"],
@@ -789,7 +1284,6 @@ const _aliasReplacements: [RegExp, string][] = [
   // Farmer's Carry has no library entry → swap to Sled Push (closest loaded conditioning)
   [/\bfarmer'?s?\s+(carry|carries)\b/g, "sled push"],
   [/\bloaded carr(y|ies)\b/g, "sled push"],
-
 
   // "Dumbbell Bench Press" → library uses "Dumbbell Chest Press"
   [/\bincline dumbbell bench press\b/g, "dumbbell incline chest press"],
@@ -937,10 +1431,7 @@ const _aliasReplacements: [RegExp, string][] = [
   [/\bglute bridges?\b/g, "body weight glute hip thrusts"],
   [/\bkas glute bridges?\b/g, "barbell glute hip thrusts"],
   [/\bb[\s-]?stance (hip thrust|rdl)\b/g, "single leg hip thrust"],
-
 ];
-
-
 
 export function findExerciseSlugByName(name: string): string | undefined {
   if (!name) return undefined;

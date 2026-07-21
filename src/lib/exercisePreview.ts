@@ -28,4 +28,3 @@ const freeSlugs: Set<string> = (() => {
 export function isFreePreviewExercise(e: Pick<Exercise, "slug">): boolean {
   return freeSlugs.has(e.slug);
 }
-

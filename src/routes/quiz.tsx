@@ -6,9 +6,17 @@ export const Route = createFileRoute("/quiz")({
   head: () => ({
     meta: [
       { title: "Find Your Program · Onyx Elevate" },
-      { name: "description", content: "Answer 7 quick questions and we'll match you to the perfect Onyx training program." },
+      {
+        name: "description",
+        content:
+          "Answer 7 quick questions and we'll match you to the perfect Onyx training program.",
+      },
       { property: "og:title", content: "Find Your Program · Onyx Elevate" },
-      { property: "og:description", content: "Answer 7 quick questions and we'll match you to the perfect Onyx training program." },
+      {
+        property: "og:description",
+        content:
+          "Answer 7 quick questions and we'll match you to the perfect Onyx training program.",
+      },
     ],
   }),
 });

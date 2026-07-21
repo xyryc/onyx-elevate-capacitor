@@ -7,10 +7,7 @@ const MAX_ATTEMPTS = 5;
 
 // Users exempt from device email verification (e.g. accounts without a real
 // inbox they can access, such as Apple private-relay aliases they don't own).
-const DEVICE_VERIFY_BYPASS_USER_IDS = new Set<string>([
-  "054655a6-c41c-4608-83da-a2d916f4fc9e",
-]);
-
+const DEVICE_VERIFY_BYPASS_USER_IDS = new Set<string>(["054655a6-c41c-4608-83da-a2d916f4fc9e"]);
 
 async function sha256Hex(input: string): Promise<string> {
   const buf = new TextEncoder().encode(input);
@@ -26,14 +23,16 @@ function generateCode(): string {
   return (buf[0] % 1_000_000).toString().padStart(6, "0");
 }
 
-export type EnsureDeviceResult =
-  | { trusted: true }
-  | { trusted: false; sentTo: string };
+export type EnsureDeviceResult = { trusted: true } | { trusted: false; sentTo: string };
 
 export const ensureDeviceTrusted = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { deviceHash: string; deviceLabel?: string }) => {
-    if (!input?.deviceHash || typeof input.deviceHash !== "string" || input.deviceHash.length > 128) {
+    if (
+      !input?.deviceHash ||
+      typeof input.deviceHash !== "string" ||
+      input.deviceHash.length > 128
+    ) {
       throw new Error("Invalid device");
     }
     return {
@@ -59,7 +58,6 @@ export const ensureDeviceTrusted = createServerFn({ method: "POST" })
       );
       return { trusted: true };
     }
-
 
     // Already trusted?
     const { data: trusted } = await supabaseAdmin
@@ -118,7 +116,6 @@ export const ensureDeviceTrusted = createServerFn({ method: "POST" })
       { onConflict: "user_id,device_hash" },
     );
 
-
     const { enqueueTransactionalEmail } = await import("@/lib/email/send.server");
     const result = await enqueueTransactionalEmail({
       templateName: "device-verification",
@@ -141,17 +138,19 @@ export const ensureDeviceTrusted = createServerFn({ method: "POST" })
 
 export const verifyDeviceCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { deviceHash: string; code: string; deviceLabel?: string; remember?: boolean }) => {
-    if (!input?.deviceHash || !input?.code) throw new Error("Missing fields");
-    const code = String(input.code).replace(/\s+/g, "");
-    if (!/^\d{6}$/.test(code)) throw new Error("Code must be 6 digits");
-    return {
-      deviceHash: String(input.deviceHash).slice(0, 128),
-      code,
-      deviceLabel: (input.deviceLabel ?? "Unknown device").slice(0, 120),
-      remember: input.remember !== false, // default true
-    };
-  })
+  .inputValidator(
+    (input: { deviceHash: string; code: string; deviceLabel?: string; remember?: boolean }) => {
+      if (!input?.deviceHash || !input?.code) throw new Error("Missing fields");
+      const code = String(input.code).replace(/\s+/g, "");
+      if (!/^\d{6}$/.test(code)) throw new Error("Code must be 6 digits");
+      return {
+        deviceHash: String(input.deviceHash).slice(0, 128),
+        code,
+        deviceLabel: (input.deviceLabel ?? "Unknown device").slice(0, 120),
+        remember: input.remember !== false, // default true
+      };
+    },
+  )
   .handler(async ({ data, context }): Promise<{ ok: true } | { ok: false; reason: string }> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const userId = context.userId;

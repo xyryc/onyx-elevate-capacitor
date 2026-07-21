@@ -1,11 +1,24 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import type { Supplement } from "@/data/supplements";
 import { SupplementDetailView } from "./SupplementDetailView";
 
-export function SupplementDialog({ supplement, children }: { supplement: Supplement; children: React.ReactNode }) {
+export function SupplementDialog({
+  supplement,
+  children,
+}: {
+  supplement: Supplement;
+  children: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>

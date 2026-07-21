@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
-import { listReviews, upsertReview, deleteMyReview, getMyReview, type ReviewRow } from "@/lib/engagement";
+import {
+  listReviews,
+  upsertReview,
+  deleteMyReview,
+  getMyReview,
+  type ReviewRow,
+} from "@/lib/engagement";
 import { StarRating } from "./StarRating";
 
 export function ReviewsSection({ slug, kind = "program" }: { slug: string; kind?: string }) {
@@ -18,16 +24,28 @@ export function ReviewsSection({ slug, kind = "program" }: { slug: string; kind?
     let active = true;
     setLoading(true);
     Promise.all([listReviews(slug, kind), getMyReview(slug, kind)])
-      .then(([r, m]) => { if (active) { setReviews(r); setMine(m); } })
+      .then(([r, m]) => {
+        if (active) {
+          setReviews(r);
+          setMine(m);
+        }
+      })
       .catch(console.error)
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [slug, kind, user?.id]);
 
   useEffect(() => {
-    if (mine) { setRating(mine.rating); setTitle(mine.title ?? ""); setBody(mine.body ?? ""); }
+    if (mine) {
+      setRating(mine.rating);
+      setTitle(mine.title ?? "");
+      setBody(mine.body ?? "");
+    }
   }, [mine?.id]);
-
 
   const avg = reviews.length ? reviews.reduce((a, r) => a + r.rating, 0) / reviews.length : 0;
 
@@ -37,17 +55,22 @@ export function ReviewsSection({ slug, kind = "program" }: { slug: string; kind?
     try {
       await upsertReview({ product_slug: slug, product_kind: kind, rating, title, body });
       const [r, m] = await Promise.all([listReviews(slug, kind), getMyReview(slug, kind)]);
-      setReviews(r); setMine(m);
-    } catch (e: any) { alert(e.message ?? "Could not submit review"); }
-    finally { setBusy(false); }
+      setReviews(r);
+      setMine(m);
+    } catch (e: any) {
+      alert(e.message ?? "Could not submit review");
+    } finally {
+      setBusy(false);
+    }
   }
-
 
   return (
     <section className="surface-card rounded-2xl p-6 md:p-8">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-semibold">Reviews & Ratings</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-semibold">
+            Reviews & Ratings
+          </p>
           <h2 className="mt-2 font-display text-2xl md:text-3xl font-bold">
             {reviews.length > 0 ? avg.toFixed(1) : "-"}
             <span className="text-base font-normal text-muted-foreground"> / 5</span>
@@ -55,7 +78,9 @@ export function ReviewsSection({ slug, kind = "program" }: { slug: string; kind?
         </div>
         <div className="text-right">
           <StarRating value={Math.round(avg)} size={20} />
-          <p className="mt-1 text-xs text-muted-foreground">{reviews.length} review{reviews.length === 1 ? "" : "s"}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {reviews.length} review{reviews.length === 1 ? "" : "s"}
+          </p>
         </div>
       </div>
 
@@ -95,9 +120,15 @@ export function ReviewsSection({ slug, kind = "program" }: { slug: string; kind?
                 onClick={async () => {
                   if (!confirm("Delete your review?")) return;
                   await deleteMyReview(slug, kind);
-                  const [r, m] = await Promise.all([listReviews(slug, kind), getMyReview(slug, kind)]);
-                  setReviews(r); setMine(m);
-                  setTitle(""); setBody(""); setRating(5);
+                  const [r, m] = await Promise.all([
+                    listReviews(slug, kind),
+                    getMyReview(slug, kind),
+                  ]);
+                  setReviews(r);
+                  setMine(m);
+                  setTitle("");
+                  setBody("");
+                  setRating(5);
                 }}
                 className="rounded-md border border-border bg-onyx-100 px-4 py-2 text-sm font-medium hover:border-destructive hover:text-destructive transition-colors"
               >
@@ -108,7 +139,10 @@ export function ReviewsSection({ slug, kind = "program" }: { slug: string; kind?
         </form>
       ) : (
         <div className="mt-6 rounded-md border border-border bg-onyx-100/50 p-4 text-sm text-muted-foreground">
-          <Link to="/auth" className="text-electric font-semibold hover:underline">Sign in</Link> to leave a review.
+          <Link to="/auth" className="text-electric font-semibold hover:underline">
+            Sign in
+          </Link>{" "}
+          to leave a review.
         </div>
       )}
 
@@ -123,10 +157,14 @@ export function ReviewsSection({ slug, kind = "program" }: { slug: string; kind?
             <article key={r.id} className="rounded-xl border border-border bg-onyx-100/40 p-4">
               <div className="flex items-center justify-between gap-3">
                 <StarRating value={r.rating} size={14} />
-                <span className="text-[11px] text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</span>
+                <span className="text-[11px] text-muted-foreground">
+                  {new Date(r.created_at).toLocaleDateString()}
+                </span>
               </div>
               {r.title && <h4 className="mt-2 font-display font-bold">{r.title}</h4>}
-              {r.body && <p className="mt-1 text-sm text-foreground/85 whitespace-pre-wrap">{r.body}</p>}
+              {r.body && (
+                <p className="mt-1 text-sm text-foreground/85 whitespace-pre-wrap">{r.body}</p>
+              )}
             </article>
           ))
         )}

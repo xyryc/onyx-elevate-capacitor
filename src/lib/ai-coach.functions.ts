@@ -83,15 +83,122 @@ const CORE_POPULAR_SLUGS = [
 ].filter((s) => VALID_EXERCISE_SLUGS.has(s));
 
 const STOP_WORDS = new Set([
-  "the","a","an","and","or","for","to","of","in","on","at","is","are","was","were",
-  "be","been","have","has","had","do","does","did","i","me","my","you","your","we",
-  "our","it","its","that","this","with","without","can","could","should","would",
-  "will","just","some","any","how","what","when","which","who","why","give","make",
-  "want","need","get","help","please","today","now","also","really","very","much",
-  "en","et","er","du","jeg","meg","min","mitt","mine","hva","hvordan","kan","skal",
-  "vil","for","med","uten","og","eller","om","på","til","fra","har","hadde","være",
-  "de","el","la","los","las","un","una","que","como","con","sin","por","para","es",
-  "está","o","de","um","uma","que","como","com","sem","por","para","é","está",
+  "the",
+  "a",
+  "an",
+  "and",
+  "or",
+  "for",
+  "to",
+  "of",
+  "in",
+  "on",
+  "at",
+  "is",
+  "are",
+  "was",
+  "were",
+  "be",
+  "been",
+  "have",
+  "has",
+  "had",
+  "do",
+  "does",
+  "did",
+  "i",
+  "me",
+  "my",
+  "you",
+  "your",
+  "we",
+  "our",
+  "it",
+  "its",
+  "that",
+  "this",
+  "with",
+  "without",
+  "can",
+  "could",
+  "should",
+  "would",
+  "will",
+  "just",
+  "some",
+  "any",
+  "how",
+  "what",
+  "when",
+  "which",
+  "who",
+  "why",
+  "give",
+  "make",
+  "want",
+  "need",
+  "get",
+  "help",
+  "please",
+  "today",
+  "now",
+  "also",
+  "really",
+  "very",
+  "much",
+  "en",
+  "et",
+  "er",
+  "du",
+  "jeg",
+  "meg",
+  "min",
+  "mitt",
+  "mine",
+  "hva",
+  "hvordan",
+  "kan",
+  "skal",
+  "vil",
+  "for",
+  "med",
+  "uten",
+  "og",
+  "eller",
+  "om",
+  "på",
+  "til",
+  "fra",
+  "har",
+  "hadde",
+  "være",
+  "de",
+  "el",
+  "la",
+  "los",
+  "las",
+  "un",
+  "una",
+  "que",
+  "como",
+  "con",
+  "sin",
+  "por",
+  "para",
+  "es",
+  "está",
+  "o",
+  "de",
+  "um",
+  "uma",
+  "que",
+  "como",
+  "com",
+  "sem",
+  "por",
+  "para",
+  "é",
+  "está",
 ]);
 
 function extractKeywords(text: string): string[] {
@@ -260,7 +367,6 @@ ${PROGRAM_CATALOG}
 ${MEALPLAN_CATALOG}
 `;
 
-
 export type CoachStatus = {
   isPremium: boolean;
   messagesLeftToday: number;
@@ -276,7 +382,11 @@ export type CoachMessageRow = {
 
 type SendResult =
   | { ok: true; message: CoachMessageRow; messagesLeftToday: number }
-  | { ok: false; error: string; code: "not_premium" | "limit" | "throttle" | "input" | "ai" | "internal" };
+  | {
+      ok: false;
+      error: string;
+      code: "not_premium" | "limit" | "throttle" | "input" | "ai" | "internal";
+    };
 
 // Server-authoritative premium check.
 // Qualifies if the user has (a) an active/trialing subscription (live or sandbox),
@@ -322,7 +432,6 @@ function sanitizeTimezone(tz: unknown): string {
   // IANA-ish: letters, digits, /_+-, so it's safe as a Postgres text arg.
   return /^[A-Za-z0-9_+\-/]+$/.test(s) ? s : "UTC";
 }
-
 
 export const getCoachStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -372,27 +481,29 @@ export const clearCoachHistory = createServerFn({ method: "POST" })
 
 export const sendCoachMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { content: string; timezone?: string; images?: string[]; language?: string }) => {
-    const content = (input?.content ?? "").toString().trim();
-    if (!content) throw new Error("Empty message");
-    const rawImages = Array.isArray(input?.images) ? input!.images! : [];
-    const images: string[] = [];
-    for (const img of rawImages) {
-      if (typeof img !== "string") continue;
-      if (!/^data:image\/(jpeg|jpg|png|webp);base64,/i.test(img)) continue;
-      if (img.length > MAX_IMAGE_BYTES * 1.4) continue; // base64 overhead
-      images.push(img);
-      if (images.length >= MAX_IMAGES_PER_MESSAGE) break;
-    }
-    const validLangs = new Set(["en", "pt-BR", "es", "no"]);
-    const language = validLangs.has(input?.language ?? "") ? input!.language! : "en";
-    return {
-      content: content.slice(0, MAX_INPUT_CHARS + 1),
-      timezone: sanitizeTimezone(input?.timezone),
-      images,
-      language,
-    };
-  })
+  .inputValidator(
+    (input: { content: string; timezone?: string; images?: string[]; language?: string }) => {
+      const content = (input?.content ?? "").toString().trim();
+      if (!content) throw new Error("Empty message");
+      const rawImages = Array.isArray(input?.images) ? input!.images! : [];
+      const images: string[] = [];
+      for (const img of rawImages) {
+        if (typeof img !== "string") continue;
+        if (!/^data:image\/(jpeg|jpg|png|webp);base64,/i.test(img)) continue;
+        if (img.length > MAX_IMAGE_BYTES * 1.4) continue; // base64 overhead
+        images.push(img);
+        if (images.length >= MAX_IMAGES_PER_MESSAGE) break;
+      }
+      const validLangs = new Set(["en", "pt-BR", "es", "no"]);
+      const language = validLangs.has(input?.language ?? "") ? input!.language! : "en";
+      return {
+        content: content.slice(0, MAX_INPUT_CHARS + 1),
+        timezone: sanitizeTimezone(input?.timezone),
+        images,
+        language,
+      };
+    },
+  )
   .handler(async ({ data, context }): Promise<SendResult> => {
     const { supabase, userId } = context;
     const content = data.content;
@@ -400,7 +511,11 @@ export const sendCoachMessage = createServerFn({ method: "POST" })
     const images = data.images;
 
     if (content.length > MAX_INPUT_CHARS) {
-      return { ok: false, error: `Message too long (max ${MAX_INPUT_CHARS} characters).`, code: "input" };
+      return {
+        ok: false,
+        error: `Message too long (max ${MAX_INPUT_CHARS} characters).`,
+        code: "input",
+      };
     }
 
     // Premium check (server-authoritative).
@@ -415,15 +530,12 @@ export const sendCoachMessage = createServerFn({ method: "POST" })
 
     // Atomic slot claim.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: claimRows, error: claimErr } = await supabaseAdmin.rpc(
-      "claim_ai_coach_slot",
-      {
-        _user_id: userId,
-        _daily_limit: DAILY_LIMIT,
-        _throttle_seconds: THROTTLE_SECONDS,
-        _timezone: timezone,
-      },
-    );
+    const { data: claimRows, error: claimErr } = await supabaseAdmin.rpc("claim_ai_coach_slot", {
+      _user_id: userId,
+      _daily_limit: DAILY_LIMIT,
+      _throttle_seconds: THROTTLE_SECONDS,
+      _timezone: timezone,
+    });
     if (claimErr) {
       console.error("claim_ai_coach_slot failed", claimErr);
       return { ok: false, error: "Could not record usage.", code: "internal" };
@@ -555,7 +667,6 @@ READABILITY RULES, keep answers easy to scan:
         }
       : { role: "user" as const, content };
 
-
     let assistantText = "";
     try {
       const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -639,8 +750,17 @@ READABILITY RULES, keep answers easy to scan:
 // point and add matching closers so we can recover partial meal plans/programs
 // even when the model got cut off by max_tokens.
 function salvageJsonObject(raw: string): any | null {
-  const base = raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
-  const tryParse = (t: string) => { try { return JSON.parse(t); } catch { return null; } };
+  const base = raw
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/```\s*$/i, "")
+    .trim();
+  const tryParse = (t: string) => {
+    try {
+      return JSON.parse(t);
+    } catch {
+      return null;
+    }
+  };
   const first = tryParse(base);
   if (first) return first;
 
@@ -651,9 +771,18 @@ function salvageJsonObject(raw: string): any | null {
     let inStr = false;
     let esc = false;
     for (const ch of candidate) {
-      if (esc) { esc = false; continue; }
-      if (ch === "\\") { esc = true; continue; }
-      if (ch === '"') { inStr = !inStr; continue; }
+      if (esc) {
+        esc = false;
+        continue;
+      }
+      if (ch === "\\") {
+        esc = true;
+        continue;
+      }
+      if (ch === '"') {
+        inStr = !inStr;
+        continue;
+      }
       if (inStr) continue;
       if (ch === "{") stack.push("}");
       else if (ch === "[") stack.push("]");
@@ -753,13 +882,16 @@ async function extractAndSavePrograms(
   return out.trim();
 }
 
-const PROGRAM_LINK_STRINGS: Record<string, {
-  openLabel: string;
-  week: (n: number) => string;
-  day: (n: number) => string;
-  exercise: (n: number) => string;
-  tapHint: string;
-}> = {
+const PROGRAM_LINK_STRINGS: Record<
+  string,
+  {
+    openLabel: string;
+    week: (n: number) => string;
+    day: (n: number) => string;
+    exercise: (n: number) => string;
+    tapHint: string;
+  }
+> = {
   en: {
     openLabel: "Open program preview",
     week: (n) => `${n} week${n === 1 ? "" : "s"}`,
@@ -794,12 +926,15 @@ const PROGRAM_LINK_STRINGS: Record<string, {
 
 const MEAL_PLAN_BLOCK_RE = /<onyx-meal-plan>\s*([\s\S]*?)\s*<\/onyx-meal-plan>/gi;
 
-const MEAL_PLAN_LINK_STRINGS: Record<string, {
-  openLabel: string;
-  day: (n: number) => string;
-  meal: (n: number) => string;
-  tapHint: string;
-}> = {
+const MEAL_PLAN_LINK_STRINGS: Record<
+  string,
+  {
+    openLabel: string;
+    day: (n: number) => string;
+    meal: (n: number) => string;
+    tapHint: string;
+  }
+> = {
   en: {
     openLabel: "Open meal plan",
     day: (n) => `${n} day${n === 1 ? "" : "s"}`,
@@ -828,36 +963,63 @@ const MEAL_PLAN_LINK_STRINGS: Record<string, {
 
 function safeParseMealPlan(raw: string): {
   name: string;
-  days: Array<{ name: string; meals: Array<{ slot: string; name: string; kcal: number; protein_g: number; carbs_g: number; fat_g: number; notes?: string }> }>;
+  days: Array<{
+    name: string;
+    meals: Array<{
+      slot: string;
+      name: string;
+      kcal: number;
+      protein_g: number;
+      carbs_g: number;
+      fat_g: number;
+      notes?: string;
+    }>;
+  }>;
 } | null {
   try {
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
+    const cleaned = raw
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/```\s*$/i, "")
+      .trim();
     const obj = JSON.parse(cleaned);
     if (!obj || typeof obj !== "object") return null;
-    const name = String(obj.name ?? "AI Meal Plan").trim().slice(0, 60) || "AI Meal Plan";
+    const name =
+      String(obj.name ?? "AI Meal Plan")
+        .trim()
+        .slice(0, 60) || "AI Meal Plan";
     const daysRaw = Array.isArray(obj.days) ? obj.days : [];
-    const days = daysRaw.slice(0, 14).map((d: any, di: number) => ({
-      name: String(d?.name ?? `Day ${di + 1}`).slice(0, 60),
-      meals: (Array.isArray(d?.meals) ? d.meals : []).slice(0, 8).map((m: any) => {
-        const slotRaw = String(m?.slot ?? "snack").toLowerCase();
-        const slot = ["breakfast", "lunch", "dinner", "snack"].includes(slotRaw) ? slotRaw : "snack";
-        const nm = String(m?.name ?? "").trim().slice(0, 120);
-        if (!nm) return null;
-        const num = (v: any) => {
-          const n = Number(v);
-          return Number.isFinite(n) && n >= 0 ? Math.round(n) : 0;
-        };
-        return {
-          slot,
-          name: nm,
-          kcal: num(m?.kcal),
-          protein_g: num(m?.protein_g),
-          carbs_g: num(m?.carbs_g),
-          fat_g: num(m?.fat_g),
-          notes: m?.notes ? String(m.notes).slice(0, 200) : undefined,
-        };
-      }).filter((x: any): x is any => x !== null),
-    })).filter((d: any) => d.meals.length > 0);
+    const days = daysRaw
+      .slice(0, 14)
+      .map((d: any, di: number) => ({
+        name: String(d?.name ?? `Day ${di + 1}`).slice(0, 60),
+        meals: (Array.isArray(d?.meals) ? d.meals : [])
+          .slice(0, 8)
+          .map((m: any) => {
+            const slotRaw = String(m?.slot ?? "snack").toLowerCase();
+            const slot = ["breakfast", "lunch", "dinner", "snack"].includes(slotRaw)
+              ? slotRaw
+              : "snack";
+            const nm = String(m?.name ?? "")
+              .trim()
+              .slice(0, 120);
+            if (!nm) return null;
+            const num = (v: any) => {
+              const n = Number(v);
+              return Number.isFinite(n) && n >= 0 ? Math.round(n) : 0;
+            };
+            return {
+              slot,
+              name: nm,
+              kcal: num(m?.kcal),
+              protein_g: num(m?.protein_g),
+              carbs_g: num(m?.carbs_g),
+              fat_g: num(m?.fat_g),
+              notes: m?.notes ? String(m.notes).slice(0, 200) : undefined,
+            };
+          })
+          .filter((x: any): x is any => x !== null),
+      }))
+      .filter((d: any) => d.meals.length > 0);
     if (days.length === 0) return null;
     return { name, days };
   } catch {
@@ -910,41 +1072,52 @@ async function extractAndSaveMealPlans(
   return out.trim();
 }
 
-
 function safeParseProgram(raw: string): {
   name: string;
   weeks: Array<{ name: string; days: Array<{ name: string; exercises: any[] }> }>;
 } | null {
   try {
     // Tolerate accidental code-fence wrapping.
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
+    const cleaned = raw
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/```\s*$/i, "")
+      .trim();
     const obj = JSON.parse(cleaned);
     if (!obj || typeof obj !== "object") return null;
-    const name = String(obj.name ?? "AI Program").trim().slice(0, 60) || "AI Program";
+    const name =
+      String(obj.name ?? "AI Program")
+        .trim()
+        .slice(0, 60) || "AI Program";
     const weeksRaw = Array.isArray(obj.weeks) ? obj.weeks : [];
-    const weeks = weeksRaw.slice(0, 4).map((w: any, wi: number) => ({
-      name: String(w?.name ?? `Week ${wi + 1}`).slice(0, 40),
-      days: (Array.isArray(w?.days) ? w.days : []).slice(0, 7).map((d: any, di: number) => ({
-        name: String(d?.name ?? `Day ${di + 1}`).slice(0, 60),
-        exercises: (Array.isArray(d?.exercises) ? d.exercises : [])
-          .slice(0, 15)
-          .map((ex: any) => {
-            const slug = String(ex?.slug ?? "").trim();
-            if (!VALID_EXERCISE_SLUGS.has(slug)) return null;
-            return {
-              exerciseSlug: slug,
-              exerciseName: EXERCISE_NAME_BY_SLUG.get(slug) ?? slug,
-              sets: ex?.sets != null ? String(ex.sets).slice(0, 20) : "",
-              reps: ex?.reps != null ? String(ex.reps).slice(0, 20) : "",
-              rest: ex?.rest != null ? String(ex.rest).slice(0, 20) : "",
-              tempo: ex?.tempo != null ? String(ex.tempo).slice(0, 20) : "",
-              rpe: ex?.rpe != null ? String(ex.rpe).slice(0, 10) : "",
-              notes: ex?.notes != null ? String(ex.notes).slice(0, 200) : "",
-            };
-          })
-          .filter((x: any): x is any => x !== null),
-      })).filter((d: any) => d.exercises.length > 0),
-    })).filter((w: any) => w.days.length > 0);
+    const weeks = weeksRaw
+      .slice(0, 4)
+      .map((w: any, wi: number) => ({
+        name: String(w?.name ?? `Week ${wi + 1}`).slice(0, 40),
+        days: (Array.isArray(w?.days) ? w.days : [])
+          .slice(0, 7)
+          .map((d: any, di: number) => ({
+            name: String(d?.name ?? `Day ${di + 1}`).slice(0, 60),
+            exercises: (Array.isArray(d?.exercises) ? d.exercises : [])
+              .slice(0, 15)
+              .map((ex: any) => {
+                const slug = String(ex?.slug ?? "").trim();
+                if (!VALID_EXERCISE_SLUGS.has(slug)) return null;
+                return {
+                  exerciseSlug: slug,
+                  exerciseName: EXERCISE_NAME_BY_SLUG.get(slug) ?? slug,
+                  sets: ex?.sets != null ? String(ex.sets).slice(0, 20) : "",
+                  reps: ex?.reps != null ? String(ex.reps).slice(0, 20) : "",
+                  rest: ex?.rest != null ? String(ex.rest).slice(0, 20) : "",
+                  tempo: ex?.tempo != null ? String(ex.tempo).slice(0, 20) : "",
+                  rpe: ex?.rpe != null ? String(ex.rpe).slice(0, 10) : "",
+                  notes: ex?.notes != null ? String(ex.notes).slice(0, 200) : "",
+                };
+              })
+              .filter((x: any): x is any => x !== null),
+          }))
+          .filter((d: any) => d.exercises.length > 0),
+      }))
+      .filter((w: any) => w.days.length > 0);
     if (weeks.length === 0) return null;
     return { name, weeks };
   } catch {
@@ -1012,4 +1185,3 @@ Categories: "csam", "sexual", "violence", "self_harm", "hate", "drugs", "safe".`
     return { flagged: true, reason: "exception" };
   }
 }
-

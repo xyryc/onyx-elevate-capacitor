@@ -4,19 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Loader2, Trash2, CalendarPlus } from "lucide-react";
 import { toast } from "sonner";
-import {
-  getAiMealPlan,
-  deleteAiMealPlan,
-  logAiMealPlanDay,
-} from "@/lib/ai-meal-plans.functions";
+import { getAiMealPlan, deleteAiMealPlan, logAiMealPlanDay } from "@/lib/ai-meal-plans.functions";
 
 export const Route = createFileRoute("/_authenticated/ai-meal-plan/$id")({
   component: AiMealPlanPage,
   head: () => ({
-    meta: [
-      { title: "AI meal plan, Onyx Elevate" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "AI meal plan, Onyx Elevate" }, { name: "robots", content: "noindex" }],
   }),
 });
 
@@ -76,7 +69,9 @@ function AiMealPlanPage() {
       <div className="container-onyx py-16 text-center space-y-3">
         <h1 className="font-display text-2xl font-bold">Meal plan not found</h1>
         <p className="text-sm text-muted-foreground">This plan may have been deleted.</p>
-        <Link to="/my-library" className="inline-flex items-center gap-1.5 text-electric underline">Go to My Library</Link>
+        <Link to="/my-library" className="inline-flex items-center gap-1.5 text-electric underline">
+          Go to My Library
+        </Link>
       </div>
     );
   }
@@ -92,7 +87,9 @@ function AiMealPlanPage() {
 
       <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <div className="text-xs uppercase tracking-wider text-electric font-semibold">AI meal plan</div>
+          <div className="text-xs uppercase tracking-wider text-electric font-semibold">
+            AI meal plan
+          </div>
           <h1 className="font-display text-3xl md:text-4xl font-bold mt-1">{plan.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {plan.days.length} day{plan.days.length === 1 ? "" : "s"} ·{" "}
@@ -119,7 +116,8 @@ function AiMealPlanPage() {
           className="rounded-md border border-border bg-background px-3 py-1.5 text-sm"
         />
         <span className="text-xs text-muted-foreground">
-          Pick a date, then tap "Log this day" on any day below to insert its meals into your nutrition log.
+          Pick a date, then tap "Log this day" on any day below to insert its meals into your
+          nutrition log.
         </span>
       </div>
 
@@ -140,7 +138,8 @@ function AiMealPlanPage() {
                 <div>
                   <div className="font-display text-lg font-bold">{d.name}</div>
                   <div className="text-xs text-muted-foreground mt-0.5">
-                    {totals.kcal} kcal · P {totals.protein_g}g · C {totals.carbs_g}g · F {totals.fat_g}g
+                    {totals.kcal} kcal · P {totals.protein_g}g · C {totals.carbs_g}g · F{" "}
+                    {totals.fat_g}g
                   </div>
                 </div>
                 <button
@@ -164,11 +163,15 @@ function AiMealPlanPage() {
                         {SLOT_LABEL[m.slot] ?? m.slot}
                       </div>
                       <div className="font-medium">{m.name}</div>
-                      {m.notes && <div className="text-xs text-muted-foreground mt-0.5">{m.notes}</div>}
+                      {m.notes && (
+                        <div className="text-xs text-muted-foreground mt-0.5">{m.notes}</div>
+                      )}
                     </div>
                     <div className="text-xs text-muted-foreground text-right shrink-0">
                       {m.kcal} kcal
-                      <div>P {m.protein_g} · C {m.carbs_g} · F {m.fat_g}</div>
+                      <div>
+                        P {m.protein_g} · C {m.carbs_g} · F {m.fat_g}
+                      </div>
                     </div>
                   </li>
                 ))}

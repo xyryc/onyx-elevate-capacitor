@@ -66,7 +66,7 @@ ZERO TOLERANCE, recipe and food content must NEVER use drug or steroid terminolo
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify(body),
       });

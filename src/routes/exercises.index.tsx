@@ -315,4 +315,3 @@ function ExerciseLibrary() {
     </div>
   );
 }
-

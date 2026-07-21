@@ -33,13 +33,19 @@ export async function getMyStreak(): Promise<StreakInfo> {
     .order("created_at", { ascending: false });
   if (error) throw error;
 
-  const dayKeys = Array.from(new Set((data ?? []).map((row) => localDateKey(new Date(row.created_at as string))))).sort();
+  const dayKeys = Array.from(
+    new Set((data ?? []).map((row) => localDateKey(new Date(row.created_at as string)))),
+  ).sort();
   const daySet = new Set(dayKeys);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   let currentStreak = 0;
-  for (let cursor = new Date(today); daySet.has(localDateKey(cursor)); cursor.setDate(cursor.getDate() - 1)) {
+  for (
+    let cursor = new Date(today);
+    daySet.has(localDateKey(cursor));
+    cursor.setDate(cursor.getDate() - 1)
+  ) {
     currentStreak += 1;
   }
 
@@ -122,5 +128,7 @@ export async function getRecentCheckInDays(daysBack = 30, daysForward = 7): Prom
     .lte("created_at", end.toISOString());
   if (error) throw error;
 
-  return Array.from(new Set((data ?? []).map((row) => localDateKey(new Date(row.created_at as string)))));
+  return Array.from(
+    new Set((data ?? []).map((row) => localDateKey(new Date(row.created_at as string)))),
+  );
 }

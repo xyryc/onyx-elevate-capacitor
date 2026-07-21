@@ -10,7 +10,13 @@ const levelTone: Record<string, string> = {
   Advanced: "text-orange-300 border-orange-400/60 bg-orange-400/15",
 };
 
-export function ExerciseCard({ exercise, locked = false }: { exercise: Exercise; locked?: boolean }) {
+export function ExerciseCard({
+  exercise,
+  locked = false,
+}: {
+  exercise: Exercise;
+  locked?: boolean;
+}) {
   const t = useT();
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [imageReady, setImageReady] = useState(false);
@@ -26,7 +32,9 @@ export function ExerciseCard({ exercise, locked = false }: { exercise: Exercise;
     <article
       role="button"
       tabIndex={0}
-      aria-label={locked ? `${t("Members only")} ${t(exercise.name)}` : `${t("Open")} ${t(exercise.name)}`}
+      aria-label={
+        locked ? `${t("Members only")} ${t(exercise.name)}` : `${t("Open")} ${t(exercise.name)}`
+      }
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -39,8 +47,17 @@ export function ExerciseCard({ exercise, locked = false }: { exercise: Exercise;
         {!imageReady && exercise.thumbnailUrl && <CardImageSkeleton />}
         {!locked && !exercise.thumbnailUrl && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
-            <svg className="h-8 w-8 text-onyx-400/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M6.5 6.5h11M6.5 17.5h11M9 9.5l-2.5-2.5M15 9.5l2.5-2.5M9 14.5l-2.5 2.5M15 14.5l2.5 2.5" strokeLinecap="round" />
+            <svg
+              className="h-8 w-8 text-onyx-400/60"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <path
+                d="M6.5 6.5h11M6.5 17.5h11M9 9.5l-2.5-2.5M15 9.5l2.5-2.5M9 14.5l-2.5 2.5M15 14.5l2.5 2.5"
+                strokeLinecap="round"
+              />
             </svg>
             <span className="text-[10px] uppercase tracking-wider text-onyx-400/80 font-medium line-clamp-2">
               {t(exercise.name)}
@@ -58,7 +75,10 @@ export function ExerciseCard({ exercise, locked = false }: { exercise: Exercise;
               locked ? "blur-md scale-110 opacity-60" : imageReady ? "opacity-100" : "opacity-0"
             }`}
             onLoad={() => setImageReady(true)}
-            onError={(e) => { setImageReady(true); (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+            onError={(e) => {
+              setImageReady(true);
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
           />
         )}
         <div className="absolute inset-0 z-20 bg-gradient-to-t from-onyx-50/80 via-onyx-50/10 to-transparent pointer-events-none" />
@@ -78,7 +98,11 @@ export function ExerciseCard({ exercise, locked = false }: { exercise: Exercise;
           exercise.videoUrl && (
             <div className="absolute inset-0 z-30 grid place-items-center pointer-events-none">
               <div className="grid h-9 w-9 sm:h-14 sm:w-14 place-items-center rounded-full bg-electric/20 backdrop-blur-sm border border-electric/50 md:transition-transform md:group-hover:scale-110 shadow-lg">
-                <svg className="h-3 w-3 sm:h-5 sm:w-5 text-electric" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  className="h-3 w-3 sm:h-5 sm:w-5 text-electric"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
@@ -86,7 +110,9 @@ export function ExerciseCard({ exercise, locked = false }: { exercise: Exercise;
           )
         )}
 
-        <span className={`absolute z-30 top-2 left-2 sm:top-3 sm:left-3 text-[9px] sm:text-[10px] uppercase tracking-wider px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md border backdrop-blur-sm ${levelTone[exercise.level]}`}>
+        <span
+          className={`absolute z-30 top-2 left-2 sm:top-3 sm:left-3 text-[9px] sm:text-[10px] uppercase tracking-wider px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md border backdrop-blur-sm ${levelTone[exercise.level]}`}
+        >
           {t(exercise.level)}
         </span>
       </div>
@@ -99,7 +125,9 @@ export function ExerciseCard({ exercise, locked = false }: { exercise: Exercise;
           {exercise.secondaryMuscles.length > 0 && (
             <>
               <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-              <span className="truncate">{exercise.secondaryMuscles.map((m) => t(m)).join(", ")}</span>
+              <span className="truncate">
+                {exercise.secondaryMuscles.map((m) => t(m)).join(", ")}
+              </span>
             </>
           )}
         </div>

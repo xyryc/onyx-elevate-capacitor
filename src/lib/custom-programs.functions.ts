@@ -95,7 +95,6 @@ export const createCustomProgram = createServerFn({ method: "POST" })
     return { id: (row as any).id };
   });
 
-
 export const updateCustomProgram = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string; name: string; weeks: CustomWeek[] }) => d)
@@ -112,10 +111,7 @@ export const deleteCustomProgram = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => d)
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("custom_programs")
-      .delete()
-      .eq("id", data.id);
+    const { error } = await context.supabase.from("custom_programs").delete().eq("id", data.id);
     if (error) throw error;
     return { ok: true };
   });
@@ -171,43 +167,50 @@ export const cloneCustomProgram = createServerFn({ method: "POST" })
     return { id: (row as any).id };
   });
 
-
 export const getBuilderAccess = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ hasAccess: boolean; reason: "subscription" | "bundle" | null }> => {
-    const nowIso = new Date().toISOString();
+  .handler(
+    async ({
+      context,
+    }): Promise<{ hasAccess: boolean; reason: "subscription" | "bundle" | null }> => {
+      const nowIso = new Date().toISOString();
 
-    // 1) Active subscription (monthly or yearly) grants access.
-    const { data: subs } = await context.supabase
-      .from("subscriptions")
-      .select("status, current_period_end")
-      .eq("user_id", context.userId)
-      .order("created_at", { ascending: false })
-      .limit(5);
+      // 1) Active subscription (monthly or yearly) grants access.
+      const { data: subs } = await context.supabase
+        .from("subscriptions")
+        .select("status, current_period_end")
+        .eq("user_id", context.userId)
+        .order("created_at", { ascending: false })
+        .limit(5);
 
-    const hasSub = (subs ?? []).some((s: any) => {
-      const status = String(s.status ?? "");
-      const endsAt = s.current_period_end ? new Date(s.current_period_end).toISOString() : null;
-      const stillInPeriod = !endsAt || endsAt > nowIso;
-      if (["active", "trialing", "past_due"].includes(status) && stillInPeriod) return true;
-      if (status === "canceled" && endsAt && endsAt > nowIso) return true;
-      return false;
-    });
-    if (hasSub) return { hasAccess: true, reason: "subscription" };
+      const hasSub = (subs ?? []).some((s: any) => {
+        const status = String(s.status ?? "");
+        const endsAt = s.current_period_end ? new Date(s.current_period_end).toISOString() : null;
+        const stillInPeriod = !endsAt || endsAt > nowIso;
+        if (["active", "trialing", "past_due"].includes(status) && stillInPeriod) return true;
+        if (status === "canceled" && endsAt && endsAt > nowIso) return true;
+        return false;
+      });
+      if (hasSub) return { hasAccess: true, reason: "subscription" };
 
-    // 2) Lifetime / All-Access bundle one-time purchase grants access.
-    const { data: purchases } = await context.supabase
-      .from("purchases")
-      .select("product_kind, product_slug")
-      .eq("user_id", context.userId);
+      // 2) Lifetime / All-Access bundle one-time purchase grants access.
+      const { data: purchases } = await context.supabase
+        .from("purchases")
+        .select("product_kind, product_slug")
+        .eq("user_id", context.userId);
 
-    const hasBundle = (purchases ?? []).some((p: any) => {
-      if (p.product_kind === "bundle") return true;
-      const slug = String(p.product_slug ?? "").toLowerCase();
-      return slug.includes("lifetime") || slug.includes("all_access") || slug.includes("all-access") || slug === "bundle";
-    });
-    if (hasBundle) return { hasAccess: true, reason: "bundle" };
+      const hasBundle = (purchases ?? []).some((p: any) => {
+        if (p.product_kind === "bundle") return true;
+        const slug = String(p.product_slug ?? "").toLowerCase();
+        return (
+          slug.includes("lifetime") ||
+          slug.includes("all_access") ||
+          slug.includes("all-access") ||
+          slug === "bundle"
+        );
+      });
+      if (hasBundle) return { hasAccess: true, reason: "bundle" };
 
-    return { hasAccess: false, reason: null };
-  });
-
+      return { hasAccess: false, reason: null };
+    },
+  );

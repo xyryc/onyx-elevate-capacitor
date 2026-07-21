@@ -21,8 +21,6 @@ const coachNick = coachNickAsset.url;
 import coachJorgenAsset from "@/assets/coach-jorgen.png.asset.json";
 const coachJorgen = coachJorgenAsset.url;
 
-
-
 export interface Coach {
   slug: string;
   name: string;
@@ -51,7 +49,6 @@ export interface Coach {
 }
 
 export const coaches: Coach[] = [
-
   {
     slug: "simen",
     name: "Simen",
@@ -60,7 +57,12 @@ export const coaches: Coach[] = [
     img: coachSimen,
     competes: false,
     bio: "Founder of Onyx Elevate and the engine behind the whole ecosystem. Simen trains as a strongman, heavy carries, log press, stones, deadlifts, and built Onyx to give everyone access to the same kind of programming that took him from gym lifter to platform athlete.",
-    specialties: ["Strongman event prep", "Maximal strength", "Conditioning under load", "Mental toughness"],
+    specialties: [
+      "Strongman event prep",
+      "Maximal strength",
+      "Conditioning under load",
+      "Mental toughness",
+    ],
     signatureLifts: ["Axle deadlift", "Log clean & press", "Atlas stones", "Yoke walk"],
     weeklySplit: [
       { day: "Mon", focus: "Heavy lower, squat / deadlift variations" },
@@ -71,7 +73,8 @@ export const coaches: Coach[] = [
       { day: "Sat", focus: "Active recovery + mobility" },
       { day: "Sun", focus: "Rest" },
     ],
-    philosophy: "Train hard, train smart, never skip the boring stuff. Real strength is built on years of quiet work, heavy carries, mobility, sleep and food.",
+    philosophy:
+      "Train hard, train smart, never skip the boring stuff. Real strength is built on years of quiet work, heavy carries, mobility, sleep and food.",
     tips: [
       "Brace before you load, your belt is not your spine",
       "If your warm-up is a joke, your max attempt will be too",
@@ -80,7 +83,8 @@ export const coaches: Coach[] = [
     ],
     coaching: {
       title: "Strongman & Raw Strength Coaching with Simen",
-      summary: "Custom strongman or raw strength programming with weekly check-ins. Built for athletes who want to compete or just lift heavy stuff for the rest of their lives.",
+      summary:
+        "Custom strongman or raw strength programming with weekly check-ins. Built for athletes who want to compete or just lift heavy stuff for the rest of their lives.",
       includes: [
         "Custom 4-week training blocks",
         "Weekly video form review",
@@ -114,7 +118,13 @@ export const coaches: Coach[] = [
       "Coaches athletes through full contest prep, peak week and posing",
       "Built a decade-long competitive physique through consistent training",
     ],
-    specialties: ["Hypertrophy programming", "Contest prep", "Posing", "Peak week protocols", "Mind-muscle connection"],
+    specialties: [
+      "Hypertrophy programming",
+      "Contest prep",
+      "Posing",
+      "Peak week protocols",
+      "Mind-muscle connection",
+    ],
     signatureLifts: ["Incline DB press", "Pendulum squat", "Cable row variations", "Hack squat"],
 
     weeklySplit: [
@@ -126,7 +136,8 @@ export const coaches: Coach[] = [
       { day: "Sat", focus: "Hamstrings, glutes + calves" },
       { day: "Sun", focus: "Cardio + posing practice" },
     ],
-    philosophy: "Hypertrophy is volume, proximity to failure and consistency over years. There is no magic split, just hard sets in the right rep range, eaten and slept on.",
+    philosophy:
+      "Hypertrophy is volume, proximity to failure and consistency over years. There is no magic split, just hard sets in the right rep range, eaten and slept on.",
     tips: [
       "Take the last 1, 2 sets to true failure on isolations",
       "Stretch under load matters more than peak contraction",
@@ -135,7 +146,8 @@ export const coaches: Coach[] = [
     ],
     coaching: {
       title: "Hypertrophy & Physique Coaching with Lars",
-      summary: "Science-based bodybuilding programming with weekly check-ins, physique photo review and full nutrition plan. From offseason mass to stage-ready conditioning.",
+      summary:
+        "Science-based bodybuilding programming with weekly check-ins, physique photo review and full nutrition plan. From offseason mass to stage-ready conditioning.",
       includes: [
         "Custom hypertrophy split + exercise selection",
         "Weekly physique check-ins (photos + measurements)",
@@ -180,7 +192,8 @@ export const coaches: Coach[] = [
       { day: "Sat", focus: "Strongman conditioning" },
       { day: "Sun", focus: "Rest" },
     ],
-    philosophy: "Big lifts make big lifters. Everything else is a supporting cast. Train the competition lifts often, peak when it counts, eat to recover.",
+    philosophy:
+      "Big lifts make big lifters. Everything else is a supporting cast. Train the competition lifts often, peak when it counts, eat to recover.",
     tips: [
       "Bar speed on top sets tells you everything, film every working set",
       "Don't chase a max every week, chase volume PRs",
@@ -189,7 +202,8 @@ export const coaches: Coach[] = [
     ],
     coaching: {
       title: "Powerlifting & Hybrid Strength with Thiago",
-      summary: "Meet-prep periodization and hybrid strongman programming. RPE/percentage based, with weekly bar-speed review and a clear peaking plan toward your platform date.",
+      summary:
+        "Meet-prep periodization and hybrid strongman programming. RPE/percentage based, with weekly bar-speed review and a clear peaking plan toward your platform date.",
       includes: [
         "12, 16 week meet-prep blocks",
         "RPE auto-regulation + percentage waves",
@@ -223,7 +237,13 @@ export const coaches: Coach[] = [
       "Coaches clients through long-term lean gaining phases",
       "Built physique through training, food and sleep",
     ],
-    specialties: ["Hypertrophy", "Lean gaining", "Recomposition", "Long-term progression", "Nutrition"],
+    specialties: [
+      "Hypertrophy",
+      "Lean gaining",
+      "Recomposition",
+      "Long-term progression",
+      "Nutrition",
+    ],
     signatureLifts: ["Incline barbell press", "Pull-up", "Romanian deadlift", "Pendulum squat"],
     weeklySplit: [
       { day: "Mon", focus: "Push, chest, shoulders, triceps" },
@@ -234,7 +254,8 @@ export const coaches: Coach[] = [
       { day: "Sat", focus: "Arms + weak points" },
       { day: "Sun", focus: "Rest + walking" },
     ],
-    philosophy: "You can't out-train recovery. You grow with hard sets, full sleep and consistent food, over years, not weeks. Patience wins.",
+    philosophy:
+      "You can't out-train recovery. You grow with hard sets, full sleep and consistent food, over years, not weeks. Patience wins.",
     tips: [
       "Take working sets to 1, 2 reps in reserve, not failure on everything",
       "Eat in a small surplus for months, not a huge one for weeks",
@@ -243,7 +264,8 @@ export const coaches: Coach[] = [
     ],
     coaching: {
       title: "Bodybuilding Coaching with Nick",
-      summary: "Hypertrophy programming and nutrition built for long-term physique development. Lean gaining, smart cutting and honest expectations.",
+      summary:
+        "Hypertrophy programming and nutrition built for long-term physique development. Lean gaining, smart cutting and honest expectations.",
       includes: [
         "Custom hypertrophy split",
         "Macro targets tuned for slow, lean gains",
@@ -253,7 +275,6 @@ export const coaches: Coach[] = [
       ],
       price: "",
     },
-
   },
   {
     slug: "trym",
@@ -263,7 +284,12 @@ export const coaches: Coach[] = [
     img: coachTrym,
     competes: false,
     bio: "Trym trains like a boxer and eats like an athlete, and he's lost (and kept off) over 30 kg doing it. He's the coach you want if your goal is sustainable fat loss without losing muscle, energy or your sanity around food.",
-    specialties: ["Sustainable fat loss", "Boxing conditioning", "Habit building", "Daily step targets"],
+    specialties: [
+      "Sustainable fat loss",
+      "Boxing conditioning",
+      "Habit building",
+      "Daily step targets",
+    ],
     signatureLifts: ["Trap-bar deadlift", "Push press", "Heavy bag rounds", "Goblet squat"],
     weeklySplit: [
       { day: "Mon", focus: "Full body strength + 30 min Z2" },
@@ -274,7 +300,8 @@ export const coaches: Coach[] = [
       { day: "Sat", focus: "Long walk / hike (10k+ steps)" },
       { day: "Sun", focus: "Mobility + rest" },
     ],
-    philosophy: "Fat loss is daily steps, protein and 3, 4 honest training sessions a week. Forget cleanses and 90-day shreds. Build a body you can keep for life.",
+    philosophy:
+      "Fat loss is daily steps, protein and 3, 4 honest training sessions a week. Forget cleanses and 90-day shreds. Build a body you can keep for life.",
     tips: [
       "Hit 10k steps before you touch a single cardio machine",
       "Protein at every meal, 30g minimum",
@@ -283,7 +310,8 @@ export const coaches: Coach[] = [
     ],
     coaching: {
       title: "Fat Loss & Boxing Conditioning with Trym",
-      summary: "Realistic fat-loss coaching paired with boxing-style conditioning. Built around your real schedule, not a magazine routine you'll abandon in two weeks.",
+      summary:
+        "Realistic fat-loss coaching paired with boxing-style conditioning. Built around your real schedule, not a magazine routine you'll abandon in two weeks.",
       includes: [
         "Custom 3, 4 day training split",
         "Calorie + protein targets that adjust weekly",
@@ -302,7 +330,12 @@ export const coaches: Coach[] = [
     img: coachMichael,
     competes: false,
     bio: "Michael is the hybrid athlete every gym needs, he boxes, he runs long, he lifts smart. He knows how to keep your lungs and your strength on the same team without one killing the other.",
-    specialties: ["Hybrid training", "Running programming", "Boxing footwork", "Aerobic base building"],
+    specialties: [
+      "Hybrid training",
+      "Running programming",
+      "Boxing footwork",
+      "Aerobic base building",
+    ],
     signatureLifts: ["Front squat", "Strict press", "Tempo runs", "Heavy bag intervals"],
     weeklySplit: [
       { day: "Mon", focus: "Strength, full body" },
@@ -313,7 +346,8 @@ export const coaches: Coach[] = [
       { day: "Sat", focus: "Long run (75, 90 min easy)" },
       { day: "Sun", focus: "Mobility + rest" },
     ],
-    philosophy: "Strong lungs, strong legs, strong hands. Don't pick one, build them all in the right order and you'll outlast anyone in the room.",
+    philosophy:
+      "Strong lungs, strong legs, strong hands. Don't pick one, build them all in the right order and you'll outlast anyone in the room.",
     tips: [
       "80% of your runs should be easy enough to talk through",
       "Footwork before power, always",
@@ -322,7 +356,8 @@ export const coaches: Coach[] = [
     ],
     coaching: {
       title: "Hybrid Performance Coaching with Michael",
-      summary: "Programming for athletes who want to lift heavy, run long and box hard, without burning out. Smart concurrent training built around your schedule.",
+      summary:
+        "Programming for athletes who want to lift heavy, run long and box hard, without burning out. Smart concurrent training built around your schedule.",
       includes: [
         "Hybrid strength + endurance programming",
         "Heart rate / pace-based zones",
@@ -335,13 +370,13 @@ export const coaches: Coach[] = [
   },
   {
     slug: "jorgen",
-    name: "Jørgen \"Jet\" Johnsen",
+    name: 'Jørgen "Jet" Johnsen',
     role: "Personal Trainer · Core & Conditioning · Norway",
     tag: "Personal Training",
     img: coachJorgen,
     competes: false,
     yearsTraining: 8,
-    bio: "Norwegian personal trainer, coach and former professional dancer. Jørgen, known as \"Jet\" abroad, blends 8+ years of strength training with a decade of movement and athletic experience to help everyday clients get seriously strong, lean and mobile.",
+    bio: 'Norwegian personal trainer, coach and former professional dancer. Jørgen, known as "Jet" abroad, blends 8+ years of strength training with a decade of movement and athletic experience to help everyday clients get seriously strong, lean and mobile.',
     longBio: [
       "Jørgen is one of Onyx's Norway-based personal trainers and one of the most well-rounded athletes on the team. He has 8+ years of dedicated strength training behind him, 5+ years of competitive basketball, and 5+ years as a professional dancer and dance instructor, a background that shows up in how he moves, coaches and cues technique.",
       "He is AFPT-certified in Personal Training, Coaching and Nutritional Guidance, and EREPS registered, meeting the European professional standard for personal trainers. On top of that he specializes in core strength: bracing, anti-rotation, real ab work that transfers to squats, deadlifts and everyday life, not just crunches.",
@@ -362,7 +397,13 @@ export const coaches: Coach[] = [
       "Athletic conditioning",
       "Mobility & movement quality",
     ],
-    signatureLifts: ["Front squat", "Trap-bar deadlift", "Hanging leg raise", "Ab wheel rollout", "Turkish get-up"],
+    signatureLifts: [
+      "Front squat",
+      "Trap-bar deadlift",
+      "Hanging leg raise",
+      "Ab wheel rollout",
+      "Turkish get-up",
+    ],
     weeklySplit: [
       { day: "Mon", focus: "Full body strength + heavy core" },
       { day: "Tue", focus: "Conditioning + mobility flow" },
@@ -372,7 +413,8 @@ export const coaches: Coach[] = [
       { day: "Sat", focus: "Long walk / active recovery + stretching" },
       { day: "Sun", focus: "Rest" },
     ],
-    philosophy: "A strong core is the difference between training and just moving weights. Build the middle, own your posture, and everything else, squat, deadlift, life, gets easier and safer.",
+    philosophy:
+      "A strong core is the difference between training and just moving weights. Build the middle, own your posture, and everything else, squat, deadlift, life, gets easier and safer.",
     tips: [
       "Train your core like a muscle, not an afterthought, 2-3 hard sessions a week",
       "Brace before you press, pull or squat, ribs down, breathe into your belt",
@@ -381,7 +423,8 @@ export const coaches: Coach[] = [
     ],
     coaching: {
       title: "1-on-1 Personal Training with Jørgen",
-      summary: "Personalized coaching from a certified Norwegian PT with a strong core and athletic background. Built for real people who want to get stronger, leaner and move better, without living in the gym.",
+      summary:
+        "Personalized coaching from a certified Norwegian PT with a strong core and athletic background. Built for real people who want to get stronger, leaner and move better, without living in the gym.",
       includes: [
         "Custom 3-5 day training program",
         "Dedicated core & mobility work",

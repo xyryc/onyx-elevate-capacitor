@@ -46,9 +46,17 @@ export function LanguageSwitcher() {
         aria-label="Change language"
         className="inline-flex items-center gap-2 rounded-md border border-border bg-onyx-100 px-2.5 py-1.5 text-xs font-semibold text-muted-foreground hover:border-electric/40 hover:text-foreground transition-colors"
       >
-        <span aria-hidden className="text-base leading-none">{current.flag}</span>
+        <span aria-hidden className="text-base leading-none">
+          {current.flag}
+        </span>
         <span>{current.short}</span>
-        <svg className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
@@ -70,10 +78,18 @@ export function LanguageSwitcher() {
                     active ? "bg-electric/10 text-electric" : "text-foreground hover:bg-onyx-200"
                   }`}
                 >
-                  <span aria-hidden className="text-base leading-none">{l.flag}</span>
+                  <span aria-hidden className="text-base leading-none">
+                    {l.flag}
+                  </span>
                   <span className="flex-1 text-left">{l.label}</span>
                   {active && (
-                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg
+                      className="h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   )}

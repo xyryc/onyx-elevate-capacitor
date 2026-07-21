@@ -19,7 +19,11 @@ export function SiteFooter() {
         { to: "/programs", label: t("footer.programs") },
         { to: "/app", label: t("footer.app") },
         { to: "/coaches/$slug", params: { slug: "simen" }, label: t("footer.coaches") },
-        { to: "/articles/$slug", params: { slug: "progressive-overload-blueprint" }, label: t("footer.articles") },
+        {
+          to: "/articles/$slug",
+          params: { slug: "progressive-overload-blueprint" },
+          label: t("footer.articles"),
+        },
         { to: "/guidelines", label: t("footer.guidelines") },
       ],
     },
@@ -65,14 +69,14 @@ export function SiteFooter() {
               <div className="grid h-8 w-8 place-items-center rounded-md bg-gradient-to-br from-electric to-electric-glow">
                 <span className="font-display text-sm font-bold text-onyx-50">O</span>
               </div>
-              <span className="font-display text-lg font-bold">ONYX<span className="text-electric">.</span></span>
+              <span className="font-display text-lg font-bold">
+                ONYX<span className="text-electric">.</span>
+              </span>
             </div>
             <p className="mt-3 text-sm text-muted-foreground max-w-[260px]">
               {t("footer.tagline")}
             </p>
-            <div className="mt-4 flex gap-2">
-              {/* Social links coming soon */}
-            </div>
+            <div className="mt-4 flex gap-2">{/* Social links coming soon */}</div>
           </div>
 
           {/* Collapsible sections */}
@@ -123,9 +127,13 @@ export function SiteFooter() {
               <div className="grid h-8 w-8 place-items-center rounded-md bg-gradient-to-br from-electric to-electric-glow">
                 <span className="font-display text-sm font-bold text-onyx-50">O</span>
               </div>
-              <span className="font-display text-lg font-bold">ONYX<span className="text-electric">.</span></span>
+              <span className="font-display text-lg font-bold">
+                ONYX<span className="text-electric">.</span>
+              </span>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground max-w-[200px]">{t("footer.tagline")}</p>
+            <p className="mt-4 text-sm text-muted-foreground max-w-[200px]">
+              {t("footer.tagline")}
+            </p>
 
             {/* SOCIAL, coming soon */}
             <div className="mt-6 flex gap-2" />
@@ -138,7 +146,11 @@ export function SiteFooter() {
                 {s.links.map((l) => (
                   <li key={l.to + l.label}>
                     {"params" in l && l.params ? (
-                      <Link to={l.to as any} params={l.params as any} className="hover:text-electric">
+                      <Link
+                        to={l.to as any}
+                        params={l.params as any}
+                        className="hover:text-electric"
+                      >
                         {l.label}
                       </Link>
                     ) : (
@@ -157,18 +169,29 @@ export function SiteFooter() {
       {/* BOTTOM BAR */}
       <div className="border-t border-border/60">
         <div className="container-onyx py-3 md:py-5 flex flex-col md:flex-row gap-2 md:gap-3 items-center justify-between text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} Onyx Elevate. {t("footer.rights")}</span>
+          <span>
+            © {new Date().getFullYear()} Onyx Elevate. {t("footer.rights")}
+          </span>
           <div className="flex gap-5 flex-wrap justify-center">
-            <Link to="/disclaimer" className="hover:text-electric">{t("footer.disclaimer")}</Link>
-            <Link to="/privacy" className="hover:text-electric">{t("footer.privacy")}</Link>
-            <Link to="/terms" className="hover:text-electric">{t("footer.terms")}</Link>
-            <Link to="/refund" className="hover:text-electric">{t("footer.refunds")}</Link>
-            <Link to="/contact" className="hover:text-electric">{t("footer.contact")}</Link>
+            <Link to="/disclaimer" className="hover:text-electric">
+              {t("footer.disclaimer")}
+            </Link>
+            <Link to="/privacy" className="hover:text-electric">
+              {t("footer.privacy")}
+            </Link>
+            <Link to="/terms" className="hover:text-electric">
+              {t("footer.terms")}
+            </Link>
+            <Link to="/refund" className="hover:text-electric">
+              {t("footer.refunds")}
+            </Link>
+            <Link to="/contact" className="hover:text-electric">
+              {t("footer.contact")}
+            </Link>
           </div>
           <span>{t("footer.builtFor")}</span>
         </div>
       </div>
-
     </footer>
   );
 }

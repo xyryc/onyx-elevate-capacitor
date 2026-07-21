@@ -42,13 +42,41 @@ export const Route = createFileRoute("/sitemap.xml")({
         ];
 
         const dynamic: SitemapEntry[] = [
-          ...exercises.map((e) => ({ path: `/exercises/${e.slug}`, changefreq: "monthly" as const, priority: "0.6" })),
-          ...programs.map((p) => ({ path: `/programs/${p.slug}`, changefreq: "monthly" as const, priority: "0.7" })),
-          ...recipes.map((r) => ({ path: `/recipes/${r.slug}`, changefreq: "monthly" as const, priority: "0.5" })),
-          ...coaches.map((c) => ({ path: `/coaches/${c.slug}`, changefreq: "monthly" as const, priority: "0.5" })),
-          ...articles.map((a) => ({ path: `/articles/${a.slug}`, changefreq: "monthly" as const, priority: "0.5" })),
-          ...nutritionPlans.map((n) => ({ path: `/meal-plans/${n.slug}`, changefreq: "monthly" as const, priority: "0.6" })),
-          ...challenges.map((c) => ({ path: `/challenges/${c.slug}`, changefreq: "monthly" as const, priority: "0.4" })),
+          ...exercises.map((e) => ({
+            path: `/exercises/${e.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.6",
+          })),
+          ...programs.map((p) => ({
+            path: `/programs/${p.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
+          })),
+          ...recipes.map((r) => ({
+            path: `/recipes/${r.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.5",
+          })),
+          ...coaches.map((c) => ({
+            path: `/coaches/${c.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.5",
+          })),
+          ...articles.map((a) => ({
+            path: `/articles/${a.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.5",
+          })),
+          ...nutritionPlans.map((n) => ({
+            path: `/meal-plans/${n.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.6",
+          })),
+          ...challenges.map((c) => ({
+            path: `/challenges/${c.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.4",
+          })),
         ];
 
         const entries = [...staticRoutes, ...dynamic];
@@ -60,7 +88,9 @@ export const Route = createFileRoute("/sitemap.xml")({
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
-          ].filter(Boolean).join("\n"),
+          ]
+            .filter(Boolean)
+            .join("\n"),
         );
 
         const xml = [

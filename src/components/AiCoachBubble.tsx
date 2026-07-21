@@ -3,7 +3,17 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { ChevronLeft, X, Minus, Send, Sparkles, Trash2, Lock, Camera, ImagePlus } from "lucide-react";
+import {
+  ChevronLeft,
+  X,
+  Minus,
+  Send,
+  Sparkles,
+  Trash2,
+  Lock,
+  Camera,
+  ImagePlus,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useLang } from "@/i18n/LanguageProvider";
@@ -99,7 +109,6 @@ async function compressImage(file: File): Promise<string | null> {
   });
 }
 
-
 const STORAGE_KEY = "onyx-ai-coach-bubble-open";
 
 function getBrowserTimezone(): string {
@@ -138,7 +147,6 @@ export function AiCoachBubble() {
     queryKey: ["coach", "history"],
     queryFn: () => historyFn(),
     enabled: !!user && open && status.data?.isPremium === true,
-
   });
 
   const messages: CoachMessageRow[] = history.data ?? [];
@@ -349,12 +357,16 @@ export function AiCoachBubble() {
       ) : (
         <>
           {/* Transcript */}
-          <div ref={scrollerRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3" style={{ overscrollBehavior: "contain" }}>
+          <div
+            ref={scrollerRef}
+            className="flex-1 overflow-y-auto px-4 py-3 space-y-3"
+            style={{ overscrollBehavior: "contain" }}
+          >
             {messages.length === 0 && !pending ? (
               <div className="space-y-3">
                 <p className="text-sm text-muted-foreground">
-                  Hi! I'm your Onyx coach. I can help with training, running, healthy nutrition
-                  and workout programming, every exercise I suggest is linked to a video in your
+                  Hi! I'm your Onyx coach. I can help with training, running, healthy nutrition and
+                  workout programming, every exercise I suggest is linked to a video in your
                   library. Try one of these:
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -479,9 +491,7 @@ export function AiCoachBubble() {
               />
               <button
                 type="submit"
-                disabled={
-                  send.isPending || left <= 0 || (!input.trim() && images.length === 0)
-                }
+                disabled={send.isPending || left <= 0 || (!input.trim() && images.length === 0)}
                 className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-electric text-onyx-900 disabled:opacity-40 hover:bg-electric/90"
                 aria-label="Send"
               >
@@ -495,13 +505,7 @@ export function AiCoachBubble() {
   );
 }
 
-function MessageBubble({
-  message,
-  onLink,
-}: {
-  message: CoachMessageRow;
-  onLink: () => void;
-}) {
+function MessageBubble({ message, onLink }: { message: CoachMessageRow; onLink: () => void }) {
   const isUser = message.role === "user";
   if (isUser) {
     return (
@@ -537,13 +541,22 @@ function MessageBubble({
               }
               if (isInternal) {
                 return (
-                  <Link to={href as string} onClick={onLink} className="text-electric hover:underline">
+                  <Link
+                    to={href as string}
+                    onClick={onLink}
+                    className="text-electric hover:underline"
+                  >
                     {children}
                   </Link>
                 );
               }
               return (
-                <a href={href} target="_blank" rel="noreferrer" className="text-electric hover:underline">
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-electric hover:underline"
+                >
                   {children}
                 </a>
               );
@@ -597,7 +610,10 @@ function NonPremiumGate({ onClose: _onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3" style={{ overscrollBehavior: "contain" }}>
+    <div
+      className="flex-1 overflow-y-auto px-4 py-3 space-y-3"
+      style={{ overscrollBehavior: "contain" }}
+    >
       {/* Canned assistant message (not AI generated) */}
       <div className="flex justify-start">
         <div className="max-w-[95%] rounded-2xl rounded-bl-sm bg-onyx-100/60 border border-border/50 px-3 py-2.5 text-sm text-foreground/90">
@@ -605,9 +621,9 @@ function NonPremiumGate({ onClose: _onClose }: { onClose: () => void }) {
             <Lock className="h-3 w-3" /> Chat is locked
           </div>
           <p className="leading-relaxed">
-            The AI Coach is included with any Onyx membership. Pick a plan below to unlock
-            unlimited access to training programs, meal plans, and personal coaching, all built
-            from the Onyx library.
+            The AI Coach is included with any Onyx membership. Pick a plan below to unlock unlimited
+            access to training programs, meal plans, and personal coaching, all built from the Onyx
+            library.
           </p>
         </div>
       </div>

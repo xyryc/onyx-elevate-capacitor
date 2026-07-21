@@ -4,7 +4,14 @@ import { useState } from "react";
 import { listMeasurements, addMeasurement, deleteMeasurement } from "@/lib/engagement-extra";
 import { Button } from "@/components/ui/button";
 import { Trash2, TrendingDown, TrendingUp, Minus, Ruler } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { BmiCalculator } from "@/components/BmiCalculator";
 import { useT } from "@/i18n/LanguageProvider";
 
@@ -49,7 +56,16 @@ function MeasurementsPage() {
         thighs_cm: form.thighs_cm ? Number(form.thighs_cm) : null,
         notes: form.notes || null,
       });
-      setForm({ ...form, weight_kg: "", body_fat_pct: "", waist_cm: "", chest_cm: "", arms_cm: "", thighs_cm: "", notes: "" });
+      setForm({
+        ...form,
+        weight_kg: "",
+        body_fat_pct: "",
+        waist_cm: "",
+        chest_cm: "",
+        arms_cm: "",
+        thighs_cm: "",
+        notes: "",
+      });
       qc.invalidateQueries({ queryKey: ["measurements"] });
     } finally {
       setBusy(false);
@@ -63,20 +79,22 @@ function MeasurementsPage() {
 
   const latest = rows[0];
   const previous = rows[1];
-  const weightDelta = latest?.weight_kg != null && previous?.weight_kg != null
-    ? Number((latest.weight_kg - previous.weight_kg).toFixed(2))
-    : null;
+  const weightDelta =
+    latest?.weight_kg != null && previous?.weight_kg != null
+      ? Number((latest.weight_kg - previous.weight_kg).toFixed(2))
+      : null;
 
   return (
     <div className="container-onyx py-10 lg:py-14">
       <div className="max-w-4xl mx-auto">
-        <div className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("measurements.eyebrow")}</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+          {t("measurements.eyebrow")}
+        </div>
         <h1 className="mt-2 font-display text-3xl lg:text-4xl font-bold">
-          {t("measurements.title")}<span className="text-electric">.</span>
+          {t("measurements.title")}
+          <span className="text-electric">.</span>
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t("measurements.subtitle")}
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">{t("measurements.subtitle")}</p>
 
         {/* BMI helper */}
         <div className="mt-6">
@@ -98,9 +116,13 @@ function MeasurementsPage() {
                 <Ruler className="h-5 w-5" />
               </div>
               <div className="flex-1">
-                <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">{t("measurements.guide.eyebrow")}</div>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">
+                  {t("measurements.guide.eyebrow")}
+                </div>
                 <div className="mt-0.5 font-semibold text-sm">{t("measurements.guide.title")}</div>
-                <div className="mt-1 text-xs text-muted-foreground">{t("measurements.guide.desc")}</div>
+                <div className="mt-1 text-xs text-muted-foreground">
+                  {t("measurements.guide.desc")}
+                </div>
               </div>
             </button>
           </DialogTrigger>
@@ -108,11 +130,10 @@ function MeasurementsPage() {
           <DialogContent className="max-w-2xl bg-onyx-100 border-border max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="font-display text-2xl">
-                {t("measurements.guide.title")}<span className="text-electric">.</span>
+                {t("measurements.guide.title")}
+                <span className="text-electric">.</span>
               </DialogTitle>
-              <DialogDescription>
-                {t("measurements.guide.desc")}
-              </DialogDescription>
+              <DialogDescription>{t("measurements.guide.desc")}</DialogDescription>
             </DialogHeader>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -167,15 +188,20 @@ function MeasurementsPage() {
             </div>
 
             <div className="mt-4 rounded-md border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-muted-foreground">
-              <span className="font-bold text-amber-400">{t("measurements.proTip")}:</span> {t("measurements.proTipBody")}
+              <span className="font-bold text-amber-400">{t("measurements.proTip")}:</span>{" "}
+              {t("measurements.proTipBody")}
             </div>
           </DialogContent>
         </Dialog>
 
-
         {latest && (
           <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Stat label={t("measurements.stat.weight")} value={fmt(latest.weight_kg, "kg")} delta={weightDelta} unit="kg" />
+            <Stat
+              label={t("measurements.stat.weight")}
+              value={fmt(latest.weight_kg, "kg")}
+              delta={weightDelta}
+              unit="kg"
+            />
             <Stat label={t("measurements.stat.bodyFat")} value={fmt(latest.body_fat_pct, "%")} />
             <Stat label={t("measurements.stat.waist")} value={fmt(latest.waist_cm, "cm")} />
             <Stat label={t("measurements.stat.logs")} value={String(rows.length)} />
@@ -185,15 +211,48 @@ function MeasurementsPage() {
         <form onSubmit={save} className="mt-10 rounded-lg border border-border bg-onyx-100/60 p-5">
           <h2 className="font-display text-xl font-bold mb-4">{t("measurements.log.title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            <Field label={t("measurements.field.date")} type="date" value={form.measured_on} onChange={(v) => setForm({ ...form, measured_on: v })} />
-            <Field label={t("measurements.field.weight")} value={form.weight_kg} onChange={(v) => setForm({ ...form, weight_kg: v })} />
-            <Field label={t("measurements.field.bodyFat")} value={form.body_fat_pct} onChange={(v) => setForm({ ...form, body_fat_pct: v })} />
-            <Field label={t("measurements.field.waist")} value={form.waist_cm} onChange={(v) => setForm({ ...form, waist_cm: v })} />
-            <Field label={t("measurements.field.chest")} value={form.chest_cm} onChange={(v) => setForm({ ...form, chest_cm: v })} />
-            <Field label={t("measurements.field.arms")} value={form.arms_cm} onChange={(v) => setForm({ ...form, arms_cm: v })} />
-            <Field label={t("measurements.field.thighs")} value={form.thighs_cm} onChange={(v) => setForm({ ...form, thighs_cm: v })} />
+            <Field
+              label={t("measurements.field.date")}
+              type="date"
+              value={form.measured_on}
+              onChange={(v) => setForm({ ...form, measured_on: v })}
+            />
+            <Field
+              label={t("measurements.field.weight")}
+              value={form.weight_kg}
+              onChange={(v) => setForm({ ...form, weight_kg: v })}
+            />
+            <Field
+              label={t("measurements.field.bodyFat")}
+              value={form.body_fat_pct}
+              onChange={(v) => setForm({ ...form, body_fat_pct: v })}
+            />
+            <Field
+              label={t("measurements.field.waist")}
+              value={form.waist_cm}
+              onChange={(v) => setForm({ ...form, waist_cm: v })}
+            />
+            <Field
+              label={t("measurements.field.chest")}
+              value={form.chest_cm}
+              onChange={(v) => setForm({ ...form, chest_cm: v })}
+            />
+            <Field
+              label={t("measurements.field.arms")}
+              value={form.arms_cm}
+              onChange={(v) => setForm({ ...form, arms_cm: v })}
+            />
+            <Field
+              label={t("measurements.field.thighs")}
+              value={form.thighs_cm}
+              onChange={(v) => setForm({ ...form, thighs_cm: v })}
+            />
             <div className="flex items-end">
-              <Button type="submit" disabled={busy} className="w-full bg-electric text-onyx-50 hover:bg-electric-glow font-bold">
+              <Button
+                type="submit"
+                disabled={busy}
+                className="w-full bg-electric text-onyx-50 hover:bg-electric-glow font-bold"
+              >
                 {busy ? t("measurements.saving") : t("measurements.saveEntry")}
               </Button>
             </div>
@@ -224,10 +283,18 @@ function MeasurementsPage() {
             </thead>
             <tbody>
               {isLoading && (
-                <tr><td colSpan={8} className="p-6 text-center text-muted-foreground">{t("common.loading")}</td></tr>
+                <tr>
+                  <td colSpan={8} className="p-6 text-center text-muted-foreground">
+                    {t("common.loading")}
+                  </td>
+                </tr>
               )}
               {!isLoading && rows.length === 0 && (
-                <tr><td colSpan={8} className="p-6 text-center text-muted-foreground">{t("measurements.empty")}</td></tr>
+                <tr>
+                  <td colSpan={8} className="p-6 text-center text-muted-foreground">
+                    {t("measurements.empty")}
+                  </td>
+                </tr>
               )}
               {rows.map((r) => (
                 <tr key={r.id} className="border-t border-border/60 hover:bg-onyx-100/40">
@@ -239,7 +306,10 @@ function MeasurementsPage() {
                   <td className="p-3 text-right">{fmt(r.arms_cm)}</td>
                   <td className="p-3 text-right">{fmt(r.thighs_cm)}</td>
                   <td className="p-3 text-right">
-                    <button onClick={() => remove(r.id)} className="text-muted-foreground hover:text-red-400">
+                    <button
+                      onClick={() => remove(r.id)}
+                      className="text-muted-foreground hover:text-red-400"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </td>
@@ -253,10 +323,22 @@ function MeasurementsPage() {
   );
 }
 
-function Field({ label, value, onChange, type = "number" }: { label: string; value: string; onChange: (v: string) => void; type?: string }) {
+function Field({
+  label,
+  value,
+  onChange,
+  type = "number",
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}) {
   return (
     <label className="block min-w-0">
-      <span className="block truncate text-xs text-muted-foreground font-semibold uppercase tracking-wide">{label}</span>
+      <span className="block truncate text-xs text-muted-foreground font-semibold uppercase tracking-wide">
+        {label}
+      </span>
       <input
         type={type}
         step="0.1"
@@ -304,16 +386,32 @@ function MethodCard({
   );
 }
 
-function Stat({ label, value, delta, unit }: { label: string; value: string; delta?: number | null; unit?: string }) {
+function Stat({
+  label,
+  value,
+  delta,
+  unit,
+}: {
+  label: string;
+  value: string;
+  delta?: number | null;
+  unit?: string;
+}) {
   const Icon = delta == null ? Minus : delta < 0 ? TrendingDown : delta > 0 ? TrendingUp : Minus;
-  const tone = delta == null || delta === 0 ? "text-muted-foreground" : delta < 0 ? "text-green-400" : "text-amber-400";
+  const tone =
+    delta == null || delta === 0
+      ? "text-muted-foreground"
+      : delta < 0
+        ? "text-green-400"
+        : "text-amber-400";
   return (
     <div className="rounded-lg border border-border bg-onyx-100/60 p-4">
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className="mt-1 text-2xl font-display font-bold">{value}</div>
       {delta != null && (
         <div className={`mt-1 text-xs font-semibold inline-flex items-center gap-1 ${tone}`}>
-          <Icon className="w-3 h-3" /> {delta > 0 ? "+" : ""}{delta} {unit}
+          <Icon className="w-3 h-3" /> {delta > 0 ? "+" : ""}
+          {delta} {unit}
         </div>
       )}
     </div>

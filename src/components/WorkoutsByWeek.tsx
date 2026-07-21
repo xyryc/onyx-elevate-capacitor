@@ -30,60 +30,228 @@ type SmartWeekPhase = {
 };
 
 const EXERCISE_VARIATIONS: Record<string, string[]> = {
-  "Smith Machine Reverse Lunge": ["Smith Machine Reverse Lunge", "Smith Machine Bulgarian Split Squat", "Walking Lunge", "Dumbbell Bulgarian Split Squat"],
-  "Smith Machine Bulgarian Split Squat": ["Smith Machine Bulgarian Split Squat", "Smith Machine Reverse Lunge", "Walking Lunge", "Leg Press"],
-  "Leg Press": ["Leg Press", "Hack Squat Machine", "Smith Machine Squats", "Dumbbell Bulgarian Split Squat"],
-  "Seated Leg Curl": ["Seated Leg Curl", "Lying Leg Curl", "Romanian Deadlift", "Single-Leg Romanian Deadlift"],
+  "Smith Machine Reverse Lunge": [
+    "Smith Machine Reverse Lunge",
+    "Smith Machine Bulgarian Split Squat",
+    "Walking Lunge",
+    "Dumbbell Bulgarian Split Squat",
+  ],
+  "Smith Machine Bulgarian Split Squat": [
+    "Smith Machine Bulgarian Split Squat",
+    "Smith Machine Reverse Lunge",
+    "Walking Lunge",
+    "Leg Press",
+  ],
+  "Leg Press": [
+    "Leg Press",
+    "Hack Squat Machine",
+    "Smith Machine Squats",
+    "Dumbbell Bulgarian Split Squat",
+  ],
+  "Seated Leg Curl": [
+    "Seated Leg Curl",
+    "Lying Leg Curl",
+    "Romanian Deadlift",
+    "Single-Leg Romanian Deadlift",
+  ],
   "Standing Calf Raise": ["Standing Calf Raise", "Seated Calf Raise", "Single-Leg Calf Raise"],
-  "Romanian Deadlift": ["Romanian Deadlift", "Single-Leg Romanian Deadlift", "Barbell Hip Thrust", "Cable Pull Through"],
+  "Romanian Deadlift": [
+    "Romanian Deadlift",
+    "Single-Leg Romanian Deadlift",
+    "Barbell Hip Thrust",
+    "Cable Pull Through",
+  ],
   "Bulgarian Split Squat": ["Bulgarian Split Squat", "Walking Lunge", "Reverse Lunge", "Leg Press"],
   "Cable Pull Through": ["Cable Pull Through", "Barbell Hip Thrust", "Romanian Deadlift"],
-  "Incline Dumbbell Bench Press": ["Incline Dumbbell Bench Press", "Flat Dumbbell Press", "Cable Chest Fly", "Dips"],
-  "Incline Dumbbell Press": ["Incline Dumbbell Press", "Flat Dumbbell Press", "Cable Chest Fly", "Dips"],
-  "Seated Dumbbell Shoulder Press": ["Seated Dumbbell Shoulder Press", "Arnold Press", "Standing Overhead Press"],
+  "Incline Dumbbell Bench Press": [
+    "Incline Dumbbell Bench Press",
+    "Flat Dumbbell Press",
+    "Cable Chest Fly",
+    "Dips",
+  ],
+  "Incline Dumbbell Press": [
+    "Incline Dumbbell Press",
+    "Flat Dumbbell Press",
+    "Cable Chest Fly",
+    "Dips",
+  ],
+  "Seated Dumbbell Shoulder Press": [
+    "Seated Dumbbell Shoulder Press",
+    "Arnold Press",
+    "Standing Overhead Press",
+  ],
   "Cable Chest Fly": ["Cable Chest Fly", "Pec Deck Machine", "Cable Crossover (low to high)"],
-  "Dumbbell Lateral Raise": ["Dumbbell Lateral Raise", "Cable Lateral Raise", "Rear Delt Fly Machine"],
+  "Dumbbell Lateral Raise": [
+    "Dumbbell Lateral Raise",
+    "Cable Lateral Raise",
+    "Rear Delt Fly Machine",
+  ],
   "Cable Lateral Raise": ["Cable Lateral Raise", "Dumbbell Lateral Raise", "Rear Delt Fly Machine"],
-  "Cable Tricep Pushdown": ["Cable Tricep Pushdown", "Overhead Rope Triceps", "Skull Crusher", "Bench Tricep Dips"],
+  "Cable Tricep Pushdown": [
+    "Cable Tricep Pushdown",
+    "Overhead Rope Triceps",
+    "Skull Crusher",
+    "Bench Tricep Dips",
+  ],
   "Triceps Pushdown": ["Triceps Pushdown", "Overhead Rope Triceps", "Skull Crusher"],
-  "Barbell Bent Over Row": ["Barbell Bent Over Row", "Chest Supported Row Machine", "Seated Cable Row", "Pendlay Row"],
-  "Lat Pulldown Wide Grip": ["Lat Pulldown Wide Grip", "Pull Up", "Seated Cable Row", "Straight Arm Cable Pulldown"],
-  "Chest Supported Row Machine": ["Chest Supported Row Machine", "Seated Cable Row", "One-Arm Row", "Barbell Bent Over Row"],
-  "Straight Arm Cable Pulldown": ["Straight Arm Cable Pulldown", "Lat Pulldown Wide Grip", "Cable Face Pull"],
-  "Dumbbell Bicep Curl": ["Dumbbell Bicep Curl", "Dumbbell Hammer Curl", "Cable Bicep Curl", "Preacher Curl"],
+  "Barbell Bent Over Row": [
+    "Barbell Bent Over Row",
+    "Chest Supported Row Machine",
+    "Seated Cable Row",
+    "Pendlay Row",
+  ],
+  "Lat Pulldown Wide Grip": [
+    "Lat Pulldown Wide Grip",
+    "Pull Up",
+    "Seated Cable Row",
+    "Straight Arm Cable Pulldown",
+  ],
+  "Chest Supported Row Machine": [
+    "Chest Supported Row Machine",
+    "Seated Cable Row",
+    "One-Arm Row",
+    "Barbell Bent Over Row",
+  ],
+  "Straight Arm Cable Pulldown": [
+    "Straight Arm Cable Pulldown",
+    "Lat Pulldown Wide Grip",
+    "Cable Face Pull",
+  ],
+  "Dumbbell Bicep Curl": [
+    "Dumbbell Bicep Curl",
+    "Dumbbell Hammer Curl",
+    "Cable Bicep Curl",
+    "Preacher Curl",
+  ],
   "Cable Bicep Curl": ["Cable Bicep Curl", "Dumbbell Hammer Curl", "Preacher Curl"],
   "Face Pull": ["Face Pull", "Cable Face Pull", "Rear Delt Fly Machine"],
   "EZ Bar Curl": ["EZ Bar Curl", "Preacher Curl", "Cable Bicep Curl", "Dumbbell Hammer Curl"],
   "Skull Crusher": ["Skull Crusher", "Overhead Tricep Extension", "Cable Tricep Pushdown"],
-  "Overhead Tricep Extension": ["Overhead Tricep Extension", "Skull Crusher", "Cable Tricep Pushdown"],
-  "Hanging Leg Raise": ["Hanging Leg Raise", "Hanging Knee Raise", "Kneeling Cable Crunch", "Side Plank"],
+  "Overhead Tricep Extension": [
+    "Overhead Tricep Extension",
+    "Skull Crusher",
+    "Cable Tricep Pushdown",
+  ],
+  "Hanging Leg Raise": [
+    "Hanging Leg Raise",
+    "Hanging Knee Raise",
+    "Kneeling Cable Crunch",
+    "Side Plank",
+  ],
   "Sit Ups": ["Sit Ups", "Kneeling Cable Crunch", "Weighted Russian Twist"],
-  "Plank": ["Plank", "Side Plank", "Weighted Plank"],
+  Plank: ["Plank", "Side Plank", "Weighted Plank"],
 };
 
 function getSmartWeekPhase(p: Program, week: number): SmartWeekPhase {
   if (p.slug.includes("5-3-1")) {
     const phases: SmartWeekPhase[] = [
-      { label: "5s wave · 65/75/85% TM", mainSets: "3", mainReps: "5 / 5 / 5+ @ RPE 7", accessoryMode: "base", restShift: 0 },
-      { label: "3s wave · 70/80/90% TM", mainSets: "3", mainReps: "3 / 3 / 3+ @ RPE 8", accessoryMode: "build", restShift: 15 },
-      { label: "5/3/1 wave · 75/85/95% TM", mainSets: "3", mainReps: "5 → 3 → 1+ @ RPE 9", accessoryMode: "peak", restShift: 30 },
-      { label: "Deload · 40/50/60% TM", mainSets: "3", mainReps: "5 / 5 / 5 easy", accessoryMode: "deload", restShift: -30 },
-      { label: "2nd wave 5s · TM +2.5/5 kg", mainSets: "3", mainReps: "5 / 5 / 5+ @ RPE 7-8", accessoryMode: "density", restShift: -10 },
-      { label: "2nd wave 3s · heavier TM", mainSets: "3", mainReps: "3 / 3 / 3+ @ RPE 8", accessoryMode: "build", restShift: 15 },
-      { label: "2nd 5/3/1 · PR set", mainSets: "3", mainReps: "5 → 3 → 1+ @ RPE 9", accessoryMode: "peak", restShift: 30 },
-      { label: "Deload · speed reps", mainSets: "3", mainReps: "5 / 5 / 5 @ fast bar speed", accessoryMode: "deload", restShift: -30 },
-      { label: "Anchor week · heavy triples", mainSets: "4", mainReps: "3 / 3 / 3+ then 1 backoff AMRAP", accessoryMode: "density", restShift: 15 },
-      { label: "Retest week · clean singles", mainSets: "4", mainReps: "5 / 3 / 1 / 1+ if bar speed is good", accessoryMode: "test", restShift: 45 },
+      {
+        label: "5s wave · 65/75/85% TM",
+        mainSets: "3",
+        mainReps: "5 / 5 / 5+ @ RPE 7",
+        accessoryMode: "base",
+        restShift: 0,
+      },
+      {
+        label: "3s wave · 70/80/90% TM",
+        mainSets: "3",
+        mainReps: "3 / 3 / 3+ @ RPE 8",
+        accessoryMode: "build",
+        restShift: 15,
+      },
+      {
+        label: "5/3/1 wave · 75/85/95% TM",
+        mainSets: "3",
+        mainReps: "5 → 3 → 1+ @ RPE 9",
+        accessoryMode: "peak",
+        restShift: 30,
+      },
+      {
+        label: "Deload · 40/50/60% TM",
+        mainSets: "3",
+        mainReps: "5 / 5 / 5 easy",
+        accessoryMode: "deload",
+        restShift: -30,
+      },
+      {
+        label: "2nd wave 5s · TM +2.5/5 kg",
+        mainSets: "3",
+        mainReps: "5 / 5 / 5+ @ RPE 7-8",
+        accessoryMode: "density",
+        restShift: -10,
+      },
+      {
+        label: "2nd wave 3s · heavier TM",
+        mainSets: "3",
+        mainReps: "3 / 3 / 3+ @ RPE 8",
+        accessoryMode: "build",
+        restShift: 15,
+      },
+      {
+        label: "2nd 5/3/1 · PR set",
+        mainSets: "3",
+        mainReps: "5 → 3 → 1+ @ RPE 9",
+        accessoryMode: "peak",
+        restShift: 30,
+      },
+      {
+        label: "Deload · speed reps",
+        mainSets: "3",
+        mainReps: "5 / 5 / 5 @ fast bar speed",
+        accessoryMode: "deload",
+        restShift: -30,
+      },
+      {
+        label: "Anchor week · heavy triples",
+        mainSets: "4",
+        mainReps: "3 / 3 / 3+ then 1 backoff AMRAP",
+        accessoryMode: "density",
+        restShift: 15,
+      },
+      {
+        label: "Retest week · clean singles",
+        mainSets: "4",
+        mainReps: "5 / 3 / 1 / 1+ if bar speed is good",
+        accessoryMode: "test",
+        restShift: 45,
+      },
     ];
     return phases[Math.min(week, phases.length) - 1];
   }
 
   const block = (week - 1) % 4;
   const wave = Math.floor((week - 1) / 4) + 1;
-  if (block === 0) return { label: `Wave ${wave} base · RPE 7`, mainSets: "4", mainReps: "6 @ RPE 7", accessoryMode: "base", restShift: 0 };
-  if (block === 1) return { label: `Wave ${wave} build · RPE 8`, mainSets: "4", mainReps: "5 @ RPE 8", accessoryMode: "build", restShift: 15 };
-  if (block === 2) return { label: `Wave ${wave} peak · RPE 9`, mainSets: "5", mainReps: "3-5 @ RPE 9", accessoryMode: "peak", restShift: 30 };
-  return { label: `Wave ${wave} deload`, mainSets: "2", mainReps: "6 easy @ RPE 6", accessoryMode: "deload", restShift: -30 };
+  if (block === 0)
+    return {
+      label: `Wave ${wave} base · RPE 7`,
+      mainSets: "4",
+      mainReps: "6 @ RPE 7",
+      accessoryMode: "base",
+      restShift: 0,
+    };
+  if (block === 1)
+    return {
+      label: `Wave ${wave} build · RPE 8`,
+      mainSets: "4",
+      mainReps: "5 @ RPE 8",
+      accessoryMode: "build",
+      restShift: 15,
+    };
+  if (block === 2)
+    return {
+      label: `Wave ${wave} peak · RPE 9`,
+      mainSets: "5",
+      mainReps: "3-5 @ RPE 9",
+      accessoryMode: "peak",
+      restShift: 30,
+    };
+  return {
+    label: `Wave ${wave} deload`,
+    mainSets: "2",
+    mainReps: "6 easy @ RPE 6",
+    accessoryMode: "deload",
+    restShift: -30,
+  };
 }
 
 function isDividerExercise(ex: ProgramExercise): boolean {
@@ -91,7 +259,10 @@ function isDividerExercise(ex: ProgramExercise): boolean {
 }
 
 function isMainLift(ex: ProgramExercise): boolean {
-  const name = ex.name.toLowerCase().replace(/\s*\(.*\)\s*$/, "").trim();
+  const name = ex.name
+    .toLowerCase()
+    .replace(/\s*\(.*\)\s*$/, "")
+    .trim();
   return new Set([
     "barbell back squat",
     "back squat",
@@ -109,7 +280,7 @@ function isMainLift(ex: ProgramExercise): boolean {
 
 function isCardioExercise(ex: ProgramExercise): boolean {
   return /treadmill|\brun\b|running|\bjog\b|walk|walking|cycle|cycling|bike|biking|row(ing)?|erg|ski erg|assault|sprint|stride|zone\s*[1-5]|km|meter|mile|marathon|tempo run|long run|interval run/i.test(
-    ex.name + " " + ex.reps
+    ex.name + " " + ex.reps,
   );
 }
 
@@ -149,13 +320,24 @@ function stripRpeNote(reps: string): string {
   return reps.replace(/\s*@\s*RPE\s*[\d-\-]+/gi, "").trim();
 }
 
-function variedExerciseName(name: string, week: number, dayIndex: number, exerciseIndex: number): string {
+function variedExerciseName(
+  name: string,
+  week: number,
+  dayIndex: number,
+  exerciseIndex: number,
+): string {
   const options = EXERCISE_VARIATIONS[name];
   if (!options?.length) return name;
   return options[(week + dayIndex + exerciseIndex) % options.length];
 }
 
-function smartAccessory(ex: ProgramExercise, phase: SmartWeekPhase, week: number, dayIndex: number, exerciseIndex: number): ProgramExercise {
+function smartAccessory(
+  ex: ProgramExercise,
+  phase: SmartWeekPhase,
+  week: number,
+  dayIndex: number,
+  exerciseIndex: number,
+): ProgramExercise {
   // Cardio / running / rowing / walking: never tag with RPE. RPE is a
   // strength-training scale, running uses pace and heart-rate zones instead.
   // Just apply the rest shift and leave name/sets/reps untouched.
@@ -178,17 +360,35 @@ function smartAccessory(ex: ProgramExercise, phase: SmartWeekPhase, week: number
       ...ex,
       name,
       sets: adjustSimpleSets(ex.sets, phase.accessoryMode === "test" ? -1 : 0),
-      reps: /amrap/i.test(ex.reps) ? ex.reps : `${adjustSimpleReps(stripRpeNote(ex.reps), -1)} @ RPE 8-9`,
+      reps: /amrap/i.test(ex.reps)
+        ? ex.reps
+        : `${adjustSimpleReps(stripRpeNote(ex.reps), -1)} @ RPE 8-9`,
       rest: shiftRest(ex.rest, phase.restShift),
     };
   }
   if (phase.accessoryMode === "density") {
-    return { ...ex, name, reps: adjustSimpleReps(stripRpeNote(ex.reps), 1), rest: shiftRest(ex.rest, -15) };
+    return {
+      ...ex,
+      name,
+      reps: adjustSimpleReps(stripRpeNote(ex.reps), 1),
+      rest: shiftRest(ex.rest, -15),
+    };
   }
   if (phase.accessoryMode === "build") {
-    return { ...ex, name, sets: adjustSimpleSets(ex.sets, 1), reps: /amrap/i.test(ex.reps) ? ex.reps : `${stripRpeNote(ex.reps)} @ RPE 8`, rest: shiftRest(ex.rest, phase.restShift) };
+    return {
+      ...ex,
+      name,
+      sets: adjustSimpleSets(ex.sets, 1),
+      reps: /amrap/i.test(ex.reps) ? ex.reps : `${stripRpeNote(ex.reps)} @ RPE 8`,
+      rest: shiftRest(ex.rest, phase.restShift),
+    };
   }
-  return { ...ex, name, reps: /amrap/i.test(ex.reps) ? ex.reps : `${stripRpeNote(ex.reps)} @ RPE 7`, rest: shiftRest(ex.rest, phase.restShift) };
+  return {
+    ...ex,
+    name,
+    reps: /amrap/i.test(ex.reps) ? ex.reps : `${stripRpeNote(ex.reps)} @ RPE 7`,
+    rest: shiftRest(ex.rest, phase.restShift),
+  };
 }
 
 function buildSmartWeek(p: Program, sourceDays: WorkoutDay[], week: number): WorkoutDay[] {
@@ -200,7 +400,8 @@ function buildSmartWeek(p: Program, sourceDays: WorkoutDay[], week: number): Wor
     exercises: workout.exercises.map((ex, exerciseIndex) => {
       if (isDividerExercise(ex)) {
         if (/main lift/i.test(ex.name)) return { ...ex, name: `- Main lift · ${phase.label} -` };
-        if (phase.accessoryMode === "deload" && /accessories|finisher|pump|core/i.test(ex.name)) return { ...ex, name: `${ex.name.replace(/-/g, "").trim()} · deload volume -` };
+        if (phase.accessoryMode === "deload" && /accessories|finisher|pump|core/i.test(ex.name))
+          return { ...ex, name: `${ex.name.replace(/-/g, "").trim()} · deload volume -` };
         return ex;
       }
       if (isMainLift(ex) && !isCardioExercise(ex)) {
@@ -227,7 +428,6 @@ export function buildDayKeys(p: Program): string[] {
   return keys;
 }
 
-
 export function WorkoutsByWeek({ p }: { p: Program }) {
   const t = useT();
   const [activeWeek, setActiveWeek] = useState(1);
@@ -240,7 +440,6 @@ export function WorkoutsByWeek({ p }: { p: Program }) {
 
   const fullAccess = !!p.isFree || unlocked || bundle;
 
-
   // Group workouts by week. If no week prefix, treat the whole list as Week 1.
   const weekMap: Record<number, typeof p.workouts> = {};
   let hasExplicitWeeks = false;
@@ -250,7 +449,9 @@ export function WorkoutsByWeek({ p }: { p: Program }) {
     const k = m ? Number(m[1]) : 1;
     (weekMap[k] ||= []).push(w);
   });
-  const weekNumbers = Object.keys(weekMap).map(Number).sort((a, b) => a - b);
+  const weekNumbers = Object.keys(weekMap)
+    .map(Number)
+    .sort((a, b) => a - b);
   // For paid programs we always want to show the full duration in the tab strip
   // even when the data only carries a couple of sample weeks.
   const durationWeeks = (() => {
@@ -268,7 +469,8 @@ export function WorkoutsByWeek({ p }: { p: Program }) {
     }
     const direct = weekMap[activeWeek];
     if (direct && direct.length > 0) return direct;
-    const baseWeek = hasExplicitWeeks && weekMap[2] && activeWeek % 2 === 0 ? weekMap[2] : (weekMap[1] ?? []);
+    const baseWeek =
+      hasExplicitWeeks && weekMap[2] && activeWeek % 2 === 0 ? weekMap[2] : (weekMap[1] ?? []);
     return baseWeek.length > 0 ? buildSmartWeek(p, baseWeek, activeWeek) : [];
   })();
   const isLocked = activeWeek > 1 && !fullAccess;
@@ -315,7 +517,9 @@ export function WorkoutsByWeek({ p }: { p: Program }) {
                 {t("Week")} {wk}
                 {locked && <span className="ml-1.5 text-[10px]">🔒</span>}
                 {wk === 1 && !fullAccess && (
-                  <span className="ml-1.5 text-[10px] uppercase tracking-wider opacity-80">{t("Free")}</span>
+                  <span className="ml-1.5 text-[10px] uppercase tracking-wider opacity-80">
+                    {t("Free")}
+                  </span>
                 )}
               </button>
             );
@@ -323,14 +527,20 @@ export function WorkoutsByWeek({ p }: { p: Program }) {
         </div>
       )}
 
-
       {/* Week content */}
       {isLocked ? (
         <div className="rounded-2xl border border-electric/40 bg-gradient-to-br from-onyx-100/60 to-onyx-50 p-8 lg:p-12 text-center">
-          <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-electric/10 text-2xl">🔒</div>
-          <h3 className="mt-4 font-display text-2xl lg:text-3xl font-bold">{t("Unlock Week")} {activeWeek} {t("of")} {t(p.title)}</h3>
+          <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-electric/10 text-2xl">
+            🔒
+          </div>
+          <h3 className="mt-4 font-display text-2xl lg:text-3xl font-bold">
+            {t("Unlock Week")} {activeWeek} {t("of")} {t(p.title)}
+          </h3>
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
-            {t("Weeks")} 2-{totalWeeks} {t("include progressive overload, intensity tweaks and new exercise variations so you never repeat the same week twice. One payment. Lifetime access on your account.")}
+            {t("Weeks")} 2-{totalWeeks}{" "}
+            {t(
+              "include progressive overload, intensity tweaks and new exercise variations so you never repeat the same week twice. One payment. Lifetime access on your account.",
+            )}
           </p>
           <div className="mt-6 font-display text-3xl font-bold">{programPrice}</div>
           <button
@@ -340,7 +550,9 @@ export function WorkoutsByWeek({ p }: { p: Program }) {
           >
             {loading ? t("Opening checkout…") : t("Unlock full program")}
           </button>
-          <p className="mt-3 text-[11px] text-muted-foreground">{t("Secure checkout")} · {t("Instant access")} · {t("No subscription")}</p>
+          <p className="mt-3 text-[11px] text-muted-foreground">
+            {t("Secure checkout")} · {t("Instant access")} · {t("No subscription")}
+          </p>
         </div>
       ) : hasContentForWeek ? (
         expandWeekToSevenDays(currentDays, activeWeek).map((slot, i) => (
@@ -356,7 +568,10 @@ export function WorkoutsByWeek({ p }: { p: Program }) {
         ))
       ) : (
         <div className="rounded-2xl border border-border bg-onyx-100/40 p-8 text-center text-sm text-muted-foreground">
-          {t("Week")} {activeWeek} {t("follows the same template as Week 1 with progressive overload applied, open the Onyx app to log your sets and see the exact loads for this week.")}
+          {t("Week")} {activeWeek}{" "}
+          {t(
+            "follows the same template as Week 1 with progressive overload applied, open the Onyx app to log your sets and see the exact loads for this week.",
+          )}
         </div>
       )}
     </div>

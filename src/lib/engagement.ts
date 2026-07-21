@@ -12,15 +12,25 @@ export async function listFavorites() {
   return data ?? [];
 }
 
-export async function toggleFavorite(item_type: FavoriteType, item_slug: string, currentlyFav: boolean) {
+export async function toggleFavorite(
+  item_type: FavoriteType,
+  item_slug: string,
+  currentlyFav: boolean,
+) {
   const { data: u } = await supabase.auth.getUser();
   if (!u.user) throw new Error("Sign in to save favorites.");
   if (currentlyFav) {
-    const { error } = await supabase.from("favorites").delete().eq("item_type", item_type).eq("item_slug", item_slug);
+    const { error } = await supabase
+      .from("favorites")
+      .delete()
+      .eq("item_type", item_type)
+      .eq("item_slug", item_slug);
     if (error) throw error;
     return false;
   }
-  const { error } = await supabase.from("favorites").insert({ user_id: u.user.id, item_type, item_slug });
+  const { error } = await supabase
+    .from("favorites")
+    .insert({ user_id: u.user.id, item_type, item_slug });
   if (error) throw error;
   const { grantDailyStreak } = await import("./engagement-extra");
   grantDailyStreak({
@@ -41,7 +51,6 @@ export interface ReviewRow {
   body: string | null;
   created_at: string;
 }
-
 
 export async function listReviews(product_slug: string, product_kind = "program") {
   const { data, error } = await supabase
@@ -66,8 +75,6 @@ export async function getMyReview(product_slug: string, product_kind = "program"
     .maybeSingle();
   return (data as Omit<ReviewRow, never> | null) ?? null;
 }
-
-
 
 export async function upsertReview(input: {
   product_slug: string;
@@ -168,7 +175,9 @@ export async function markDayComplete(program_slug: string, dayKey: string, work
     current_week: existing?.current_week ?? 1,
     last_active_at: new Date().toISOString(),
   };
-  const { error } = await supabase.from("program_progress").upsert(payload, { onConflict: "user_id,program_slug" });
+  const { error } = await supabase
+    .from("program_progress")
+    .upsert(payload, { onConflict: "user_id,program_slug" });
   if (error) throw error;
 
   const { grantDailyStreak } = await import("./engagement-extra");
@@ -200,14 +209,22 @@ export async function getLoggedTrainingToday() {
   return data ?? null;
 }
 
-export async function markSingleTrainingDayComplete(program_slug: string, dayKey: string, workoutTitle?: string): Promise<DayCompleteResult> {
+export async function markSingleTrainingDayComplete(
+  program_slug: string,
+  dayKey: string,
+  workoutTitle?: string,
+): Promise<DayCompleteResult> {
   const { data: u } = await supabase.auth.getUser();
   if (!u.user) throw new Error("Sign in to track progress.");
 
   const existingToday = await getLoggedTrainingToday();
   // Always mark the day itself (visual checkmark + progress). The one-log-per-day
   // rule only gates the streak/activity event, which markDayComplete handles internally.
-  const completedDays = await markDayComplete(program_slug, dayKey || `log-${todayISO()}`, workoutTitle);
+  const completedDays = await markDayComplete(
+    program_slug,
+    dayKey || `log-${todayISO()}`,
+    workoutTitle,
+  );
   return {
     completedDays,
     loggedToday: true,
@@ -227,7 +244,8 @@ export async function setDayCompletion(program_slug: string, dayKey: string, don
   if (!u.user) throw new Error("Sign in to track progress.");
   const existing = await getProgress(program_slug);
   const set = new Set(existing?.completed_days ?? []);
-  if (done) set.add(dayKey); else set.delete(dayKey);
+  if (done) set.add(dayKey);
+  else set.delete(dayKey);
   const payload = {
     user_id: u.user.id,
     program_slug,
@@ -276,7 +294,12 @@ export async function listMyTrainingLog(daysBack = 120) {
     .gte("created_at", since.toISOString())
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return (data ?? []) as { created_at: string; title: string; detail: string | null; item_slug: string | null }[];
+  return (data ?? []) as {
+    created_at: string;
+    title: string;
+    detail: string | null;
+    item_slug: string | null;
+  }[];
 }
 
 // ---------- Challenges ----------
@@ -310,7 +333,9 @@ export async function joinChallenge(challenge_slug: string) {
     .is("completed_at", null);
   const activeSlugs = new Set((active ?? []).map((r: any) => r.challenge_slug));
   if (!activeSlugs.has(challenge_slug) && activeSlugs.size >= 3) {
-    throw new Error("You can only run 3 challenges at once. Finish or leave one before joining another.");
+    throw new Error(
+      "You can only run 3 challenges at once. Finish or leave one before joining another.",
+    );
   }
 
   const { data: prof } = await supabase
@@ -358,7 +383,10 @@ export async function bumpChallengeProgress(challenge_slug: string, totalDays: n
   const completed_at = next >= totalDays ? new Date().toISOString() : null;
   await supabase
     .from("challenge_participants")
-    .upsert({ user_id: u.user.id, challenge_slug, progress: next, completed_at }, { onConflict: "user_id,challenge_slug" });
+    .upsert(
+      { user_id: u.user.id, challenge_slug, progress: next, completed_at },
+      { onConflict: "user_id,challenge_slug" },
+    );
 
   const { logActivity, grantDailyStreak } = await import("./engagement-extra");
   if (delta > 0) {
@@ -382,5 +410,9 @@ export async function bumpChallengeProgress(challenge_slug: string, totalDays: n
 export async function leaveChallenge(challenge_slug: string) {
   const { data: u } = await supabase.auth.getUser();
   if (!u.user) throw new Error("Sign in required.");
-  await supabase.from("challenge_participants").delete().eq("challenge_slug", challenge_slug).eq("user_id", u.user.id);
+  await supabase
+    .from("challenge_participants")
+    .delete()
+    .eq("challenge_slug", challenge_slug)
+    .eq("user_id", u.user.id);
 }

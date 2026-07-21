@@ -55,16 +55,22 @@ export const searchFoods = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const publicQ = supabase
       .from("foods")
-      .select("id,name,name_no,name_es,name_pt,brand,serving_size_g,serving_label,kcal_per_100g,protein_g_per_100g,carbs_g_per_100g,fat_g_per_100g,category")
+      .select(
+        "id,name,name_no,name_es,name_pt,brand,serving_size_g,serving_label,kcal_per_100g,protein_g_per_100g,carbs_g_per_100g,fat_g_per_100g,category",
+      )
       .limit(2000);
     const customQ = supabase
       .from("custom_foods")
-      .select("id,name,serving_size_g,kcal_per_100g,protein_g_per_100g,carbs_g_per_100g,fat_g_per_100g")
+      .select(
+        "id,name,serving_size_g,kcal_per_100g,protein_g_per_100g,carbs_g_per_100g,fat_g_per_100g",
+      )
       .eq("user_id", userId)
       .limit(50);
     if (q) {
       const like = `%${q.replace(/[%_,]/g, "")}%`;
-      publicQ.or(`name.ilike.${like},name_no.ilike.${like},name_es.ilike.${like},name_pt.ilike.${like}`);
+      publicQ.or(
+        `name.ilike.${like},name_no.ilike.${like},name_es.ilike.${like},name_pt.ilike.${like}`,
+      );
       customQ.ilike("name", `%${q}%`);
     } else {
       publicQ.order("name", { ascending: true });
@@ -86,7 +92,12 @@ export const searchFoods = createServerFn({ method: "GET" })
       category: "my food",
       is_custom: true,
     }));
-    const pick = (r: { name: string; name_no?: string | null; name_es?: string | null; name_pt?: string | null }) => {
+    const pick = (r: {
+      name: string;
+      name_no?: string | null;
+      name_es?: string | null;
+      name_pt?: string | null;
+    }) => {
       if (lang === "no") return r.name_no || r.name;
       if (lang === "es") return r.name_es || r.name;
       if (lang === "pt-BR") return r.name_pt || r.name;
@@ -115,7 +126,9 @@ export const listDayLog = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const { data: rows, error } = await supabase
       .from("food_log_entries")
-      .select("id,logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref,created_at")
+      .select(
+        "id,logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref,created_at",
+      )
       .eq("user_id", userId)
       .eq("logged_date", data.date)
       .order("created_at", { ascending: true });
@@ -160,7 +173,6 @@ export const listSourceRefDates = createServerFn({ method: "GET" })
       Array.from(new Set((rows ?? []).map((r) => r.logged_date)));
     return { logged: uniq(entries.data), drafted: uniq(drafts.data) };
   });
-
 
 // ---------- Week log ----------
 export const listWeekLog = createServerFn({ method: "GET" })
@@ -267,7 +279,7 @@ const logBatchInput = z.object({
         protein_g: z.number().min(0).default(0),
         carbs_g: z.number().min(0).default(0),
         fat_g: z.number().min(0).default(0),
-      })
+      }),
     )
     .min(1)
     .max(20),
@@ -321,7 +333,6 @@ export const logFoodBatch = createServerFn({ method: "POST" })
     return { ok: true, inserted: rows.length };
   });
 
-
 // Same shape as logFoodBatch but writes to food_log_drafts (pending),
 // used when you "Add day" from a meal plan, the user still has to press
 // "Log day" on my-nutrition to commit them to the statistics.
@@ -359,7 +370,6 @@ export const logDraftBatch = createServerFn({ method: "POST" })
     return { ok: true, inserted: rows.length };
   });
 
-
 // Commit every draft for a given date into food_log_entries and clear them.
 export const commitDayDrafts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -368,7 +378,9 @@ export const commitDayDrafts = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { data: drafts, error: getErr } = await supabase
       .from("food_log_drafts")
-      .select("logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref")
+      .select(
+        "logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref",
+      )
       .eq("user_id", userId)
       .eq("logged_date", data.date);
     if (getErr) throw getErr;
@@ -424,8 +436,6 @@ export const commitDayDrafts = createServerFn({ method: "POST" })
     return { ok: true, committed: rows.length };
   });
 
-
-
 // ---------- Draft (pending) food entries ----------
 export interface FoodDraft {
   id: string;
@@ -450,7 +460,9 @@ export const listDayDrafts = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const { data: rows, error } = await supabase
       .from("food_log_drafts")
-      .select("id,logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref,created_at")
+      .select(
+        "id,logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref,created_at",
+      )
       .eq("user_id", userId)
       .eq("logged_date", data.date)
       .order("created_at", { ascending: true });
@@ -471,20 +483,24 @@ export const createDraft = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => logInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: row, error } = await supabase.from("food_log_drafts").insert({
-      user_id: userId,
-      logged_date: data.date,
-      meal_slot: data.meal_slot,
-      name: data.name,
-      grams: data.grams ?? null,
-      servings: data.servings ?? null,
-      kcal: data.kcal,
-      protein_g: data.protein_g,
-      carbs_g: data.carbs_g,
-      fat_g: data.fat_g,
-      source: data.source ?? "manual",
-      source_ref: data.source_ref ?? null,
-    }).select("id").single();
+    const { data: row, error } = await supabase
+      .from("food_log_drafts")
+      .insert({
+        user_id: userId,
+        logged_date: data.date,
+        meal_slot: data.meal_slot,
+        name: data.name,
+        grams: data.grams ?? null,
+        servings: data.servings ?? null,
+        kcal: data.kcal,
+        protein_g: data.protein_g,
+        carbs_g: data.carbs_g,
+        fat_g: data.fat_g,
+        source: data.source ?? "manual",
+        source_ref: data.source_ref ?? null,
+      })
+      .select("id")
+      .single();
     if (error) throw error;
     return { id: row.id };
   });
@@ -510,7 +526,9 @@ export const commitDraft = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { data: draft, error: getErr } = await supabase
       .from("food_log_drafts")
-      .select("logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref")
+      .select(
+        "logged_date,meal_slot,name,grams,servings,kcal,protein_g,carbs_g,fat_g,source,source_ref",
+      )
       .eq("id", data.id)
       .eq("user_id", userId)
       .maybeSingle();
@@ -636,7 +654,10 @@ export const upsertTargets = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { error } = await supabase
       .from("nutrition_targets")
-      .upsert({ user_id: userId, ...data, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+      .upsert(
+        { user_id: userId, ...data, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" },
+      );
     if (error) throw error;
     return { ok: true };
   });

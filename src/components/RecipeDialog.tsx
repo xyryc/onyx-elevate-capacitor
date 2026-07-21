@@ -27,8 +27,8 @@ export function RecipeDialog({ recipe, children }: { recipe: Recipe; children: R
       <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
         <div className="sticky top-0 right-0 z-50 h-0 pointer-events-none">
           <DialogClose className="absolute right-3 top-3 pointer-events-auto grid h-9 w-9 place-items-center rounded-full bg-onyx-950/70 text-white backdrop-blur-md ring-1 ring-white/20 hover:bg-onyx-950/90 transition-colors focus:outline-none focus:ring-2 focus:ring-electric">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
           </DialogClose>
         </div>
         <RecipeDialogBody recipe={recipe} />
@@ -62,7 +62,10 @@ function RecipeDialogBody({ recipe: r }: { recipe: Recipe }) {
         <DialogHeader className="text-left">
           <div className="flex flex-wrap gap-1.5 mb-2">
             {r.diets.map((d) => (
-              <span key={d} className="text-[10px] uppercase tracking-wider font-semibold px-2 py-1 rounded bg-onyx-100 border border-border text-muted-foreground">
+              <span
+                key={d}
+                className="text-[10px] uppercase tracking-wider font-semibold px-2 py-1 rounded bg-onyx-100 border border-border text-muted-foreground"
+              >
                 {d}
               </span>
             ))}
@@ -122,7 +125,9 @@ function RecipeDialogBody({ recipe: r }: { recipe: Recipe }) {
           </h3>
           <p className="mt-3 text-sm text-foreground/85 leading-relaxed">{r.summary}</p>
           <ul className="mt-4 space-y-2">
-            {r.whyItWorks.map((w) => <Bullet key={w}>{w}</Bullet>)}
+            {r.whyItWorks.map((w) => (
+              <Bullet key={w}>{w}</Bullet>
+            ))}
           </ul>
         </div>
 
@@ -173,7 +178,9 @@ function RecipeDialogBody({ recipe: r }: { recipe: Recipe }) {
               {t("recipe.proTips")}
             </h4>
             <ul className="mt-3 space-y-2">
-              {r.proTips.map((tp) => <Bullet key={tp}>{tp}</Bullet>)}
+              {r.proTips.map((tp) => (
+                <Bullet key={tp}>{tp}</Bullet>
+              ))}
             </ul>
           </div>
           <div>
@@ -181,7 +188,9 @@ function RecipeDialogBody({ recipe: r }: { recipe: Recipe }) {
               {t("recipe.swaps")}
             </h4>
             <ul className="mt-3 space-y-2">
-              {r.swaps.map((s) => <Bullet key={s}>{s}</Bullet>)}
+              {r.swaps.map((s) => (
+                <Bullet key={s}>{s}</Bullet>
+              ))}
             </ul>
           </div>
         </div>
@@ -208,8 +217,12 @@ const STAT_TONE: Record<StatTone, string> = {
 function Stat({ label, value, tone }: { label: string; value: string; tone?: StatTone }) {
   return (
     <div className="min-w-0 rounded-md border border-border/60 bg-onyx-100 px-2 py-2 text-center">
-      <p className="text-[9px] uppercase tracking-wide text-muted-foreground leading-tight">{label}</p>
-      <p className={`mt-0.5 font-display font-bold text-sm ${tone ? STAT_TONE[tone] : ""}`}>{value}</p>
+      <p className="text-[9px] uppercase tracking-wide text-muted-foreground leading-tight">
+        {label}
+      </p>
+      <p className={`mt-0.5 font-display font-bold text-sm ${tone ? STAT_TONE[tone] : ""}`}>
+        {value}
+      </p>
     </div>
   );
 }
@@ -217,7 +230,13 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: Sta
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex items-start gap-3 text-sm text-foreground/85">
-      <svg className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+      <svg
+        className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+      >
         <polyline points="20 6 9 17 4 12" />
       </svg>
       <span>{children}</span>
@@ -229,8 +248,12 @@ function AllergenPanel({ recipe }: { recipe: Recipe }) {
   const allergens = detectAllergens(recipe);
   const hasNuts = allergens.includes("Peanuts") || allergens.includes("Tree Nuts");
   return (
-    <div className={`mt-4 rounded-xl border p-3 ${hasNuts ? "bg-red-500/10 border-red-500/40" : "bg-amber-500/5 border-amber-500/25"}`}>
-      <p className={`text-[10px] uppercase tracking-[0.2em] font-bold ${hasNuts ? "text-red-300" : "text-amber-300"}`}>
+    <div
+      className={`mt-4 rounded-xl border p-3 ${hasNuts ? "bg-red-500/10 border-red-500/40" : "bg-amber-500/5 border-amber-500/25"}`}
+    >
+      <p
+        className={`text-[10px] uppercase tracking-[0.2em] font-bold ${hasNuts ? "text-red-300" : "text-amber-300"}`}
+      >
         {hasNuts ? "Allergen warning" : "Allergen info"}
       </p>
       <p className="mt-1 text-xs text-foreground/90 font-semibold">{allergenSummary(allergens)}</p>

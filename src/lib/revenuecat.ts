@@ -95,31 +95,39 @@ export async function rcPurchase(kind: RCProductKind): Promise<boolean> {
 
   // Fetch the current offerings.
   const offerings = await Purchases.getOfferings();
-  console.log("[RevenueCat] getOfferings result:", JSON.stringify(offerings?.current?.availablePackages?.map((p: any) => ({
-    identifier: p.identifier,
-    packageType: p.packageType,
-    productId: p.product?.identifier ?? p.storeProduct?.productIdentifier,
-  }))));
+  console.log(
+    "[RevenueCat] getOfferings result:",
+    JSON.stringify(
+      offerings?.current?.availablePackages?.map((p: any) => ({
+        identifier: p.identifier,
+        packageType: p.packageType,
+        productId: p.product?.identifier ?? p.storeProduct?.productIdentifier,
+      })),
+    ),
+  );
 
   const current = offerings?.current;
   if (!current) {
-    throw new Error("No current offering is configured in the RevenueCat dashboard. Set a Current Offering under Monetization → Offerings.");
+    throw new Error(
+      "No current offering is configured in the RevenueCat dashboard. Set a Current Offering under Monetization → Offerings.",
+    );
   }
 
   const targetProductId = RC_PRODUCT_IDS[kind];
-  console.log(`[RevenueCat] Looking for productId="${targetProductId}" in ${current.availablePackages?.length ?? 0} packages`);
+  console.log(
+    `[RevenueCat] Looking for productId="${targetProductId}" in ${current.availablePackages?.length ?? 0} packages`,
+  );
 
   // Primary match: by product identifier.
   let pkg = current.availablePackages?.find(
-    (p: any) =>
-      (p.product?.identifier ?? p.storeProduct?.productIdentifier) === targetProductId,
+    (p: any) => (p.product?.identifier ?? p.storeProduct?.productIdentifier) === targetProductId,
   );
 
   // Fallback match: by RevenueCat package type string (MONTHLY / ANNUAL / LIFETIME).
   if (!pkg) {
     const typeMap: Record<RCProductKind, string[]> = {
-      monthly:  ["MONTHLY", "$rc_monthly"],
-      yearly:   ["ANNUAL", "YEARLY", "$rc_annual"],
+      monthly: ["MONTHLY", "$rc_monthly"],
+      yearly: ["ANNUAL", "YEARLY", "$rc_annual"],
       lifetime: ["LIFETIME", "$rc_lifetime"],
     };
     const types = typeMap[kind];
@@ -127,7 +135,9 @@ export async function rcPurchase(kind: RCProductKind): Promise<boolean> {
       (p: any) => types.includes(p.packageType) || types.includes(p.identifier),
     );
     if (pkg) {
-      console.log(`[RevenueCat] Matched package via type fallback: ${pkg.identifier} (${pkg.packageType})`);
+      console.log(
+        `[RevenueCat] Matched package via type fallback: ${pkg.identifier} (${pkg.packageType})`,
+      );
     }
   }
 
@@ -135,7 +145,7 @@ export async function rcPurchase(kind: RCProductKind): Promise<boolean> {
     console.error("[RevenueCat] Available packages:", JSON.stringify(current.availablePackages));
     throw new Error(
       `Could not find a package for "${kind}" in your RevenueCat offering. ` +
-      `Make sure your Offering contains a package linked to "${targetProductId}".`,
+        `Make sure your Offering contains a package linked to "${targetProductId}".`,
     );
   }
 
@@ -143,14 +153,17 @@ export async function rcPurchase(kind: RCProductKind): Promise<boolean> {
 
   try {
     const result = await Purchases.purchasePackage({ aPackage: pkg });
-    console.log("[RevenueCat] purchasePackage result:", JSON.stringify(result?.customerInfo?.entitlements));
+    console.log(
+      "[RevenueCat] purchasePackage result:",
+      JSON.stringify(result?.customerInfo?.entitlements),
+    );
     const entitlement = result?.customerInfo?.entitlements?.all?.["all_access"];
     const success = entitlement?.isActive === true;
     console.log(`[RevenueCat] all_access entitlement active: ${success}`);
     return success;
   } catch (err: any) {
     const code = String(err?.code ?? "");
-    const msg  = String(err?.message ?? err?.userInfo?.NSLocalizedDescription ?? "");
+    const msg = String(err?.message ?? err?.userInfo?.NSLocalizedDescription ?? "");
     console.log(`[RevenueCat] purchasePackage error code="${code}" message="${msg}"`);
 
     // Code 1 = user cancelled; SKErrorDomain 2 = user cancelled on device.
@@ -185,7 +198,7 @@ export interface RCSubscriptionInfo {
   isActive: boolean;
   tier: "monthly" | "yearly" | "lifetime" | null;
   productIdentifier: string | null;
-  expirationDate: string | null;       // ISO string, null for lifetime
+  expirationDate: string | null; // ISO string, null for lifetime
   willRenew: boolean;
   isSandbox: boolean;
   periodType: "NORMAL" | "INTRO" | "TRIAL" | string;

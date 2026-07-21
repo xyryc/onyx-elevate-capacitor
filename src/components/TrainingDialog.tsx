@@ -1,8 +1,23 @@
-import { cloneElement, isValidElement, useEffect, useState, type KeyboardEvent, type MouseEvent, type ReactElement, type ReactNode } from "react";
+import {
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { Check, X } from "lucide-react";
 import type { Program } from "@/data/programs";
 import { useT } from "@/i18n/LanguageProvider";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { TrainingBody } from "@/routes/_authenticated/training.$slug";
 import { useAuth } from "@/hooks/useAuth";
@@ -84,12 +99,15 @@ export function TrainingDialog({ program, children }: { program: Program; childr
         "aria-haspopup": "dialog",
         "aria-expanded": open,
         "data-added": added,
-        children: checked && added ? (
-          <span className="inline-flex items-center gap-1.5">
-            <Check className="h-4 w-4" strokeWidth={3} />
-            {t("program.alreadyInWorkout") || "Lagt til"}
-          </span>
-        ) : original.props.children,
+        children:
+          checked && added ? (
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-4 w-4" strokeWidth={3} />
+              {t("program.alreadyInWorkout") || "Lagt til"}
+            </span>
+          ) : (
+            original.props.children
+          ),
         onClick: (e: MouseEvent<HTMLElement>) => {
           original.props.onClick?.(e);
           if (!e.defaultPrevented) handleOpenChange(true);

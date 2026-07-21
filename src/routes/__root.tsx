@@ -38,8 +38,16 @@ if (typeof window !== "undefined") {
     let resolvedValue = value;
     if (typeof value === "string" && value.startsWith("/__l5e/assets-v1/") && isCapacitor()) {
       resolvedValue = `https://onyxperformance.app${value}`;
-    } else if (name === "style" && typeof value === "string" && value.includes("/__l5e/assets-v1/") && isCapacitor()) {
-      resolvedValue = value.replace(/\/__l5e\/assets-v1\//g, "https://onyxperformance.app/__l5e/assets-v1/");
+    } else if (
+      name === "style" &&
+      typeof value === "string" &&
+      value.includes("/__l5e/assets-v1/") &&
+      isCapacitor()
+    ) {
+      resolvedValue = value.replace(
+        /\/__l5e\/assets-v1\//g,
+        "https://onyxperformance.app/__l5e/assets-v1/",
+      );
     }
     return originalSetAttribute.call(this, name, resolvedValue);
   };
@@ -57,7 +65,7 @@ if (typeof window !== "undefined") {
             resolvedValue = `https://onyxperformance.app${value}`;
           }
           return originalSet.call(this, resolvedValue);
-        }
+        },
       });
     }
   };
@@ -72,7 +80,10 @@ if (typeof window !== "undefined") {
   CSSStyleDeclaration.prototype.setProperty = function (property, value, priority) {
     let resolvedValue = value;
     if (typeof value === "string" && value.includes("/__l5e/assets-v1/") && isCapacitor()) {
-      resolvedValue = value.replace(/\/__l5e\/assets-v1\//g, "https://onyxperformance.app/__l5e/assets-v1/");
+      resolvedValue = value.replace(
+        /\/__l5e\/assets-v1\//g,
+        "https://onyxperformance.app/__l5e/assets-v1/",
+      );
     }
     return originalSetProperty.call(this, property, resolvedValue, priority);
   };
@@ -86,17 +97,19 @@ if (typeof window !== "undefined") {
         set: function (value) {
           let resolvedValue = value;
           if (typeof value === "string" && value.includes("/__l5e/assets-v1/") && isCapacitor()) {
-            resolvedValue = value.replace(/\/__l5e\/assets-v1\//g, "https://onyxperformance.app/__l5e/assets-v1/");
+            resolvedValue = value.replace(
+              /\/__l5e\/assets-v1\//g,
+              "https://onyxperformance.app/__l5e/assets-v1/",
+            );
           }
           return originalSet.call(this, resolvedValue);
-        }
+        },
       });
     }
   };
   patchStyleProperty("backgroundImage");
   patchStyleProperty("background");
 }
-
 
 function NotFoundComponent() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
@@ -142,12 +155,18 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="inline-flex items-center justify-center rounded-md bg-electric px-4 py-2 text-sm font-semibold text-onyx-50 transition-colors hover:bg-electric-glow"
           >
             Try again
           </button>
-          <a href="/" className="inline-flex items-center justify-center rounded-md border border-border bg-onyx-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-onyx-200">
+          <a
+            href="/"
+            className="inline-flex items-center justify-center rounded-md border border-border bg-onyx-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-onyx-200"
+          >
             Go home
           </a>
         </div>
@@ -160,19 +179,43 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" },
+      {
+        name: "viewport",
+        content:
+          "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover",
+      },
       { title: "Onyx Elevate - Free Exercise Library" },
-      { name: "description", content: "Onyx Elevate - a premium, free exercise database with step-by-step instructions, anatomy, pro tips, and training programs." },
+      {
+        name: "description",
+        content:
+          "Onyx Elevate - a premium, free exercise database with step-by-step instructions, anatomy, pro tips, and training programs.",
+      },
       { name: "author", content: "Onyx Elevate" },
       { name: "theme-color", content: "#0a0a0a" },
       { property: "og:title", content: "Onyx Elevate - Free Exercise Library" },
-      { property: "og:description", content: "Onyx Elevate - a premium, free exercise database with step-by-step instructions, anatomy, pro tips, and training programs." },
+      {
+        property: "og:description",
+        content:
+          "Onyx Elevate - a premium, free exercise database with step-by-step instructions, anatomy, pro tips, and training programs.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Onyx Elevate - Free Exercise Library" },
-      { name: "twitter:description", content: "Onyx Elevate - a premium, free exercise database with step-by-step instructions, anatomy, pro tips, and training programs." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8c93cdbd-52dd-4f63-bc8e-1f8393606480/id-preview-35c53357--b0f8a6aa-2d69-4211-afa3-414eb72f8277.lovable.app-1782868692634.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8c93cdbd-52dd-4f63-bc8e-1f8393606480/id-preview-35c53357--b0f8a6aa-2d69-4211-afa3-414eb72f8277.lovable.app-1782868692634.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Onyx Elevate - a premium, free exercise database with step-by-step instructions, anatomy, pro tips, and training programs.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8c93cdbd-52dd-4f63-bc8e-1f8393606480/id-preview-35c53357--b0f8a6aa-2d69-4211-afa3-414eb72f8277.lovable.app-1782868692634.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8c93cdbd-52dd-4f63-bc8e-1f8393606480/id-preview-35c53357--b0f8a6aa-2d69-4211-afa3-414eb72f8277.lovable.app-1782868692634.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -190,7 +233,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <head suppressHydrationWarning><HeadContent /></head>
+      <head suppressHydrationWarning>
+        <HeadContent />
+      </head>
       <body suppressHydrationWarning>
         {children}
         <Scripts />
@@ -224,7 +269,9 @@ function RootComponent() {
       "/train",
       "/app",
       "/quiz",
-    ].includes(normalizedPath) || normalizedPath.startsWith("/builder/") || normalizedPath.startsWith("/challenges/");
+    ].includes(normalizedPath) ||
+    normalizedPath.startsWith("/builder/") ||
+    normalizedPath.startsWith("/challenges/");
   // Full-screen detail pages on mobile: hide top header + bottom tab bar so
   // the card content opens like a native modal (matches recipe dialog UX).
   const detailPrefixes = [
@@ -246,8 +293,7 @@ function RootComponent() {
   // Profile and quiz are treated as full-screen mobile pages: hide the top
   // category header so only the bottom tab bar remains for navigation.
   const isFullscreenMobilePage =
-    pathname.replace(/\/$/, "") === "/my-library" ||
-    pathname.replace(/\/$/, "") === "/quiz";
+    pathname.replace(/\/$/, "") === "/my-library" || pathname.replace(/\/$/, "") === "/quiz";
   useSyncTranslations();
   // useSingleSession(); // disabled, multiple devices allowed
   return (
@@ -258,7 +304,9 @@ function RootComponent() {
         <AutoCheckInTrigger />
         {/* TranslationGate removed, instant switch, no loading screen */}
         <div className="h-dvh flex flex-col overflow-hidden pt-[env(safe-area-inset-top)]">
-          <div className={`shrink-0 z-50 ${isDetailPage || isFullscreenMobilePage ? "hidden md:block" : ""}`}>
+          <div
+            className={`shrink-0 z-50 ${isDetailPage || isFullscreenMobilePage ? "hidden md:block" : ""}`}
+          >
             <PaymentTestModeBanner />
             <SiteHeader />
           </div>
@@ -270,11 +318,14 @@ function RootComponent() {
           </ScrollManager>
           <AiCoachBubble />
           <NameCapture />
-          <div className={isDetailPage && !normalizedPath.startsWith("/builder/") ? "hidden md:block" : ""}>
+          <div
+            className={
+              isDetailPage && !normalizedPath.startsWith("/builder/") ? "hidden md:block" : ""
+            }
+          >
             <BottomTabBar />
           </div>
         </div>
-
       </LanguageProvider>
     </QueryClientProvider>
   );
@@ -341,12 +392,13 @@ function ScrollManager({ children, isDetailPage }: { children: ReactNode; isDeta
     });
   }, [href]);
 
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
-      try { window.history.scrollRestoration = "manual"; } catch {}
+      try {
+        window.history.scrollRestoration = "manual";
+      } catch {}
     }
 
     const getIndex = (): number => {
@@ -355,22 +407,24 @@ function ScrollManager({ children, isDetailPage }: { children: ReactNode; isDeta
     };
 
     // Track history action type (PUSH, BACK, FORWARD, ...) alongside router events.
-    const unsubHistory = router.history.subscribe(({ action }: { action: { type?: string } | string }) => {
-      const actionType = typeof action === "string" ? action : action.type;
-      // Save scroll of the entry we're leaving.
-      if (lastIndex.current !== null) {
-        positions.current.set(lastIndex.current, el.scrollTop);
-      }
-      pendingAction.current = actionType as typeof pendingAction.current;
+    const unsubHistory = router.history.subscribe(
+      ({ action }: { action: { type?: string } | string }) => {
+        const actionType = typeof action === "string" ? action : action.type;
+        // Save scroll of the entry we're leaving.
+        if (lastIndex.current !== null) {
+          positions.current.set(lastIndex.current, el.scrollTop);
+        }
+        pendingAction.current = actionType as typeof pendingAction.current;
 
-      // For normal category taps, clear the old scroll offset immediately,
-      // before the next route renders. Waiting for onResolved can show the
-      // incoming page at the previous scroll depth for one frame.
-      if (actionType === "PUSH" || actionType === "REPLACE") {
-        el.scrollTo({ top: 0, left: 0, behavior: "auto" });
-        el.scrollTop = 0;
-      }
-    });
+        // For normal category taps, clear the old scroll offset immediately,
+        // before the next route renders. Waiting for onResolved can show the
+        // incoming page at the previous scroll depth for one frame.
+        if (actionType === "PUSH" || actionType === "REPLACE") {
+          el.scrollTo({ top: 0, left: 0, behavior: "auto" });
+          el.scrollTop = 0;
+        }
+      },
+    );
 
     const unsubResolved = router.subscribe("onResolved", () => {
       const idx = getIndex();
@@ -418,5 +472,3 @@ function ScrollManager({ children, isDetailPage }: { children: ReactNode; isDeta
     </main>
   );
 }
-
-

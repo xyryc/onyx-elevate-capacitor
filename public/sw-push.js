@@ -7,7 +7,9 @@ self.addEventListener("activate", (e) => {
 });
 self.addEventListener("push", (event) => {
   let data = {};
-  try { data = event.data ? event.data.json() : {}; } catch (_) {}
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (_) {}
   const title = data.title || "Don't break your streak 🔥";
   const body = data.body || "You haven't logged a workout today. Tap to keep your streak alive.";
   event.waitUntil(
@@ -17,7 +19,7 @@ self.addEventListener("push", (event) => {
       badge: "/app-icon-512.png",
       tag: data.tag || "onyx-streak",
       data: { url: data.url || "/my-library" },
-    })
+    }),
   );
 });
 self.addEventListener("notificationclick", (event) => {
@@ -29,6 +31,6 @@ self.addEventListener("notificationclick", (event) => {
         if ("focus" in c) return c.focus().then(() => c.navigate(target));
       }
       if (self.clients.openWindow) return self.clients.openWindow(target);
-    })
+    }),
   );
 });

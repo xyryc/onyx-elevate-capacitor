@@ -64,19 +64,24 @@ export async function hkRequestPermissions(): Promise<boolean> {
   try {
     console.log("[HealthKit] Requesting permissions...");
     const Health = await getHealth();
-    
+
     // We request permissions for weight, height, body fat, active calories (energy), steps, and workouts.
     const options = {
       read: ["steps", "calories", "weight", "height"],
-      write: ["weight", "calories"]
+      write: ["weight", "calories"],
     };
-    console.log("[HealthKit] Calling Health.requestAuthorization with options:", JSON.stringify(options));
-    
+    console.log(
+      "[HealthKit] Calling Health.requestAuthorization with options:",
+      JSON.stringify(options),
+    );
+
     const promise = Health.requestAuthorization(options);
     console.log("[HealthKit] requestAuthorization promise created, waiting for user response...");
-    
+
     await promise;
-    console.log("[HealthKit] requestAuthorization completed successfully (user answered sheet or already authorized).");
+    console.log(
+      "[HealthKit] requestAuthorization completed successfully (user answered sheet or already authorized).",
+    );
     return true;
   } catch (err: any) {
     console.error("[HealthKit] Authorization failed with error:", err);
@@ -117,4 +122,3 @@ export async function hkSetEnabled(enabled: boolean): Promise<void> {
     window.localStorage.removeItem("onyx.healthkit.enabled");
   }
 }
-

@@ -17,11 +17,11 @@ function openLoginSplash() {
   if (typeof window === "undefined") return;
   try {
     window.sessionStorage.setItem("onyx.loginSplash.forceOpen", "1");
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
   window.dispatchEvent(new CustomEvent("onyx:open-login-splash"));
 }
-
-
 
 const OPTIONAL_CORE_RE = /optional\s*core/i;
 
@@ -30,7 +30,12 @@ const OPTIONAL_CORE_RE = /optional\s*core/i;
  *  live sessions with the same premium video experience.
  */
 function programDayToQuickWorkout(
-  w: { day: string; title: string; focus?: string; exercises: { name: string; sets: string; reps: string; rest: string }[] },
+  w: {
+    day: string;
+    title: string;
+    focus?: string;
+    exercises: { name: string; sets: string; reps: string; rest: string }[];
+  },
   liveSlug: string,
 ): QuickWorkout {
   const clean = w.exercises.filter((ex) => !ex.name.startsWith("- "));
@@ -60,7 +65,6 @@ function programDayToQuickWorkout(
     ],
   };
 }
-
 
 export function WorkoutCard({
   w,
@@ -93,7 +97,10 @@ export function WorkoutCard({
   const [logging, setLogging] = useState(false);
   const [loggedNow, setLoggedNow] = useState(false);
   const liveWorkout = useMemo(
-    () => (enableLive ? programDayToQuickWorkout(w, `${liveSlugPrefix ?? "program"}-day-${dayNum}`) : null),
+    () =>
+      enableLive
+        ? programDayToQuickWorkout(w, `${liveSlugPrefix ?? "program"}-day-${dayNum}`)
+        : null,
     [enableLive, liveSlugPrefix, dayNum, w],
   );
 
@@ -113,7 +120,11 @@ export function WorkoutCard({
   async function logDay() {
     if (logging) return;
     if (logged || dailyLocked) {
-      toast.info(progressQuery.data?.title ? `${comeBackMessage} ${progressQuery.data.title}` : comeBackMessage);
+      toast.info(
+        progressQuery.data?.title
+          ? `${comeBackMessage} ${progressQuery.data.title}`
+          : comeBackMessage,
+      );
       return;
     }
     setLogging(true);
@@ -139,7 +150,6 @@ export function WorkoutCard({
       setLogging(false);
     }
   }
-
 
   // Detect indices for the "Optional core" divider and where that section ends
   // (either the next "- " divider, or the end of the list). Users can toggle
@@ -171,7 +181,6 @@ export function WorkoutCard({
     <div
       className={`surface-card rounded-xl overflow-hidden ${optional ? "border border-dashed border-border/70" : ""}`}
     >
-
       <div className="relative px-4 sm:px-6 py-4 sm:py-5 border-b border-border bg-gradient-to-br from-onyx-100/60 to-onyx-50">
         <div className="min-w-0 pr-10">
           <div className="flex flex-wrap items-center gap-2">
@@ -190,7 +199,9 @@ export function WorkoutCard({
             {t(w.title)}
           </h3>
           {w.focus && (
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2 sm:line-clamp-none">{t(w.focus)}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2 sm:line-clamp-none">
+              {t(w.focus)}
+            </p>
           )}
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -225,22 +236,24 @@ export function WorkoutCard({
               <span
                 className={`inline-block h-2 w-2 rounded-full ${showCore ? "bg-onyx-900" : "bg-muted-foreground"}`}
               />
-                <span className="hidden sm:inline">{showCore ? t("Core: On") : t("Add optional core")}</span>
-                <span className="sm:hidden">{showCore ? t("Core") : t("+ Core")}</span>
+              <span className="hidden sm:inline">
+                {showCore ? t("Core: On") : t("Add optional core")}
+              </span>
+              <span className="sm:hidden">{showCore ? t("Core") : t("+ Core")}</span>
             </button>
           )}
         </div>
       </div>
-
-
-
 
       {/* Mobile: compact stacked cards */}
       <ul className="sm:hidden divide-y divide-border">
         {visibleExercises.map((ex) => {
           if (ex.name.startsWith("- ")) {
             return (
-              <li key={ex.name} className="bg-electric/5 px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-electric font-bold">
+              <li
+                key={ex.name}
+                className="bg-electric/5 px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-electric font-bold"
+              >
                 {translateSectionLabel(ex.name)}
               </li>
             );
@@ -248,9 +261,16 @@ export function WorkoutCard({
           const slug = findExerciseSlugByName(ex.name);
           const exObj = slug ? findExercise(slug) : undefined;
           const nameContent = (
-            <span className="group inline-flex items-center gap-2 text-foreground min-w-0 cursor-pointer" title={t("Watch demo video")}>
+            <span
+              className="group inline-flex items-center gap-2 text-foreground min-w-0 cursor-pointer"
+              title={t("Watch demo video")}
+            >
               <span className="grid h-6 w-6 place-items-center rounded-full bg-electric/15 border border-electric/30 shrink-0">
-                <svg className="h-3 w-3 text-electric translate-x-[1px]" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  className="h-3 w-3 text-electric translate-x-[1px]"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </span>
@@ -259,7 +279,9 @@ export function WorkoutCard({
           );
           const NameEl = exObj ? (
             <ExerciseDialog exercise={exObj}>
-              <button type="button" className="text-left min-w-0">{nameContent}</button>
+              <button type="button" className="text-left min-w-0">
+                {nameContent}
+              </button>
             </ExerciseDialog>
           ) : (
             <span className="font-medium truncate">{t(ex.name)}</span>
@@ -269,16 +291,37 @@ export function WorkoutCard({
               <div className="min-w-0">{NameEl}</div>
               <div className="mt-2 grid grid-cols-3 gap-2 text-[11px]">
                 <div className="rounded-md bg-onyx-100/60 border border-border/60 px-2 py-1.5">
-                  <p data-no-translate className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("program.table.sets")}</p>
-                   <p className="text-foreground font-semibold"><GlossaryText>{t(ex.sets)}</GlossaryText></p>
+                  <p
+                    data-no-translate
+                    className="text-[9px] uppercase tracking-wider text-muted-foreground"
+                  >
+                    {t("program.table.sets")}
+                  </p>
+                  <p className="text-foreground font-semibold">
+                    <GlossaryText>{t(ex.sets)}</GlossaryText>
+                  </p>
                 </div>
                 <div className="rounded-md bg-onyx-100/60 border border-border/60 px-2 py-1.5">
-                  <p data-no-translate className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("program.table.reps")}</p>
-                   <p className="text-foreground font-semibold"><GlossaryText>{t(ex.reps)}</GlossaryText></p>
+                  <p
+                    data-no-translate
+                    className="text-[9px] uppercase tracking-wider text-muted-foreground"
+                  >
+                    {t("program.table.reps")}
+                  </p>
+                  <p className="text-foreground font-semibold">
+                    <GlossaryText>{t(ex.reps)}</GlossaryText>
+                  </p>
                 </div>
                 <div className="rounded-md bg-onyx-100/60 border border-border/60 px-2 py-1.5">
-                  <p data-no-translate className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("program.table.rest")}</p>
-                   <p className="text-foreground font-semibold"><GlossaryText>{t(ex.rest)}</GlossaryText></p>
+                  <p
+                    data-no-translate
+                    className="text-[9px] uppercase tracking-wider text-muted-foreground"
+                  >
+                    {t("program.table.rest")}
+                  </p>
+                  <p className="text-foreground font-semibold">
+                    <GlossaryText>{t(ex.rest)}</GlossaryText>
+                  </p>
                 </div>
               </div>
             </li>
@@ -310,7 +353,10 @@ export function WorkoutCard({
               if (ex.name.startsWith("- ")) {
                 return (
                   <tr key={ex.name} className="bg-electric/5">
-                    <td colSpan={4} className="px-5 py-2 text-[10px] uppercase tracking-[0.25em] text-electric font-bold">
+                    <td
+                      colSpan={4}
+                      className="px-5 py-2 text-[10px] uppercase tracking-[0.25em] text-electric font-bold"
+                    >
                       {translateSectionLabel(ex.name)}
                     </td>
                   </tr>
@@ -319,10 +365,7 @@ export function WorkoutCard({
               const slug = findExerciseSlugByName(ex.name);
               const exObj = slug ? findExercise(slug) : undefined;
               return (
-                <tr
-                  key={ex.name}
-                  className="hover:bg-onyx-100/50 transition-colors"
-                >
+                <tr key={ex.name} className="hover:bg-onyx-100/50 transition-colors">
                   <td className="px-5 py-3 font-medium">
                     {exObj ? (
                       <ExerciseDialog exercise={exObj}>
@@ -358,11 +401,9 @@ export function WorkoutCard({
                   <td className="px-5 py-3 text-muted-foreground">
                     <GlossaryText>{t(ex.rest)}</GlossaryText>
                   </td>
-
                 </tr>
               );
             })}
-
           </tbody>
         </table>
       </div>
@@ -466,10 +507,7 @@ export const TRAINING_POSITIONS: Record<number, number[]> = {
   7: [0, 1, 2, 3, 4, 5, 6],
 };
 
-export function expandWeekToSevenDays(
-  currentDays: WorkoutDay[],
-  weekIdx: number
-): WorkoutSlot[] {
+export function expandWeekToSevenDays(currentDays: WorkoutDay[], weekIdx: number): WorkoutSlot[] {
   const n = Math.min(currentDays.length, 7);
   const positions = TRAINING_POSITIONS[n] ?? TRAINING_POSITIONS[3];
   const slots: WorkoutSlot[] = new Array(7).fill(null);

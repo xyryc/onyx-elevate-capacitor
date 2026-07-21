@@ -1,6 +1,13 @@
 import { useMemo, useState } from "react";
 import { Calculator, Info, AlertTriangle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n/LanguageProvider";
 
@@ -26,9 +33,11 @@ export function BmiCalculator({
 
   function classify(bmi: number): { label: string; tone: string; range: string } {
     if (bmi < 18.5) return { label: t("bmi.cat.under"), tone: "text-sky-400", range: "< 18.5" };
-    if (bmi < 25) return { label: t("bmi.cat.healthy"), tone: "text-green-400", range: "18.5 – 24.9" };
+    if (bmi < 25)
+      return { label: t("bmi.cat.healthy"), tone: "text-green-400", range: "18.5 – 24.9" };
     if (bmi < 30) return { label: t("bmi.cat.over"), tone: "text-amber-400", range: "25 – 29.9" };
-    if (bmi < 35) return { label: t("bmi.cat.obese1"), tone: "text-orange-400", range: "30 – 34.9" };
+    if (bmi < 35)
+      return { label: t("bmi.cat.obese1"), tone: "text-orange-400", range: "30 – 34.9" };
     if (bmi < 40) return { label: t("bmi.cat.obese2"), tone: "text-red-400", range: "35 – 39.9" };
     return { label: t("bmi.cat.obese3"), tone: "text-red-500", range: "≥ 40" };
   }
@@ -44,8 +53,12 @@ export function BmiCalculator({
             <Calculator className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">{t("bmi.eyebrow")}</div>
-            <div className="mt-0.5 font-semibold text-sm">{triggerLabel ?? t("bmi.triggerLabel")}</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">
+              {t("bmi.eyebrow")}
+            </div>
+            <div className="mt-0.5 font-semibold text-sm">
+              {triggerLabel ?? t("bmi.triggerLabel")}
+            </div>
             <div className="mt-1 text-xs text-muted-foreground">{t("bmi.triggerDesc")}</div>
           </div>
         </button>
@@ -54,11 +67,10 @@ export function BmiCalculator({
       <DialogContent className="max-w-lg bg-onyx-100 border-border">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
-            {t("bmi.title")}<span className="text-electric">.</span>
+            {t("bmi.title")}
+            <span className="text-electric">.</span>
           </DialogTitle>
-          <DialogDescription>
-            {t("bmi.desc")}
-          </DialogDescription>
+          <DialogDescription>{t("bmi.desc")}</DialogDescription>
         </DialogHeader>
 
         <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 flex gap-2.5">
@@ -70,7 +82,9 @@ export function BmiCalculator({
 
         <div className="grid grid-cols-2 gap-3">
           <label className="block min-w-0">
-            <span className="block truncate text-xs text-muted-foreground font-semibold uppercase tracking-wide">{t("bmi.height")}</span>
+            <span className="block truncate text-xs text-muted-foreground font-semibold uppercase tracking-wide">
+              {t("bmi.height")}
+            </span>
             <input
               type="number"
               inputMode="decimal"
@@ -81,7 +95,9 @@ export function BmiCalculator({
             />
           </label>
           <label className="block min-w-0">
-            <span className="block truncate text-xs text-muted-foreground font-semibold uppercase tracking-wide">{t("bmi.weight")}</span>
+            <span className="block truncate text-xs text-muted-foreground font-semibold uppercase tracking-wide">
+              {t("bmi.weight")}
+            </span>
             <input
               type="number"
               inputMode="decimal"
@@ -97,12 +113,16 @@ export function BmiCalculator({
           <div className="rounded-lg border border-border bg-onyx-200/40 p-4">
             <div className="flex items-baseline justify-between">
               <div>
-                <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold">{t("bmi.yourBmi")}</div>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold">
+                  {t("bmi.yourBmi")}
+                </div>
                 <div className="mt-1 font-display text-4xl font-bold tabular-nums">{bmi}</div>
               </div>
               <div className="text-right">
                 <div className={`text-sm font-bold ${cat.tone}`}>{cat.label}</div>
-                <div className="text-[11px] text-muted-foreground">{t("bmi.range")} {cat.range}</div>
+                <div className="text-[11px] text-muted-foreground">
+                  {t("bmi.range")} {cat.range}
+                </div>
               </div>
             </div>
 
@@ -121,7 +141,11 @@ export function BmiCalculator({
                 />
               </div>
               <div className="mt-3 flex justify-between text-[10px] text-muted-foreground uppercase tracking-wider">
-                <span>15</span><span>18.5</span><span>25</span><span>30</span><span>40</span>
+                <span>15</span>
+                <span>18.5</span>
+                <span>25</span>
+                <span>30</span>
+                <span>40</span>
               </div>
             </div>
 
@@ -133,7 +157,10 @@ export function BmiCalculator({
             {onApply && (
               <Button
                 type="button"
-                onClick={() => { onApply(bmi); setOpen(false); }}
+                onClick={() => {
+                  onApply(bmi);
+                  setOpen(false);
+                }}
                 className="mt-4 w-full bg-electric text-onyx-50 hover:bg-electric-glow font-bold"
               >
                 {t("bmi.saveToNotes")}

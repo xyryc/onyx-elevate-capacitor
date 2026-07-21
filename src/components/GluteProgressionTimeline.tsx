@@ -111,7 +111,6 @@ export function GluteProgressionTimeline({ slug }: { slug: string }) {
   const [activeWeek, setActiveWeek] = useState(1);
   if (!timeline) return null;
 
-
   return (
     <div className="mt-6 surface-card rounded-2xl border border-electric/20 overflow-hidden">
       <div className="px-5 py-4 md:px-6 md:py-5 border-b border-border bg-onyx-100/40">
@@ -121,9 +120,7 @@ export function GluteProgressionTimeline({ slug }: { slug: string }) {
         <h3 className="mt-1 font-display text-lg md:text-xl font-bold">
           RPE + deload ladder for every main lift
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-          {timeline.legend}
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{timeline.legend}</p>
       </div>
 
       <div className="overflow-x-auto">
@@ -148,14 +145,11 @@ export function GluteProgressionTimeline({ slug }: { slug: string }) {
           <tbody className="divide-y divide-border">
             {timeline.lifts.map((lift) => (
               <tr key={lift.name} className="align-top">
-
                 <td className="px-4 py-3 sticky left-0 bg-background z-10">
                   <div className="font-semibold text-foreground" data-no-translate>
                     {lift.name}
                   </div>
-                  <div className="text-xs text-muted-foreground mt-0.5">
-                    {lift.workingReps}
-                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{lift.workingReps}</div>
                 </td>
                 {lift.weeks.map((wk, i) => {
                   const isActive = i + 1 === activeWeek;
@@ -186,7 +180,6 @@ export function GluteProgressionTimeline({ slug }: { slug: string }) {
                     </td>
                   );
                 })}
-
               </tr>
             ))}
           </tbody>
@@ -203,7 +196,8 @@ export function GluteProgressionTimeline({ slug }: { slug: string }) {
               Log last week's weight + RPE → next-week load
             </h4>
             <p className="mt-1 text-xs text-muted-foreground">
-              Uses ~3% load change per RPE point, rounds to the nearest 2.5 kg / 5 lb plate. Saved on this device.
+              Uses ~3% load change per RPE point, rounds to the nearest 2.5 kg / 5 lb plate. Saved
+              on this device.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -241,4 +235,3 @@ export function GluteProgressionTimeline({ slug }: { slug: string }) {
     </div>
   );
 }
-

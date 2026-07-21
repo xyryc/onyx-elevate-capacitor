@@ -5,7 +5,11 @@ export const Route = createFileRoute("/guidelines")({
   head: () => ({
     meta: [
       { title: "Guidelines - Onyx Elevate" },
-      { name: "description", content: "Guidelines for using Onyx Elevate. We provide training and nutrition guidance. You are responsible for your own safety." },
+      {
+        name: "description",
+        content:
+          "Guidelines for using Onyx Elevate. We provide training and nutrition guidance. You are responsible for your own safety.",
+      },
     ],
   }),
   component: GuidelinesPage,
@@ -15,7 +19,9 @@ function GuidelinesPage() {
   const t = useT();
   return (
     <section className="container-onyx py-16 max-w-3xl">
-      <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">{t("guidelines.eyebrow")}</p>
+      <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+        {t("guidelines.eyebrow")}
+      </p>
       <h1 className="mt-3 font-display text-4xl md:text-5xl font-bold">{t("guidelines.title")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{t("guidelines.lastUpdated")}</p>
 

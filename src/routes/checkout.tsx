@@ -7,7 +7,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
-type Search = { priceId?: string; slug?: string; successUrl?: string; intro?: string; reward?: string };
+type Search = {
+  priceId?: string;
+  slug?: string;
+  successUrl?: string;
+  intro?: string;
+  reward?: string;
+};
 
 export const Route = createFileRoute("/checkout")({
   validateSearch: (s: Record<string, unknown>): Search => ({
@@ -21,7 +27,10 @@ export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
       { title: "Checkout, Onyx Elevate" },
-      { name: "description", content: "Complete your purchase to unlock your Onyx Elevate training." },
+      {
+        name: "description",
+        content: "Complete your purchase to unlock your Onyx Elevate training.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -35,7 +44,9 @@ function CheckoutPage() {
     if (!priceId) return null;
     return {
       fetchClientSecret: async (): Promise<string> => {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         const returnUrl =
           successUrl ||
           `${window.location.origin}/checkout/success?slug=${encodeURIComponent(slug ?? "")}&session_id={CHECKOUT_SESSION_ID}`;
@@ -60,7 +71,6 @@ function CheckoutPage() {
       },
     };
   }, [priceId, slug, successUrl, intro, reward]);
-
 
   if (!priceId || !options) {
     return (

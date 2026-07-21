@@ -4,7 +4,10 @@ import { hasPreparedTranslations } from "./translationCache";
 
 function hasCompletedLanguageSplash() {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem("onyx.languageSplash.done") === "1" || window.localStorage.getItem("onyx.splash.dismissed") === "1";
+  return (
+    window.localStorage.getItem("onyx.languageSplash.done") === "1" ||
+    window.localStorage.getItem("onyx.splash.dismissed") === "1"
+  );
 }
 
 const MESSAGES = {
@@ -58,7 +61,12 @@ export function TranslationGate() {
         setBlocking(false);
         return;
       }
-      if (detail?.lang === lang && lang !== "en" && detail?.blocking === true && !hasPreparedTranslations(lang)) {
+      if (
+        detail?.lang === lang &&
+        lang !== "en" &&
+        detail?.blocking === true &&
+        !hasPreparedTranslations(lang)
+      ) {
         waitStartedAt.current = detail.startedAt ?? Date.now();
         setBlocking(true);
       }
@@ -76,8 +84,13 @@ export function TranslationGate() {
     window.addEventListener("onyx:translation-start", onStart as EventListener);
     window.addEventListener("onyx:translation-ready", onReady as EventListener);
 
-    const lastReady = (window as unknown as { __onyxTranslationReady?: ReadyState }).__onyxTranslationReady;
-    if (lastReady?.lang === lang && Date.now() - lastReady.at < 600 && (lastReady.startedAt ?? 0) >= waitStartedAt.current - 50) {
+    const lastReady = (window as unknown as { __onyxTranslationReady?: ReadyState })
+      .__onyxTranslationReady;
+    if (
+      lastReady?.lang === lang &&
+      Date.now() - lastReady.at < 600 &&
+      (lastReady.startedAt ?? 0) >= waitStartedAt.current - 50
+    ) {
       setBlocking(false);
     }
 

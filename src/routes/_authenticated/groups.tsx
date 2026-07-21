@@ -5,20 +5,50 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useAccess } from "@/hooks/useAccess";
 import {
-  listMyRooms, getRoom, getMessages, sendMessage, toggleReaction,
-  markRead, createGroup, createDm, inviteToRoom, removeMember,
-  renameGroup, deleteRoom, deleteMessage, setRoomAvatar,
-  type ChatRoomSummary, type ChatMessage, type ChatMember,
+  listMyRooms,
+  getRoom,
+  getMessages,
+  sendMessage,
+  toggleReaction,
+  markRead,
+  createGroup,
+  createDm,
+  inviteToRoom,
+  removeMember,
+  renameGroup,
+  deleteRoom,
+  deleteMessage,
+  setRoomAvatar,
+  type ChatRoomSummary,
+  type ChatMessage,
+  type ChatMember,
 } from "@/lib/chat.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  ArrowLeft, ImageIcon, Send, Plus, Users, MessageCircle, Trash2, Settings, UserPlus, Loader2, X, Lock, Camera, Search,
+  ArrowLeft,
+  ImageIcon,
+  Send,
+  Plus,
+  Users,
+  MessageCircle,
+  Trash2,
+  Settings,
+  UserPlus,
+  Loader2,
+  X,
+  Lock,
+  Camera,
+  Search,
 } from "lucide-react";
-
 
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/i18n/LanguageProvider";
@@ -50,14 +80,24 @@ function GroupsPage() {
     if (!mq.matches) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, [activeRoomId]);
 
   if (authLoading || access.loading) {
-    return <div className="container-onyx py-24 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></div>;
+    return (
+      <div className="container-onyx py-24 text-center">
+        <Loader2 className="w-6 h-6 animate-spin mx-auto" />
+      </div>
+    );
   }
   if (!user) {
-    return <div className="container-onyx py-24 text-center text-sm text-muted-foreground">Sign in required.</div>;
+    return (
+      <div className="container-onyx py-24 text-center text-sm text-muted-foreground">
+        Sign in required.
+      </div>
+    );
   }
   if (!hasAccess) {
     return <PremiumUpsell />;
@@ -66,7 +106,9 @@ function GroupsPage() {
   return (
     <div className="container-onyx py-6 lg:py-10 md:min-h-[calc(100vh-4rem)]">
       <div className="grid md:grid-cols-[320px_1fr] gap-4 md:h-[calc(100vh-8rem)]">
-        <div className={`${activeRoomId ? "hidden md:block" : ""} min-h-0 h-[calc(100dvh-8rem)] md:h-auto`}>
+        <div
+          className={`${activeRoomId ? "hidden md:block" : ""} min-h-0 h-[calc(100dvh-8rem)] md:h-auto`}
+        >
           <RoomList activeRoomId={activeRoomId} onSelect={setActiveRoomId} />
         </div>
         <div
@@ -91,7 +133,6 @@ function GroupsPage() {
   );
 }
 
-
 // ------------- Premium Upsell -------------
 function PremiumUpsell() {
   const t = useT();
@@ -103,10 +144,15 @@ function PremiumUpsell() {
         </div>
         <h1 className="font-display text-2xl font-bold">{t("Onyx Groups is a Pro feature")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {t("Private group chats and DMs are included with Onyx Pro and All-Access. Invite your training partners, share programs, and stay in sync, no public feed, no strangers.")}
+          {t(
+            "Private group chats and DMs are included with Onyx Pro and All-Access. Invite your training partners, share programs, and stay in sync, no public feed, no strangers.",
+          )}
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-2 justify-center">
-          <Link to="/app" className="inline-flex items-center justify-center rounded-md bg-electric px-4 py-2.5 text-sm font-semibold text-onyx-50 hover:bg-electric-glow transition">
+          <Link
+            to="/app"
+            className="inline-flex items-center justify-center rounded-md bg-electric px-4 py-2.5 text-sm font-semibold text-onyx-50 hover:bg-electric-glow transition"
+          >
             {t("See membership options")}
           </Link>
         </div>
@@ -116,7 +162,13 @@ function PremiumUpsell() {
 }
 
 // ------------- Room List -------------
-function RoomList({ activeRoomId, onSelect }: { activeRoomId: string | null; onSelect: (id: string) => void }) {
+function RoomList({
+  activeRoomId,
+  onSelect,
+}: {
+  activeRoomId: string | null;
+  onSelect: (id: string) => void;
+}) {
   const t = useT();
   const { user } = useAuth();
   const qc = useQueryClient();
@@ -136,11 +188,17 @@ function RoomList({ activeRoomId, onSelect }: { activeRoomId: string | null; onS
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_messages" }, () => {
         qc.invalidateQueries({ queryKey: ["chat-rooms"] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "chat_members", filter: `user_id=eq.${user.id}` }, () => {
-        qc.invalidateQueries({ queryKey: ["chat-rooms"] });
-      })
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "chat_members", filter: `user_id=eq.${user.id}` },
+        () => {
+          qc.invalidateQueries({ queryKey: ["chat-rooms"] });
+        },
+      )
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => {
+      supabase.removeChannel(ch);
+    };
   }, [user?.id, qc]);
 
   const rooms = query.data ?? [];
@@ -159,7 +217,9 @@ function RoomList({ activeRoomId, onSelect }: { activeRoomId: string | null; onS
     <div className="relative flex flex-col h-full md:rounded-2xl md:border md:border-border bg-background md:bg-onyx-100/40 overflow-hidden">
       {/* Big title header */}
       <div className="px-4 pt-4 pb-2 flex items-center justify-between gap-2">
-        <h1 className="font-display font-black text-2xl md:text-xl text-electric tracking-tight">{t("Chats")}</h1>
+        <h1 className="font-display font-black text-2xl md:text-xl text-electric tracking-tight">
+          {t("Chats")}
+        </h1>
         <div className="flex gap-1.5">
           <NewDmDialog />
           <NewGroupDialog />
@@ -181,11 +241,13 @@ function RoomList({ activeRoomId, onSelect }: { activeRoomId: string | null; onS
 
       {/* Filter chips */}
       <div className="px-4 pb-2 flex gap-2 overflow-x-auto no-scrollbar">
-        {([
-          { k: "all", label: t("All") },
-          { k: "unread", label: `${t("Unread")}${unreadTotal ? ` ${unreadTotal}` : ""}` },
-          { k: "groups", label: t("Groups") },
-        ] as const).map((c) => (
+        {(
+          [
+            { k: "all", label: t("All") },
+            { k: "unread", label: `${t("Unread")}${unreadTotal ? ` ${unreadTotal}` : ""}` },
+            { k: "groups", label: t("Groups") },
+          ] as const
+        ).map((c) => (
           <button
             key={c.k}
             type="button"
@@ -202,7 +264,11 @@ function RoomList({ activeRoomId, onSelect }: { activeRoomId: string | null; onS
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {query.isLoading && <div className="p-6 text-center text-sm text-muted-foreground"><Loader2 className="w-4 h-4 animate-spin inline" /></div>}
+        {query.isLoading && (
+          <div className="p-6 text-center text-sm text-muted-foreground">
+            <Loader2 className="w-4 h-4 animate-spin inline" />
+          </div>
+        )}
         {!query.isLoading && filtered.length === 0 && (
           <div className="p-8 text-center text-sm text-muted-foreground">
             <MessageCircle className="w-6 h-6 mx-auto mb-2 opacity-60" />
@@ -210,7 +276,12 @@ function RoomList({ activeRoomId, onSelect }: { activeRoomId: string | null; onS
           </div>
         )}
         {filtered.map((r) => (
-          <RoomListItem key={r.id} room={r} active={r.id === activeRoomId} onClick={() => onSelect(r.id)} />
+          <RoomListItem
+            key={r.id}
+            room={r}
+            active={r.id === activeRoomId}
+            onClick={() => onSelect(r.id)}
+          />
         ))}
         <div className="h-24" />
       </div>
@@ -218,13 +289,22 @@ function RoomList({ activeRoomId, onSelect }: { activeRoomId: string | null; onS
   );
 }
 
-function RoomListItem({ room, active, onClick }: { room: ChatRoomSummary; active: boolean; onClick: () => void }) {
-  const title = room.kind === "dm"
-    ? (room.peer?.display_name || "Onyx athlete")
-    : (room.name || "Untitled group");
+function RoomListItem({
+  room,
+  active,
+  onClick,
+}: {
+  room: ChatRoomSummary;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const title =
+    room.kind === "dm" ? room.peer?.display_name || "Onyx athlete" : room.name || "Untitled group";
   const preview = room.last_message
-    ? (room.last_message.body || (room.last_message.image_path ? "📷 Photo" : "…"))
-    : (room.kind === "group" ? `${room.member_count} member${room.member_count === 1 ? "" : "s"}` : "Say hi 👋");
+    ? room.last_message.body || (room.last_message.image_path ? "📷 Photo" : "…")
+    : room.kind === "group"
+      ? `${room.member_count} member${room.member_count === 1 ? "" : "s"}`
+      : "Say hi 👋";
   const hasUnread = room.unread_count > 0;
   return (
     <button
@@ -232,20 +312,39 @@ function RoomListItem({ room, active, onClick }: { room: ChatRoomSummary; active
       onClick={onClick}
       className={`w-full text-left px-4 py-3 flex items-center gap-3 active:bg-onyx-200/60 hover:bg-onyx-200/40 transition ${active ? "bg-onyx-200/50" : ""}`}
     >
-      <div className={`shrink-0 rounded-full ${hasUnread ? "p-[2px] bg-gradient-to-br from-electric to-electric-glow" : ""}`}>
+      <div
+        className={`shrink-0 rounded-full ${hasUnread ? "p-[2px] bg-gradient-to-br from-electric to-electric-glow" : ""}`}
+      >
         <div className={hasUnread ? "rounded-full bg-background p-[1.5px]" : ""}>
-          <Avatar name={title} url={room.kind === "dm" ? room.peer?.avatar_url ?? null : room.avatar_url} kind={room.kind} size="lg" />
+          <Avatar
+            name={title}
+            url={room.kind === "dm" ? (room.peer?.avatar_url ?? null) : room.avatar_url}
+            kind={room.kind}
+            size="lg"
+          />
         </div>
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <span className={`truncate ${hasUnread ? "font-bold text-foreground" : "font-semibold text-foreground/90"} text-[15px]`}>{title}</span>
+          <span
+            className={`truncate ${hasUnread ? "font-bold text-foreground" : "font-semibold text-foreground/90"} text-[15px]`}
+          >
+            {title}
+          </span>
           {room.last_message && (
-            <span className={`text-[11px] shrink-0 ${hasUnread ? "text-electric font-semibold" : "text-muted-foreground"}`}>{timeAgo(room.last_message.created_at)}</span>
+            <span
+              className={`text-[11px] shrink-0 ${hasUnread ? "text-electric font-semibold" : "text-muted-foreground"}`}
+            >
+              {timeAgo(room.last_message.created_at)}
+            </span>
           )}
         </div>
         <div className="flex items-center justify-between gap-2 mt-0.5">
-          <span className={`text-[13px] truncate ${hasUnread ? "text-foreground/80" : "text-muted-foreground"}`}>{preview}</span>
+          <span
+            className={`text-[13px] truncate ${hasUnread ? "text-foreground/80" : "text-muted-foreground"}`}
+          >
+            {preview}
+          </span>
           {hasUnread && (
             <span className="shrink-0 bg-electric text-onyx-50 text-[11px] font-bold rounded-full min-w-[20px] h-[20px] px-1.5 grid place-items-center">
               {room.unread_count > 99 ? "99+" : room.unread_count}
@@ -257,7 +356,6 @@ function RoomListItem({ room, active, onClick }: { room: ChatRoomSummary; active
   );
 }
 
-
 // ------------- Empty pane -------------
 function EmptyPane() {
   const t = useT();
@@ -265,17 +363,33 @@ function EmptyPane() {
     <div className="hidden md:flex flex-col items-center justify-center h-full rounded-xl border border-dashed border-border bg-onyx-100/20 text-center p-8">
       <MessageCircle className="w-10 h-10 text-muted-foreground/60 mb-3" />
       <p className="font-semibold">{t("Pick a chat to start")}</p>
-      <p className="text-sm text-muted-foreground mt-1">{t("Or start a new group / DM from the left panel.")}</p>
+      <p className="text-sm text-muted-foreground mt-1">
+        {t("Or start a new group / DM from the left panel.")}
+      </p>
     </div>
   );
 }
 
 // ------------- Chat Pane -------------
-function ChatPane({ roomId, onBack, onDeleted }: { roomId: string; onBack: () => void; onDeleted: () => void }) {
+function ChatPane({
+  roomId,
+  onBack,
+  onDeleted,
+}: {
+  roomId: string;
+  onBack: () => void;
+  onDeleted: () => void;
+}) {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const roomQuery = useQuery({ queryKey: ["chat-room", roomId], queryFn: () => getRoom({ data: { roomId } }) });
-  const msgQuery = useQuery({ queryKey: ["chat-messages", roomId], queryFn: () => getMessages({ data: { roomId } }) });
+  const roomQuery = useQuery({
+    queryKey: ["chat-room", roomId],
+    queryFn: () => getRoom({ data: { roomId } }),
+  });
+  const msgQuery = useQuery({
+    queryKey: ["chat-messages", roomId],
+    queryFn: () => getMessages({ data: { roomId } }),
+  });
 
   const markReadMut = useMutation({ mutationFn: () => markRead({ data: { roomId } }) });
 
@@ -283,18 +397,28 @@ function ChatPane({ roomId, onBack, onDeleted }: { roomId: string; onBack: () =>
   useEffect(() => {
     const ch = supabase
       .channel(`room-${roomId}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "chat_messages", filter: `room_id=eq.${roomId}` }, () => {
-        qc.invalidateQueries({ queryKey: ["chat-messages", roomId] });
-        qc.invalidateQueries({ queryKey: ["chat-rooms"] });
-      })
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "chat_messages", filter: `room_id=eq.${roomId}` },
+        () => {
+          qc.invalidateQueries({ queryKey: ["chat-messages", roomId] });
+          qc.invalidateQueries({ queryKey: ["chat-rooms"] });
+        },
+      )
       .on("postgres_changes", { event: "*", schema: "public", table: "chat_reactions" }, () => {
         qc.invalidateQueries({ queryKey: ["chat-messages", roomId] });
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "chat_members", filter: `room_id=eq.${roomId}` }, () => {
-        qc.invalidateQueries({ queryKey: ["chat-room", roomId] });
-      })
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "chat_members", filter: `room_id=eq.${roomId}` },
+        () => {
+          qc.invalidateQueries({ queryKey: ["chat-room", roomId] });
+        },
+      )
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => {
+      supabase.removeChannel(ch);
+    };
   }, [roomId, qc]);
 
   // Mark read on message load and on focus
@@ -310,16 +434,20 @@ function ChatPane({ roomId, onBack, onDeleted }: { roomId: string; onBack: () =>
   const members = roomQuery.data?.members ?? [];
   const myRole = roomQuery.data?.my_role ?? "member";
 
-  const title = room?.kind === "dm"
-    ? (members.find((m) => m.user_id !== user?.id)?.display_name || "Direct message")
-    : (room?.name || "Group");
+  const title =
+    room?.kind === "dm"
+      ? members.find((m) => m.user_id !== user?.id)?.display_name || "Direct message"
+      : room?.name || "Group";
 
   return (
     <div className="flex flex-col h-[100dvh] md:h-full md:rounded-2xl md:border md:border-border bg-onyx-100/30 overflow-hidden chat-bg">
-
       {/* Header */}
       <div className="px-3 py-2.5 border-b border-border/60 flex items-center gap-3 bg-onyx-100/80 backdrop-blur-md pt-[max(0.625rem,env(safe-area-inset-top))]">
-        <button className="md:hidden -ml-1 p-1.5 rounded-full hover:bg-onyx-200/60 text-electric" onClick={onBack} aria-label="Back">
+        <button
+          className="md:hidden -ml-1 p-1.5 rounded-full hover:bg-onyx-200/60 text-electric"
+          onClick={onBack}
+          aria-label="Back"
+        >
           <ArrowLeft className="w-5 h-5" />
         </button>
         {room?.kind === "group" ? (
@@ -339,7 +467,9 @@ function ChatPane({ roomId, onBack, onDeleted }: { roomId: string; onBack: () =>
         <div className="flex-1 min-w-0">
           <div className="font-semibold truncate text-[15px] leading-tight">{title}</div>
           {room?.kind === "group" ? (
-            <div className="text-[11px] text-muted-foreground truncate">{members.length} member{members.length === 1 ? "" : "s"}</div>
+            <div className="text-[11px] text-muted-foreground truncate">
+              {members.length} member{members.length === 1 ? "" : "s"}
+            </div>
           ) : (
             <div className="text-[11px] text-muted-foreground">Direct message</div>
           )}
@@ -357,18 +487,35 @@ function ChatPane({ roomId, onBack, onDeleted }: { roomId: string; onBack: () =>
       </div>
 
       {/* Messages */}
-      <MessageList messages={msgQuery.data ?? []} loading={msgQuery.isLoading} currentUserId={user?.id ?? ""} members={members} />
+      <MessageList
+        messages={msgQuery.data ?? []}
+        loading={msgQuery.isLoading}
+        currentUserId={user?.id ?? ""}
+        members={members}
+      />
 
       {/* Composer */}
-      <Composer roomId={roomId} onSent={() => { qc.invalidateQueries({ queryKey: ["chat-messages", roomId] }); }} />
+      <Composer
+        roomId={roomId}
+        onSent={() => {
+          qc.invalidateQueries({ queryKey: ["chat-messages", roomId] });
+        }}
+      />
     </div>
   );
 }
 
-
 // ------------- Message List -------------
-function MessageList({ messages, loading, currentUserId, members }: {
-  messages: ChatMessage[]; loading: boolean; currentUserId: string; members: ChatMember[];
+function MessageList({
+  messages,
+  loading,
+  currentUserId,
+  members,
+}: {
+  messages: ChatMessage[];
+  loading: boolean;
+  currentUserId: string;
+  members: ChatMember[];
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -377,22 +524,40 @@ function MessageList({ messages, loading, currentUserId, members }: {
 
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-3">
-      {loading && <div className="text-center text-sm text-muted-foreground"><Loader2 className="w-4 h-4 animate-spin inline" /></div>}
+      {loading && (
+        <div className="text-center text-sm text-muted-foreground">
+          <Loader2 className="w-4 h-4 animate-spin inline" />
+        </div>
+      )}
       {!loading && messages.length === 0 && (
         <div className="text-center text-sm text-muted-foreground py-10">
           No messages yet, send the first one 👋
         </div>
       )}
       {messages.map((m) => (
-        <MessageBubble key={m.id} msg={m} mine={m.sender_id === currentUserId} members={members} currentUserId={currentUserId} />
+        <MessageBubble
+          key={m.id}
+          msg={m}
+          mine={m.sender_id === currentUserId}
+          members={members}
+          currentUserId={currentUserId}
+        />
       ))}
       <div ref={bottomRef} />
     </div>
   );
 }
 
-function MessageBubble({ msg, mine, members, currentUserId }: {
-  msg: ChatMessage; mine: boolean; members: ChatMember[]; currentUserId: string;
+function MessageBubble({
+  msg,
+  mine,
+  members,
+  currentUserId,
+}: {
+  msg: ChatMessage;
+  mine: boolean;
+  members: ChatMember[];
+  currentUserId: string;
 }) {
   const [showReactions, setShowReactions] = useState(false);
   const qc = useQueryClient();
@@ -406,14 +571,18 @@ function MessageBubble({ msg, mine, members, currentUserId }: {
   });
 
   // Read receipts: members whose last_read_at >= msg.created_at (excluding sender)
-  const readers = members.filter((m) => m.user_id !== msg.sender_id && m.last_read_at >= msg.created_at);
+  const readers = members.filter(
+    (m) => m.user_id !== msg.sender_id && m.last_read_at >= msg.created_at,
+  );
 
   return (
     <div className={`flex gap-2 ${mine ? "flex-row-reverse" : ""}`}>
       {!mine && <Avatar name={msg.sender_name || "?"} url={msg.sender_avatar} size="sm" />}
       <div className={`max-w-[75%] ${mine ? "items-end" : "items-start"} flex flex-col`}>
         {!mine && (
-          <span className="text-[11px] text-muted-foreground px-1 mb-0.5">{msg.sender_name || "Onyx athlete"}</span>
+          <span className="text-[11px] text-muted-foreground px-1 mb-0.5">
+            {msg.sender_name || "Onyx athlete"}
+          </span>
         )}
         <div
           className={`relative px-3.5 py-2 text-[14px] leading-snug break-words shadow-sm ${
@@ -423,7 +592,6 @@ function MessageBubble({ msg, mine, members, currentUserId }: {
           } ${msg.deleted_at ? "italic opacity-60" : ""}`}
           onDoubleClick={() => !msg.deleted_at && setShowReactions((v) => !v)}
         >
-
           {msg.deleted_at ? (
             <span>message deleted</span>
           ) : (
@@ -440,14 +608,18 @@ function MessageBubble({ msg, mine, members, currentUserId }: {
             </>
           )}
 
-
           {showReactions && !msg.deleted_at && (
-            <div className={`absolute ${mine ? "right-0" : "left-0"} -top-9 bg-onyx-50 border border-border rounded-full px-2 py-1 flex gap-1 shadow-lg z-10`}>
+            <div
+              className={`absolute ${mine ? "right-0" : "left-0"} -top-9 bg-onyx-50 border border-border rounded-full px-2 py-1 flex gap-1 shadow-lg z-10`}
+            >
               {REACTION_EMOJIS.map((e) => (
                 <button
                   key={e}
                   type="button"
-                  onClick={() => { toggleMut.mutate(e); setShowReactions(false); }}
+                  onClick={() => {
+                    toggleMut.mutate(e);
+                    setShowReactions(false);
+                  }}
                   className="text-lg hover:scale-125 transition"
                 >
                   {e}
@@ -456,7 +628,10 @@ function MessageBubble({ msg, mine, members, currentUserId }: {
               {mine && (
                 <button
                   type="button"
-                  onClick={() => { deleteMut.mutate(); setShowReactions(false); }}
+                  onClick={() => {
+                    deleteMut.mutate();
+                    setShowReactions(false);
+                  }}
                   className="ml-1 text-destructive hover:scale-110 transition"
                   aria-label="Delete message"
                 >
@@ -476,7 +651,9 @@ function MessageBubble({ msg, mine, members, currentUserId }: {
                 type="button"
                 onClick={() => toggleMut.mutate(r.emoji)}
                 className={`text-xs rounded-full border px-1.5 py-0.5 ${
-                  r.user_ids.includes(currentUserId) ? "border-electric bg-electric/15" : "border-border bg-onyx-200/40"
+                  r.user_ids.includes(currentUserId)
+                    ? "border-electric bg-electric/15"
+                    : "border-border bg-onyx-200/40"
                 }`}
               >
                 {r.emoji} {r.user_ids.length}
@@ -485,8 +662,15 @@ function MessageBubble({ msg, mine, members, currentUserId }: {
           </div>
         )}
 
-        <div className={`flex items-center gap-1 mt-0.5 px-1 text-[10px] text-muted-foreground ${mine ? "flex-row-reverse" : ""}`}>
-          <span>{new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+        <div
+          className={`flex items-center gap-1 mt-0.5 px-1 text-[10px] text-muted-foreground ${mine ? "flex-row-reverse" : ""}`}
+        >
+          <span>
+            {new Date(msg.created_at).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
           {mine && readers.length > 0 && (
             <span>· Seen{readers.length > 1 ? ` by ${readers.length}` : ""}</span>
           )}
@@ -526,7 +710,10 @@ function Composer({ roomId, onSent }: { roomId: string; onSent: () => void }) {
   const sendMut = useMutation({
     mutationFn: (payload: { body?: string; imagePath?: string }) =>
       sendMessage({ data: { roomId, ...payload } }),
-    onSuccess: () => { setText(""); onSent(); },
+    onSuccess: () => {
+      setText("");
+      onSent();
+    },
   });
 
   const submit = () => {
@@ -584,14 +771,21 @@ function Composer({ roomId, onSent }: { roomId: string; onSent: () => void }) {
           className="shrink-0 h-9 w-9 grid place-items-center rounded-full text-electric hover:bg-electric/10 transition"
           aria-label="Attach image"
         >
-          {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
+          {uploading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <ImageIcon className="w-5 h-5" />
+          )}
         </button>
         <textarea
           ref={textareaRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
           }}
           rows={1}
           placeholder="Message"
@@ -615,16 +809,27 @@ function Composer({ roomId, onSent }: { roomId: string; onSent: () => void }) {
         className="shrink-0 h-11 w-11 grid place-items-center rounded-full bg-gradient-to-br from-electric to-electric-glow text-onyx-50 shadow-lg shadow-electric/30 disabled:opacity-40 disabled:shadow-none active:scale-95 transition"
         aria-label="Send"
       >
-        {sendMut.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 -ml-0.5" />}
+        {sendMut.isPending ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <Send className="w-5 h-5 -ml-0.5" />
+        )}
       </button>
-
     </div>
   );
 }
 
 // ------------- Room Avatar Editor -------------
-function RoomAvatarEditor({ roomId, userId, currentUrl, name }: {
-  roomId: string; userId: string; currentUrl: string | null; name: string;
+function RoomAvatarEditor({
+  roomId,
+  userId,
+  currentUrl,
+  name,
+}: {
+  roomId: string;
+  userId: string;
+  currentUrl: string | null;
+  name: string;
 }) {
   const qc = useQueryClient();
   const [uploading, setUploading] = useState(false);
@@ -673,7 +878,11 @@ function RoomAvatarEditor({ roomId, userId, currentUrl, name }: {
       >
         <Avatar name={name} url={currentUrl} kind="group" size="sm" />
         <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-electric text-onyx-50 grid place-items-center border border-onyx-100">
-          {uploading ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <Plus className="w-2.5 h-2.5" />}
+          {uploading ? (
+            <Loader2 className="w-2.5 h-2.5 animate-spin" />
+          ) : (
+            <Plus className="w-2.5 h-2.5" />
+          )}
         </span>
       </button>
       <input
@@ -716,7 +925,6 @@ function RoomAvatarEditor({ roomId, userId, currentUrl, name }: {
   );
 }
 
-
 // ------------- Dialogs -------------
 function NewDmDialog() {
   const [open, setOpen] = useState(false);
@@ -726,23 +934,35 @@ function NewDmDialog() {
     mutationFn: () => createDm({ data: { identifier } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["chat-rooms"] });
-      setOpen(false); setIdentifier("");
+      setOpen(false);
+      setIdentifier("");
     },
   });
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="h-8 w-8 grid place-items-center rounded-full border border-border hover:border-electric transition" aria-label="New DM">
+        <button
+          className="h-8 w-8 grid place-items-center rounded-full border border-border hover:border-electric transition"
+          aria-label="New DM"
+        >
           <MessageCircle className="w-4 h-4" />
         </button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader><DialogTitle>New direct message</DialogTitle></DialogHeader>
+        <DialogHeader>
+          <DialogTitle>New direct message</DialogTitle>
+        </DialogHeader>
         <p className="text-sm text-muted-foreground">Enter their Onyx username or email.</p>
-        <Input placeholder="username or email@example.com" value={identifier} onChange={(e) => setIdentifier(e.target.value)} />
+        <Input
+          placeholder="username or email@example.com"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
+        />
         {mut.error && <p className="text-sm text-destructive">{(mut.error as Error).message}</p>}
         <DialogFooter>
-          <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="ghost" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
           <Button onClick={() => mut.mutate()} disabled={!identifier.trim() || mut.isPending}>
             {mut.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Start chat"}
           </Button>
@@ -758,43 +978,67 @@ function NewGroupDialog() {
   const [members, setMembers] = useState<string[]>([""]);
   const qc = useQueryClient();
   const mut = useMutation({
-    mutationFn: () => createGroup({ data: { name, initialMembers: members.map((m) => m.trim()).filter(Boolean) } }),
+    mutationFn: () =>
+      createGroup({ data: { name, initialMembers: members.map((m) => m.trim()).filter(Boolean) } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["chat-rooms"] });
-      setOpen(false); setName(""); setMembers([""]);
+      setOpen(false);
+      setName("");
+      setMembers([""]);
     },
   });
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="h-8 w-8 grid place-items-center rounded-full border border-electric/60 bg-electric/10 text-electric hover:bg-electric/20 transition" aria-label="New group">
+        <button
+          className="h-8 w-8 grid place-items-center rounded-full border border-electric/60 bg-electric/10 text-electric hover:bg-electric/20 transition"
+          aria-label="New group"
+        >
           <Plus className="w-4 h-4" />
         </button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader><DialogTitle>New group</DialogTitle></DialogHeader>
+        <DialogHeader>
+          <DialogTitle>New group</DialogTitle>
+        </DialogHeader>
         <div className="space-y-3">
           <div>
             <label className="text-xs font-semibold text-muted-foreground">Group name</label>
-            <Input placeholder="Legs Squad" value={name} onChange={(e) => setName(e.target.value)} />
+            <Input
+              placeholder="Legs Squad"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
           <div>
-            <label className="text-xs font-semibold text-muted-foreground">Invite members (username or email, optional)</label>
+            <label className="text-xs font-semibold text-muted-foreground">
+              Invite members (username or email, optional)
+            </label>
             {members.map((m, i) => (
               <div key={i} className="flex gap-2 mt-1">
                 <Input
                   placeholder="username or email"
                   value={m}
-                  onChange={(e) => setMembers((prev) => prev.map((v, idx) => (idx === i ? e.target.value : v)))}
+                  onChange={(e) =>
+                    setMembers((prev) => prev.map((v, idx) => (idx === i ? e.target.value : v)))
+                  }
                 />
                 {members.length > 1 && (
-                  <button type="button" onClick={() => setMembers((prev) => prev.filter((_, idx) => idx !== i))} className="text-muted-foreground">
+                  <button
+                    type="button"
+                    onClick={() => setMembers((prev) => prev.filter((_, idx) => idx !== i))}
+                    className="text-muted-foreground"
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 )}
               </div>
             ))}
-            <button type="button" onClick={() => setMembers((prev) => [...prev, ""])} className="text-xs text-electric mt-2 hover:underline">
+            <button
+              type="button"
+              onClick={() => setMembers((prev) => [...prev, ""])}
+              className="text-xs text-electric mt-2 hover:underline"
+            >
               + Add another
             </button>
           </div>
@@ -802,13 +1046,15 @@ function NewGroupDialog() {
             <p className="font-semibold text-electric mb-1">Community rules</p>
             Onyx Groups are for <strong>fitness-related content only</strong>, training, programs,
             nutrition, progress and motivation. Harassment, spam, nudity, or unrelated content is
-            not allowed and may result in your group being removed and your account suspended.
-            Chats are private to invited members only.
+            not allowed and may result in your group being removed and your account suspended. Chats
+            are private to invited members only.
           </div>
         </div>
         {mut.error && <p className="text-sm text-destructive">{(mut.error as Error).message}</p>}
         <DialogFooter>
-          <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="ghost" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
           <Button onClick={() => mut.mutate()} disabled={!name.trim() || mut.isPending}>
             {mut.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create group"}
           </Button>
@@ -818,27 +1064,60 @@ function NewGroupDialog() {
   );
 }
 
-function RoomSettingsDialog({ roomId, members, myRole, currentName, currentUserId, onDeleted }: {
-  roomId: string; members: ChatMember[]; myRole: "owner" | "member"; currentName: string; currentUserId: string; onDeleted: () => void;
+function RoomSettingsDialog({
+  roomId,
+  members,
+  myRole,
+  currentName,
+  currentUserId,
+  onDeleted,
+}: {
+  roomId: string;
+  members: ChatMember[];
+  myRole: "owner" | "member";
+  currentName: string;
+  currentUserId: string;
+  onDeleted: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(currentName);
   const [invite, setInvite] = useState("");
   const qc = useQueryClient();
-  useEffect(() => { setName(currentName); }, [currentName]);
+  useEffect(() => {
+    setName(currentName);
+  }, [currentName]);
 
-  const renameMut = useMutation({ mutationFn: () => renameGroup({ data: { roomId, name } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["chat-room", roomId] }) });
-  const inviteMut = useMutation({ mutationFn: () => inviteToRoom({ data: { roomId, identifier: invite } }),
-    onSuccess: () => { setInvite(""); qc.invalidateQueries({ queryKey: ["chat-room", roomId] }); qc.invalidateQueries({ queryKey: ["chat-rooms"] }); } });
-  const removeMut = useMutation({ mutationFn: (uid: string) => removeMember({ data: { roomId, userId: uid } }),
+  const renameMut = useMutation({
+    mutationFn: () => renameGroup({ data: { roomId, name } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["chat-room", roomId] }),
+  });
+  const inviteMut = useMutation({
+    mutationFn: () => inviteToRoom({ data: { roomId, identifier: invite } }),
+    onSuccess: () => {
+      setInvite("");
+      qc.invalidateQueries({ queryKey: ["chat-room", roomId] });
+      qc.invalidateQueries({ queryKey: ["chat-rooms"] });
+    },
+  });
+  const removeMut = useMutation({
+    mutationFn: (uid: string) => removeMember({ data: { roomId, userId: uid } }),
     onSuccess: (_d, uid) => {
       qc.invalidateQueries({ queryKey: ["chat-room", roomId] });
       qc.invalidateQueries({ queryKey: ["chat-rooms"] });
-      if (uid === currentUserId) { setOpen(false); onDeleted(); }
-    } });
-  const deleteMut = useMutation({ mutationFn: () => deleteRoom({ data: { roomId } }),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["chat-rooms"] }); setOpen(false); onDeleted(); } });
+      if (uid === currentUserId) {
+        setOpen(false);
+        onDeleted();
+      }
+    },
+  });
+  const deleteMut = useMutation({
+    mutationFn: () => deleteRoom({ data: { roomId } }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["chat-rooms"] });
+      setOpen(false);
+      onDeleted();
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -848,14 +1127,21 @@ function RoomSettingsDialog({ roomId, members, myRole, currentName, currentUserI
         </button>
       </DialogTrigger>
       <DialogContent className="max-h-[85vh] overflow-y-auto">
-        <DialogHeader><DialogTitle>Group settings</DialogTitle></DialogHeader>
+        <DialogHeader>
+          <DialogTitle>Group settings</DialogTitle>
+        </DialogHeader>
         <div className="space-y-4">
           {myRole === "owner" && (
             <div>
               <label className="text-xs font-semibold text-muted-foreground">Name</label>
               <div className="flex gap-2 mt-1">
                 <Input value={name} onChange={(e) => setName(e.target.value)} />
-                <Button onClick={() => renameMut.mutate()} disabled={!name.trim() || name === currentName}>Save</Button>
+                <Button
+                  onClick={() => renameMut.mutate()}
+                  disabled={!name.trim() || name === currentName}
+                >
+                  Save
+                </Button>
               </div>
             </div>
           )}
@@ -864,12 +1150,27 @@ function RoomSettingsDialog({ roomId, members, myRole, currentName, currentUserI
             <div>
               <label className="text-xs font-semibold text-muted-foreground">Add member</label>
               <div className="flex gap-2 mt-1">
-                <Input placeholder="username or email" value={invite} onChange={(e) => setInvite(e.target.value)} />
-                <Button onClick={() => inviteMut.mutate()} disabled={!invite.trim() || inviteMut.isPending}>
-                  {inviteMut.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+                <Input
+                  placeholder="username or email"
+                  value={invite}
+                  onChange={(e) => setInvite(e.target.value)}
+                />
+                <Button
+                  onClick={() => inviteMut.mutate()}
+                  disabled={!invite.trim() || inviteMut.isPending}
+                >
+                  {inviteMut.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <UserPlus className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
-              {inviteMut.error && <p className="text-xs text-destructive mt-1">{(inviteMut.error as Error).message}</p>}
+              {inviteMut.error && (
+                <p className="text-xs text-destructive mt-1">
+                  {(inviteMut.error as Error).message}
+                </p>
+              )}
             </div>
           )}
 
@@ -877,15 +1178,27 @@ function RoomSettingsDialog({ roomId, members, myRole, currentName, currentUserI
             <label className="text-xs font-semibold text-muted-foreground">Members</label>
             <div className="mt-1 space-y-1">
               {members.map((m) => (
-                <div key={m.user_id} className="flex items-center gap-2 py-1.5 border-b border-border/40">
+                <div
+                  key={m.user_id}
+                  className="flex items-center gap-2 py-1.5 border-b border-border/40"
+                >
                   <Avatar name={m.display_name || "?"} url={m.avatar_url} size="sm" />
                   <div className="flex-1 text-sm truncate">
                     {m.display_name || "Onyx athlete"}
-                    {m.role === "owner" && <span className="ml-2 text-[10px] uppercase tracking-wide text-electric">Owner</span>}
-                    {m.user_id === currentUserId && <span className="ml-2 text-[10px] text-muted-foreground">(you)</span>}
+                    {m.role === "owner" && (
+                      <span className="ml-2 text-[10px] uppercase tracking-wide text-electric">
+                        Owner
+                      </span>
+                    )}
+                    {m.user_id === currentUserId && (
+                      <span className="ml-2 text-[10px] text-muted-foreground">(you)</span>
+                    )}
                   </div>
-                  {(myRole === "owner" && m.user_id !== currentUserId) && (
-                    <button className="text-destructive text-xs hover:underline" onClick={() => removeMut.mutate(m.user_id)}>
+                  {myRole === "owner" && m.user_id !== currentUserId && (
+                    <button
+                      className="text-destructive text-xs hover:underline"
+                      onClick={() => removeMut.mutate(m.user_id)}
+                    >
                       Remove
                     </button>
                   )}
@@ -899,7 +1212,12 @@ function RoomSettingsDialog({ roomId, members, myRole, currentName, currentUserI
               Leave group
             </Button>
             {myRole === "owner" && (
-              <Button variant="destructive" onClick={() => { if (confirm("Delete this group for everyone?")) deleteMut.mutate(); }}>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (confirm("Delete this group for everyone?")) deleteMut.mutate();
+                }}
+              >
                 Delete group
               </Button>
             )}
@@ -918,31 +1236,42 @@ function ShareCard({ share, mine }: { share: any; mine: boolean }) {
   const image = share?.image || null;
   const kind = share?.kind || "other";
   const label =
-    kind === "exercise" ? "Exercise" :
-    kind === "program" ? "Program" :
-    kind === "recipe" ? "Recipe" :
-    kind === "meal-plan" ? "Meal plan" :
-    kind === "custom-program" ? "My program" : "Link";
+    kind === "exercise"
+      ? "Exercise"
+      : kind === "program"
+        ? "Program"
+        : kind === "recipe"
+          ? "Recipe"
+          : kind === "meal-plan"
+            ? "Meal plan"
+            : kind === "custom-program"
+              ? "My program"
+              : "Link";
   return (
     <a
       href={url}
       className={`block rounded-xl overflow-hidden mb-1 border ${
-        mine ? "bg-onyx-50/15 border-onyx-50/25 hover:bg-onyx-50/25"
-             : "bg-onyx-200/60 border-border hover:bg-onyx-200/80"
+        mine
+          ? "bg-onyx-50/15 border-onyx-50/25 hover:bg-onyx-50/25"
+          : "bg-onyx-200/60 border-border hover:bg-onyx-200/80"
       } transition max-w-[280px]`}
     >
-      {image && (
-        <img src={image} alt="" className="w-full h-28 object-cover" />
-      )}
+      {image && <img src={image} alt="" className="w-full h-28 object-cover" />}
       <div className="p-2.5">
-        <div className={`text-[10px] font-bold uppercase tracking-wider ${mine ? "text-onyx-50/80" : "text-electric"}`}>
+        <div
+          className={`text-[10px] font-bold uppercase tracking-wider ${mine ? "text-onyx-50/80" : "text-electric"}`}
+        >
           {label}
         </div>
-        <div className={`text-sm font-semibold leading-snug ${mine ? "text-onyx-50" : "text-foreground"} line-clamp-2`}>
+        <div
+          className={`text-sm font-semibold leading-snug ${mine ? "text-onyx-50" : "text-foreground"} line-clamp-2`}
+        >
           {title}
         </div>
         {subtitle && (
-          <div className={`text-xs mt-0.5 ${mine ? "text-onyx-50/70" : "text-muted-foreground"} line-clamp-1`}>
+          <div
+            className={`text-xs mt-0.5 ${mine ? "text-onyx-50/70" : "text-muted-foreground"} line-clamp-1`}
+          >
             {subtitle}
           </div>
         )}
@@ -953,14 +1282,37 @@ function ShareCard({ share, mine }: { share: any; mine: boolean }) {
 
 // ------------- Utils -------------
 
-function Avatar({ name, url, size = "md", kind }: { name: string; url: string | null; size?: "sm" | "md" | "lg"; kind?: "group" | "dm" }) {
-  const sizeClass = size === "sm" ? "w-8 h-8 text-[10px]" : size === "lg" ? "w-12 h-12 text-sm" : "w-11 h-11 text-xs";
+function Avatar({
+  name,
+  url,
+  size = "md",
+  kind,
+}: {
+  name: string;
+  url: string | null;
+  size?: "sm" | "md" | "lg";
+  kind?: "group" | "dm";
+}) {
+  const sizeClass =
+    size === "sm"
+      ? "w-8 h-8 text-[10px]"
+      : size === "lg"
+        ? "w-12 h-12 text-sm"
+        : "w-11 h-11 text-xs";
 
   if (url) {
-    return <img src={url} alt={name} className={`${sizeClass} rounded-full object-cover border border-border shrink-0`} />;
+    return (
+      <img
+        src={url}
+        alt={name}
+        className={`${sizeClass} rounded-full object-cover border border-border shrink-0`}
+      />
+    );
   }
   return (
-    <div className={`${sizeClass} rounded-full bg-electric/15 border border-electric/30 grid place-items-center text-electric font-bold shrink-0`}>
+    <div
+      className={`${sizeClass} rounded-full bg-electric/15 border border-electric/30 grid place-items-center text-electric font-bold shrink-0`}
+    >
       {kind === "group" ? <Users className="w-4 h-4" /> : name.slice(0, 2).toUpperCase()}
     </div>
   );

@@ -52,8 +52,8 @@ function ForgotPasswordPage() {
           <div className="mt-8 rounded-md border border-electric/40 bg-electric/5 p-5 text-sm">
             <div className="font-semibold text-electric mb-1">Check your inbox</div>
             <p className="text-muted-foreground">
-              We've sent a password reset link to <strong className="text-foreground">{email}</strong>.
-              The link expires in 1 hour.
+              We've sent a password reset link to{" "}
+              <strong className="text-foreground">{email}</strong>. The link expires in 1 hour.
             </p>
           </div>
         ) : (

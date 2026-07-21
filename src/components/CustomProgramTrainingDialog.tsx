@@ -65,7 +65,10 @@ export function CustomProgramTrainingDialog({
   const program = useMemo(() => (cp ? customToProgram(cp) : null), [cp]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showClose={false} className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[95dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-background border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+      <DialogContent
+        showClose={false}
+        className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[95dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-background border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]"
+      >
         <button
           type="button"
           onClick={() => onOpenChange(false)}

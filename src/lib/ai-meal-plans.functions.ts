@@ -26,34 +26,42 @@ export type AiMealPlan = {
 
 function normalizeDays(input: unknown): AiMealPlanDay[] {
   const arr = Array.isArray(input) ? input : [];
-  return arr.slice(0, 14).map((d: any, di: number) => ({
-    name: String(d?.name ?? `Day ${di + 1}`).slice(0, 60),
-    meals: (Array.isArray(d?.meals) ? d.meals : [])
-      .slice(0, 8)
-      .map((m: any): AiMealPlanMeal | null => {
-        const slotRaw = String(m?.slot ?? "snack").toLowerCase();
-        const slot: AiMealPlanMeal["slot"] =
-          slotRaw === "breakfast" || slotRaw === "lunch" || slotRaw === "dinner" || slotRaw === "snack"
-            ? slotRaw
-            : "snack";
-        const name = String(m?.name ?? "").trim().slice(0, 120);
-        if (!name) return null;
-        const num = (v: any) => {
-          const n = Number(v);
-          return Number.isFinite(n) && n >= 0 ? n : 0;
-        };
-        return {
-          slot,
-          name,
-          kcal: num(m?.kcal),
-          protein_g: num(m?.protein_g),
-          carbs_g: num(m?.carbs_g),
-          fat_g: num(m?.fat_g),
-          notes: m?.notes ? String(m.notes).slice(0, 200) : undefined,
-        };
-      })
-      .filter((x: AiMealPlanMeal | null): x is AiMealPlanMeal => x !== null),
-  })).filter((d) => d.meals.length > 0);
+  return arr
+    .slice(0, 14)
+    .map((d: any, di: number) => ({
+      name: String(d?.name ?? `Day ${di + 1}`).slice(0, 60),
+      meals: (Array.isArray(d?.meals) ? d.meals : [])
+        .slice(0, 8)
+        .map((m: any): AiMealPlanMeal | null => {
+          const slotRaw = String(m?.slot ?? "snack").toLowerCase();
+          const slot: AiMealPlanMeal["slot"] =
+            slotRaw === "breakfast" ||
+            slotRaw === "lunch" ||
+            slotRaw === "dinner" ||
+            slotRaw === "snack"
+              ? slotRaw
+              : "snack";
+          const name = String(m?.name ?? "")
+            .trim()
+            .slice(0, 120);
+          if (!name) return null;
+          const num = (v: any) => {
+            const n = Number(v);
+            return Number.isFinite(n) && n >= 0 ? n : 0;
+          };
+          return {
+            slot,
+            name,
+            kcal: num(m?.kcal),
+            protein_g: num(m?.protein_g),
+            carbs_g: num(m?.carbs_g),
+            fat_g: num(m?.fat_g),
+            notes: m?.notes ? String(m.notes).slice(0, 200) : undefined,
+          };
+        })
+        .filter((x: AiMealPlanMeal | null): x is AiMealPlanMeal => x !== null),
+    }))
+    .filter((d) => d.meals.length > 0);
 }
 
 export const listMyAiMealPlans = createServerFn({ method: "GET" })
@@ -113,11 +121,13 @@ export const deleteAiMealPlan = createServerFn({ method: "POST" })
 export const logAiMealPlanDay = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string; dayIndex: number; date: string }) =>
-    z.object({
-      id: z.string().uuid(),
-      dayIndex: z.number().int().min(0).max(13),
-      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    }).parse(d),
+    z
+      .object({
+        id: z.string().uuid(),
+        dayIndex: z.number().int().min(0).max(13),
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;

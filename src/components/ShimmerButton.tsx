@@ -10,7 +10,7 @@ export function ShimmerButton({ children, className, ...props }: ShimmerButtonPr
     <button
       className={cn(
         "relative overflow-hidden rounded-md bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-3 text-sm font-bold text-onyx-50 transition-all shadow-[0_0_0_1px_oklch(0.6_0.2_160/0.4),0_0_30px_-5px_oklch(0.65_0.18_165/0.55),0_15px_40px_-15px_oklch(0.55_0.18_165/0.5)] hover:shadow-[0_0_0_1px_oklch(0.65_0.22_160/0.55),0_0_45px_-5px_oklch(0.7_0.2_165/0.65),0_20px_50px_-15px_oklch(0.55_0.18_165/0.6)] hover:scale-[1.02] active:scale-[0.98]",
-        className
+        className,
       )}
       {...props}
     >

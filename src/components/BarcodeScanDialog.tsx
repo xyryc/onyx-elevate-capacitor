@@ -109,11 +109,15 @@ async function lookupOFF(code: string): Promise<Product | null> {
 
   const n = product.nutriments ?? {};
   const num = (v: unknown) => (typeof v === "number" ? v : v ? Number(v) : 0);
-  const kcal = num(n["energy-kcal_100g"]) || num(n["energy-kcal"]) || Math.round(num(n["energy_100g"]) / 4.184);
+  const kcal =
+    num(n["energy-kcal_100g"]) ||
+    num(n["energy-kcal"]) ||
+    Math.round(num(n["energy_100g"]) / 4.184);
   if (!kcal && !num(n.proteins_100g) && !num(n.carbohydrates_100g) && !num(n.fat_100g)) return null;
 
   const cats = (product.categories_tags ?? []).join(",");
-  const is_beverage = /beverage|drink|water|juice|soda|milk|coffee|tea|bebida|boisson|getränk|bevanda/i.test(cats);
+  const is_beverage =
+    /beverage|drink|water|juice|soda|milk|coffee|tea|bebida|boisson|getränk|bevanda/i.test(cats);
 
   // Pick the best available name across languages
   const name =
@@ -158,11 +162,12 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
   const amountNum = amount === "" ? 0 : Math.max(0, Number(amount) || 0);
 
   const [zoom, setZoom] = useState(1);
-  const [zoomRange, setZoomRange] = useState<{ min: number; max: number; step: number } | null>(null);
+  const [zoomRange, setZoomRange] = useState<{ min: number; max: number; step: number } | null>(
+    null,
+  );
   const [torchSupported, setTorchSupported] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
   const [shape, setShape] = useState<"long" | "square">("long");
-
 
   const logFn = useServerFn(logFood);
   const draftFn = useServerFn(createDraft);
@@ -225,7 +230,6 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
     }
   };
 
-
   const startScanner = async () => {
     try {
       const [{ BrowserMultiFormatReader }, zxingCommon] = await Promise.all([
@@ -251,7 +255,6 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
         BarcodeFormat.AZTEC,
       ]);
       hints.set(DecodeHintType.TRY_HARDER, true);
-
 
       const reader = new BrowserMultiFormatReader(hints, { delayBetweenScanAttempts: 120 });
 
@@ -360,7 +363,8 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
 
   const buildPayload = () => {
     if (!product) throw new Error("Scan a product first");
-    const unitLabel = unit === "g" ? null : unit === "l" ? `${amountNum} L` : `${amountNum} ${unit}`;
+    const unitLabel =
+      unit === "g" ? null : unit === "l" ? `${amountNum} L` : `${amountNum} ${unit}`;
     const qtyLabel = servings > 1 ? ` ×${servings}` : "";
     const name = `${product.brand ? `${product.brand} ` : ""}${product.name}${unitLabel ? ` (${unitLabel})` : ""}${qtyLabel}`;
     return {
@@ -425,7 +429,11 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
               Hold 10-20 cm from the barcode. Use zoom for small codes.
             </p>
           </div>
-          <button onClick={onClose} aria-label="Close" className="shrink-0 p-1 text-muted-foreground hover:text-foreground">
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="shrink-0 p-1 text-muted-foreground hover:text-foreground"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -453,7 +461,13 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
                 onClick={handleVideoTap}
                 className="relative overflow-hidden rounded-xl border border-electric/40 bg-black aspect-[4/3]"
               >
-                <video ref={videoRef} className="h-full w-full object-cover" muted playsInline autoPlay />
+                <video
+                  ref={videoRef}
+                  className="h-full w-full object-cover"
+                  muted
+                  playsInline
+                  autoPlay
+                />
                 {scanning && (
                   <>
                     {/* Framed target, rectangle for 1D barcodes, square for 2D codes */}
@@ -488,7 +502,9 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
 
               {zoomRange && (
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Zoom</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Zoom
+                  </span>
                   <input
                     type="range"
                     min={zoomRange.min}
@@ -504,9 +520,10 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
                 </div>
               )}
 
-
               {error && (
-                <div className="rounded-md border border-red-500/40 bg-red-500/10 p-2 text-xs text-red-300">{error}</div>
+                <div className="rounded-md border border-red-500/40 bg-red-500/10 p-2 text-xs text-red-300">
+                  {error}
+                </div>
               )}
               <div>
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -538,8 +555,9 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
                 <p className="text-sm font-bold">{product.name}</p>
                 {product.brand && <p className="text-xs text-muted-foreground">{product.brand}</p>}
                 <p className="mt-1 text-[11px] text-muted-foreground">
-                  {product.kcal_per_100g.toFixed(0)} kcal · P{product.protein_g_per_100g.toFixed(1)} · C
-                  {product.carbs_g_per_100g.toFixed(1)} · F{product.fat_g_per_100g.toFixed(1)} / 100
+                  {product.kcal_per_100g.toFixed(0)} kcal · P{product.protein_g_per_100g.toFixed(1)}{" "}
+                  · C{product.carbs_g_per_100g.toFixed(1)} · F{product.fat_g_per_100g.toFixed(1)} /
+                  100
                   {product.is_beverage ? "ml" : "g"}
                 </p>
                 <p className="mt-1 text-[10px] text-muted-foreground/70">Code {product.code}</p>
@@ -596,7 +614,11 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
                     max={99}
                     step={1}
                     value={servings}
-                    onChange={(e) => setServings(Math.max(1, Math.min(99, Math.floor(Number(e.target.value) || 1))))}
+                    onChange={(e) =>
+                      setServings(
+                        Math.max(1, Math.min(99, Math.floor(Number(e.target.value) || 1))),
+                      )
+                    }
                     className="w-16 rounded-md border border-border bg-onyx-100 px-3 py-2 text-center text-sm"
                   />
                   <button
@@ -615,7 +637,9 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
               </div>
 
               <div className="rounded-xl border border-border bg-onyx-100/60 p-3">
-                <p className="text-xs font-bold uppercase tracking-wider text-electric">Your intake</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-electric">
+                  Your intake
+                </p>
                 <p className="mt-1 text-lg font-bold">{totals.kcal.toFixed(0)} kcal</p>
                 <p className="text-xs text-muted-foreground">
                   P {totals.p.toFixed(1)}g · C {totals.c.toFixed(1)}g · F {totals.f.toFixed(1)}g

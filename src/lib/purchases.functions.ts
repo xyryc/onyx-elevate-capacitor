@@ -25,7 +25,9 @@ export const getMyProfile = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("profiles")
-      .select("id, display_name, avatar_url, training_goal, preferred_language, country, hidden_program_slugs, hidden_plan_slugs")
+      .select(
+        "id, display_name, avatar_url, training_goal, preferred_language, country, hidden_program_slugs, hidden_plan_slugs",
+      )
       .eq("id", context.userId)
       .maybeSingle();
     if (error) throw error;
@@ -36,7 +38,10 @@ export const getMyProfile = createServerFn({ method: "GET" })
     if (/^https?:\/\//.test(storagePath)) {
       const marker = "/site-images/";
       const markerIndex = storagePath.indexOf(marker);
-      storagePath = markerIndex >= 0 ? decodeURIComponent(storagePath.slice(markerIndex + marker.length).split("?")[0]) : "";
+      storagePath =
+        markerIndex >= 0
+          ? decodeURIComponent(storagePath.slice(markerIndex + marker.length).split("?")[0])
+          : "";
     }
 
     if (storagePath && !/^https?:\/\//.test(storagePath)) {
@@ -51,7 +56,17 @@ export const getMyProfile = createServerFn({ method: "GET" })
 
 export const updateMyProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { display_name?: string; avatar_url?: string; training_goal?: string; preferred_language?: string; country?: string; hidden_program_slugs?: string[]; hidden_plan_slugs?: string[] }) => data)
+  .inputValidator(
+    (data: {
+      display_name?: string;
+      avatar_url?: string;
+      training_goal?: string;
+      preferred_language?: string;
+      country?: string;
+      hidden_program_slugs?: string[];
+      hidden_plan_slugs?: string[];
+    }) => data,
+  )
   .handler(async ({ data, context }) => {
     const { data: existing, error: readError } = await context.supabase
       .from("profiles")
@@ -70,14 +85,17 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     }
 
     const payload = {
-          id: context.userId,
-          display_name:
-            data.display_name ??
-            (typeof context.claims.user_metadata === "object" && context.claims.user_metadata && "full_name" in context.claims.user_metadata
-              ? String((context.claims.user_metadata as Record<string, unknown>).full_name ?? "") || null
-              : null),
-          ...data,
-        };
+      id: context.userId,
+      display_name:
+        data.display_name ??
+        (typeof context.claims.user_metadata === "object" &&
+        context.claims.user_metadata &&
+        "full_name" in context.claims.user_metadata
+          ? String((context.claims.user_metadata as Record<string, unknown>).full_name ?? "") ||
+            null
+          : null),
+      ...data,
+    };
 
     const { error } = await context.supabase.from("profiles").insert(payload);
     if (error) throw error;

@@ -23,7 +23,9 @@ async function maybeAutoCancelYearly3x(invoice: any, env: StripeEnv) {
     }
     if (paidCount >= 3) {
       await stripe.subscriptions.update(subscriptionId, { cancel_at_period_end: true });
-      console.log(`[stripe] yearly-3x subscription ${subscriptionId} scheduled to cancel after 3rd payment`);
+      console.log(
+        `[stripe] yearly-3x subscription ${subscriptionId} scheduled to cancel after 3rd payment`,
+      );
     }
   } catch (err) {
     console.error("[stripe] maybeAutoCancelYearly3x failed", err);
@@ -62,16 +64,19 @@ async function handleOneTime(session: any, env: StripeEnv) {
   }
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { error } = await supabaseAdmin.from("purchases").upsert({
-    user_id: userId,
-    product_kind: purchase.kind,
-    product_slug: purchase.slug,
-    product_title: null,
-    amount_cents: session.amount_total ?? null,
-    currency: (session.currency ?? "usd").toUpperCase(),
-    transaction_id: session.id,
-    environment: env,
-  }, { onConflict: "user_id,product_kind,product_slug" });
+  const { error } = await supabaseAdmin.from("purchases").upsert(
+    {
+      user_id: userId,
+      product_kind: purchase.kind,
+      product_slug: purchase.slug,
+      product_title: null,
+      amount_cents: session.amount_total ?? null,
+      currency: (session.currency ?? "usd").toUpperCase(),
+      transaction_id: session.id,
+      environment: env,
+    },
+    { onConflict: "user_id,product_kind,product_slug" },
+  );
   if (error) console.error("[stripe] purchase upsert failed", error);
 }
 
@@ -82,9 +87,8 @@ async function handleSubscriptionUpsert(subscription: any, env: StripeEnv) {
     return;
   }
   const item = subscription.items?.data?.[0];
-  const priceId = item?.price?.lookup_key
-    || item?.price?.metadata?.lovable_external_id
-    || item?.price?.id;
+  const priceId =
+    item?.price?.lookup_key || item?.price?.metadata?.lovable_external_id || item?.price?.id;
   const productId = item?.price?.product;
   const periodStart = item?.current_period_start ?? subscription.current_period_start;
   const periodEnd = item?.current_period_end ?? subscription.current_period_end;

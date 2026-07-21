@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Smartphone, Share, PlusSquare, MoreVertical, Download, Check, X, ChevronDown } from "lucide-react";
+import {
+  Smartphone,
+  Share,
+  PlusSquare,
+  MoreVertical,
+  Download,
+  Check,
+  X,
+  ChevronDown,
+} from "lucide-react";
 import { useT } from "@/i18n/LanguageProvider";
 
 type BeforeInstallPromptEvent = Event & {
@@ -21,7 +30,8 @@ function isStandalone() {
   if (typeof window === "undefined") return false;
   const mm = window.matchMedia?.("(display-mode: standalone)").matches;
   // iOS Safari legacy flag
-  const iosStandalone = (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+  const iosStandalone =
+    (window.navigator as unknown as { standalone?: boolean }).standalone === true;
   return !!(mm || iosStandalone);
 }
 
@@ -93,7 +103,9 @@ export function InstallToPhoneCard() {
           <Smartphone className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold leading-none">{t("install.eyebrow")}</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold leading-none">
+            {t("install.eyebrow")}
+          </p>
           <h3 className="mt-1 font-display text-base sm:text-lg font-bold leading-tight truncate">
             {t("install.title")}
           </h3>
@@ -103,15 +115,15 @@ export function InstallToPhoneCard() {
             <Check className="h-4 w-4" /> {t("install.installed")}
           </span>
         ) : (
-          <ChevronDown className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform ${expanded ? "rotate-180" : ""}`} />
+          <ChevronDown
+            className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform ${expanded ? "rotate-180" : ""}`}
+          />
         )}
       </button>
 
       {expanded && !installed && (
         <div className="px-4 pb-5 pt-1 border-t border-border/60">
-          <p className="mt-4 text-sm text-muted-foreground">
-            {t("install.description")}
-          </p>
+          <p className="mt-4 text-sm text-muted-foreground">{t("install.description")}</p>
 
           <div className="mt-4 flex flex-col sm:flex-row gap-2">
             <button
@@ -124,7 +136,9 @@ export function InstallToPhoneCard() {
             </button>
             <button
               type="button"
-              onClick={() => (platform === "ios" ? setShowIosSheet(true) : setShowAndroidSheet(true))}
+              onClick={() =>
+                platform === "ios" ? setShowIosSheet(true) : setShowAndroidSheet(true)
+              }
               className="inline-flex items-center justify-center rounded-md border border-border bg-onyx-100 px-4 py-3 text-sm font-semibold hover:bg-onyx-200 transition-colors"
             >
               {t("install.howItWorks")}
@@ -134,17 +148,29 @@ export function InstallToPhoneCard() {
           <div className="mt-4 grid gap-2 sm:grid-cols-3 text-xs">
             <PlatformHint
               title={t("install.platform.ios.title")}
-              steps={[t("install.platform.ios.step1"), t("install.platform.ios.step2"), t("install.platform.ios.step3")]}
+              steps={[
+                t("install.platform.ios.step1"),
+                t("install.platform.ios.step2"),
+                t("install.platform.ios.step3"),
+              ]}
               onClick={() => setShowIosSheet(true)}
             />
             <PlatformHint
               title={t("install.platform.android.title")}
-              steps={[t("install.platform.android.step1"), t("install.platform.android.step2"), t("install.platform.android.step3")]}
+              steps={[
+                t("install.platform.android.step1"),
+                t("install.platform.android.step2"),
+                t("install.platform.android.step3"),
+              ]}
               onClick={() => setShowAndroidSheet(true)}
             />
             <PlatformHint
               title={t("install.platform.desktop.title")}
-              steps={[t("install.platform.desktop.step1"), t("install.platform.desktop.step2"), t("install.platform.desktop.step3")]}
+              steps={[
+                t("install.platform.desktop.step1"),
+                t("install.platform.desktop.step2"),
+                t("install.platform.desktop.step3"),
+              ]}
               onClick={() => setShowAndroidSheet(true)}
             />
           </div>
@@ -157,7 +183,15 @@ export function InstallToPhoneCard() {
   );
 }
 
-function PlatformHint({ title, steps, onClick }: { title: string; steps: string[]; onClick: () => void }) {
+function PlatformHint({
+  title,
+  steps,
+  onClick,
+}: {
+  title: string;
+  steps: string[];
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"
@@ -166,20 +200,34 @@ function PlatformHint({ title, steps, onClick }: { title: string; steps: string[
     >
       <p className="font-bold text-foreground">{title}</p>
       <ol className="mt-1 space-y-0.5 text-muted-foreground list-decimal list-inside">
-        {steps.map((s) => <li key={s}>{s}</li>)}
+        {steps.map((s) => (
+          <li key={s}>{s}</li>
+        ))}
       </ol>
     </button>
   );
 }
 
-function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+function Sheet({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
   const t = useT();
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="w-full sm:max-w-md bg-onyx-50 border border-border rounded-t-2xl sm:rounded-2xl max-h-[90dvh] overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <h4 className="font-display font-bold">{title}</h4>
-          <button onClick={onClose} aria-label={t("common.close")} className="p-1 text-muted-foreground hover:text-foreground">
+          <button
+            onClick={onClose}
+            aria-label={t("common.close")}
+            className="p-1 text-muted-foreground hover:text-foreground"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -194,33 +242,52 @@ function IosInstructions({ onClose }: { onClose: () => void }) {
   return (
     <Sheet title={t("install.ios.title")} onClose={onClose}>
       <p className="text-muted-foreground">
-        {t("install.ios.intro1")} <span className="text-foreground font-semibold">{t("install.ios.openSafari")}</span> {t("install.ios.intro2")}
+        {t("install.ios.intro1")}{" "}
+        <span className="text-foreground font-semibold">{t("install.ios.openSafari")}</span>{" "}
+        {t("install.ios.intro2")}
       </p>
       <ol className="mt-4 space-y-3">
         <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">1</span>
-          <p>{t("install.ios.step1.before")} <span className="text-foreground font-semibold">onyxperformance.app</span> {t("install.ios.step1.after")}</p>
-        </li>
-        <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">2</span>
-          <p className="flex items-center gap-2">
-            {t("install.ios.step2.before")} <Share className="inline h-4 w-4 text-electric" /> <span className="font-semibold text-foreground">{t("install.ios.share")}</span> {t("install.ios.step2.after")}
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            1
+          </span>
+          <p>
+            {t("install.ios.step1.before")}{" "}
+            <span className="text-foreground font-semibold">onyxperformance.app</span>{" "}
+            {t("install.ios.step1.after")}
           </p>
         </li>
         <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">3</span>
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            2
+          </span>
           <p className="flex items-center gap-2">
-            {t("install.ios.step3.before")} <PlusSquare className="inline h-4 w-4 text-electric" /> <span className="font-semibold text-foreground">{t("install.ios.addHome")}</span>.
+            {t("install.ios.step2.before")} <Share className="inline h-4 w-4 text-electric" />{" "}
+            <span className="font-semibold text-foreground">{t("install.ios.share")}</span>{" "}
+            {t("install.ios.step2.after")}
           </p>
         </li>
         <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">4</span>
-          <p>{t("install.ios.step4.before")} <span className="font-semibold text-foreground">{t("install.ios.add")}</span> {t("install.ios.step4.after")}</p>
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            3
+          </span>
+          <p className="flex items-center gap-2">
+            {t("install.ios.step3.before")} <PlusSquare className="inline h-4 w-4 text-electric" />{" "}
+            <span className="font-semibold text-foreground">{t("install.ios.addHome")}</span>.
+          </p>
+        </li>
+        <li className="flex gap-3">
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            4
+          </span>
+          <p>
+            {t("install.ios.step4.before")}{" "}
+            <span className="font-semibold text-foreground">{t("install.ios.add")}</span>{" "}
+            {t("install.ios.step4.after")}
+          </p>
         </li>
       </ol>
-      <p className="mt-4 text-xs text-muted-foreground">
-        {t("install.ios.tip")}
-      </p>
+      <p className="mt-4 text-xs text-muted-foreground">{t("install.ios.tip")}</p>
     </Sheet>
   );
 }
@@ -230,31 +297,55 @@ function AndroidInstructions({ onClose }: { onClose: () => void }) {
   return (
     <Sheet title={t("install.android.title")} onClose={onClose}>
       <p className="text-muted-foreground">
-        {t("install.android.intro1")} <span className="text-foreground font-semibold">Chrome</span>. {t("install.android.intro2")} <span className="text-foreground font-semibold">Chrome {t("install.android.or")} Edge</span>.
+        {t("install.android.intro1")} <span className="text-foreground font-semibold">Chrome</span>.{" "}
+        {t("install.android.intro2")}{" "}
+        <span className="text-foreground font-semibold">Chrome {t("install.android.or")} Edge</span>
+        .
       </p>
       <ol className="mt-4 space-y-3">
         <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">1</span>
-          <p>{t("install.android.step1.before")} <span className="text-foreground font-semibold">onyxperformance.app</span>.</p>
-        </li>
-        <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">2</span>
-          <p className="flex items-center gap-2">
-            {t("install.android.step2.before")} <MoreVertical className="inline h-4 w-4 text-electric" /> {t("install.android.step2.middle")} <Download className="inline h-4 w-4 text-electric" /> {t("install.android.step2.after")}
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            1
+          </span>
+          <p>
+            {t("install.android.step1.before")}{" "}
+            <span className="text-foreground font-semibold">onyxperformance.app</span>.
           </p>
         </li>
         <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">3</span>
-          <p>{t("install.android.step3.before")} <span className="font-semibold text-foreground">{t("install.android.installApp")}</span> {t("install.android.or")} <span className="font-semibold text-foreground">{t("install.android.addHome")}</span>.</p>
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            2
+          </span>
+          <p className="flex items-center gap-2">
+            {t("install.android.step2.before")}{" "}
+            <MoreVertical className="inline h-4 w-4 text-electric" />{" "}
+            {t("install.android.step2.middle")}{" "}
+            <Download className="inline h-4 w-4 text-electric" /> {t("install.android.step2.after")}
+          </p>
         </li>
         <li className="flex gap-3">
-          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">4</span>
-          <p>{t("install.android.step4.before")} <span className="font-semibold text-foreground">{t("install.android.install")}</span>. {t("install.android.step4.after")}</p>
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            3
+          </span>
+          <p>
+            {t("install.android.step3.before")}{" "}
+            <span className="font-semibold text-foreground">{t("install.android.installApp")}</span>{" "}
+            {t("install.android.or")}{" "}
+            <span className="font-semibold text-foreground">{t("install.android.addHome")}</span>.
+          </p>
+        </li>
+        <li className="flex gap-3">
+          <span className="h-6 w-6 shrink-0 rounded-full bg-electric text-onyx-50 grid place-items-center text-xs font-bold">
+            4
+          </span>
+          <p>
+            {t("install.android.step4.before")}{" "}
+            <span className="font-semibold text-foreground">{t("install.android.install")}</span>.{" "}
+            {t("install.android.step4.after")}
+          </p>
         </li>
       </ol>
-      <p className="mt-4 text-xs text-muted-foreground">
-        {t("install.android.tip")}
-      </p>
+      <p className="mt-4 text-xs text-muted-foreground">{t("install.android.tip")}</p>
     </Sheet>
   );
 }

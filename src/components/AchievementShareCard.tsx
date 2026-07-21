@@ -116,8 +116,14 @@ export function AchievementShareCard({ title, subtitle, metric, userName }: Prop
           </div>
         </div>
       </div>
-      <Button onClick={downloadCard} disabled={busy} className="w-full bg-electric text-onyx-50 hover:bg-electric-glow font-bold">
-        {busy ? "Generating…" : (
+      <Button
+        onClick={downloadCard}
+        disabled={busy}
+        className="w-full bg-electric text-onyx-50 hover:bg-electric-glow font-bold"
+      >
+        {busy ? (
+          "Generating…"
+        ) : (
           <>
             <Share2 className="w-4 h-4 mr-2" />
             Share / Download <Download className="w-4 h-4 ml-2 opacity-60" />
@@ -129,5 +135,8 @@ export function AchievementShareCard({ title, subtitle, metric, userName }: Prop
 }
 
 function escape(s: string) {
-  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c]!));
+  return s.replace(
+    /[&<>"']/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" })[c]!,
+  );
 }

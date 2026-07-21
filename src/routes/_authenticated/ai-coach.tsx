@@ -15,24 +15,28 @@ import {
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageProvider";
 
-const COACH_STRINGS: Record<string, {
-  subtitle: (left: number, limit: number) => string;
-  clearConfirm: string;
-  clear: string;
-  emptyTitle: string;
-  emptyBody: string;
-  thinking: string;
-  placeholder: string;
-  limitReached: string;
-  limitToast: string;
-  hint: string;
-}> = {
+const COACH_STRINGS: Record<
+  string,
+  {
+    subtitle: (left: number, limit: number) => string;
+    clearConfirm: string;
+    clear: string;
+    emptyTitle: string;
+    emptyBody: string;
+    thinking: string;
+    placeholder: string;
+    limitReached: string;
+    limitToast: string;
+    hint: string;
+  }
+> = {
   en: {
     subtitle: (l, m) => `Nutrition · Training · Wellness · ${l}/${m} messages left today`,
     clearConfirm: "Clear your chat history?",
     clear: "Clear",
     emptyTitle: "Hey! I'm your Onyx AI Coach.",
-    emptyBody: "Ask me about meal ideas, macro targets, exercise form, recovery, or how to structure your week. I stick to nutrition, training, and general wellness.",
+    emptyBody:
+      "Ask me about meal ideas, macro targets, exercise form, recovery, or how to structure your week. I stick to nutrition, training, and general wellness.",
     thinking: "Coach is thinking…",
     placeholder: "Ask about nutrition, training, wellness…",
     limitReached: "Daily limit reached, resets at 00:00 UTC",
@@ -44,7 +48,8 @@ const COACH_STRINGS: Record<string, {
     clearConfirm: "Slette chat-historikken din?",
     clear: "Slett",
     emptyTitle: "Hei! Jeg er din Onyx AI-coach.",
-    emptyBody: "Spør meg om måltidsideer, makromål, øvelsesteknikk, restitusjon eller hvordan du bør legge opp uka. Jeg holder meg til ernæring, trening og generell velvære.",
+    emptyBody:
+      "Spør meg om måltidsideer, makromål, øvelsesteknikk, restitusjon eller hvordan du bør legge opp uka. Jeg holder meg til ernæring, trening og generell velvære.",
     thinking: "Coachen tenker…",
     placeholder: "Spør om ernæring, trening, velvære…",
     limitReached: "Dagsgrense nådd, nullstilles kl. 00:00 UTC",
@@ -56,7 +61,8 @@ const COACH_STRINGS: Record<string, {
     clearConfirm: "Limpar seu histórico de conversa?",
     clear: "Limpar",
     emptyTitle: "Oi! Sou seu Onyx AI Coach.",
-    emptyBody: "Pergunte sobre ideias de refeições, metas de macros, técnica de exercícios, recuperação ou como estruturar sua semana. Foco em nutrição, treino e bem-estar.",
+    emptyBody:
+      "Pergunte sobre ideias de refeições, metas de macros, técnica de exercícios, recuperação ou como estruturar sua semana. Foco em nutrição, treino e bem-estar.",
     thinking: "O coach está pensando…",
     placeholder: "Pergunte sobre nutrição, treino, bem-estar…",
     limitReached: "Limite diário atingido, reinicia às 00:00 UTC",
@@ -68,7 +74,8 @@ const COACH_STRINGS: Record<string, {
     clearConfirm: "¿Borrar tu historial de chat?",
     clear: "Borrar",
     emptyTitle: "¡Hola! Soy tu Onyx AI Coach.",
-    emptyBody: "Pregúntame sobre ideas de comidas, objetivos de macros, técnica de ejercicios, recuperación o cómo estructurar tu semana. Me centro en nutrición, entrenamiento y bienestar.",
+    emptyBody:
+      "Pregúntame sobre ideas de comidas, objetivos de macros, técnica de ejercicios, recuperación o cómo estructurar tu semana. Me centro en nutrición, entrenamiento y bienestar.",
     thinking: "El coach está pensando…",
     placeholder: "Pregunta sobre nutrición, entrenamiento, bienestar…",
     limitReached: "Límite diario alcanzado, se reinicia a las 00:00 UTC",
@@ -81,7 +88,11 @@ export const Route = createFileRoute("/_authenticated/ai-coach")({
   head: () => ({
     meta: [
       { title: "AI Coach, Onyx Elevate" },
-      { name: "description", content: "Chat with the Onyx AI Coach for personalised nutrition, training, and wellness guidance." },
+      {
+        name: "description",
+        content:
+          "Chat with the Onyx AI Coach for personalised nutrition, training, and wellness guidance.",
+      },
     ],
   }),
   component: AiCoachPage,
@@ -216,9 +227,7 @@ function AiCoachPage() {
           <h1 className="font-display text-lg font-bold tracking-tight md:text-xl">
             AI Coach <span className="text-electric">⚡</span>
           </h1>
-          <p className="text-xs text-muted-foreground">
-            {L.subtitle(left, DAILY_LIMIT)}
-          </p>
+          <p className="text-xs text-muted-foreground">{L.subtitle(left, DAILY_LIMIT)}</p>
         </div>
         {messages.length > 0 && (
           <button
@@ -280,7 +289,9 @@ function AiCoachPage() {
         </div>
         <p className="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
           <span>{L.hint}</span>
-          <span>{input.length}/{MAX_INPUT_CHARS}</span>
+          <span>
+            {input.length}/{MAX_INPUT_CHARS}
+          </span>
         </p>
       </form>
     </div>

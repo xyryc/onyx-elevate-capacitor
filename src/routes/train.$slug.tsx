@@ -1,6 +1,11 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { goals, goalsBySlug, type Goal } from "@/data/goals";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { findExerciseSlugByName } from "@/data/exercises";
 
 // Split a lift label like "Incline DB Press 4×8" or "Walking Lunge 3×12/leg"
@@ -33,13 +38,17 @@ export const Route = createFileRoute("/train/$slug")({
   notFoundComponent: () => (
     <div className="container-onyx py-32 text-center">
       <h1 className="font-display text-3xl font-bold">Goal not found</h1>
-      <Link to="/" className="mt-4 inline-block text-electric hover:text-electric-glow">← Back home</Link>
+      <Link to="/" className="mt-4 inline-block text-electric hover:text-electric-glow">
+        ← Back home
+      </Link>
     </div>
   ),
   errorComponent: () => (
     <div className="container-onyx py-32 text-center">
       <h1 className="font-display text-3xl font-bold">Something broke loading this page</h1>
-      <Link to="/" className="mt-4 inline-block text-electric hover:text-electric-glow">← Back home</Link>
+      <Link to="/" className="mt-4 inline-block text-electric hover:text-electric-glow">
+        ← Back home
+      </Link>
     </div>
   ),
 });
@@ -62,7 +71,12 @@ function GoalPage() {
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border/60">
         <div className="absolute inset-0">
-          <img src={g.img} alt="" className="h-full w-full object-cover opacity-40" decoding="async" />
+          <img
+            src={g.img}
+            alt=""
+            className="h-full w-full object-cover opacity-40"
+            decoding="async"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-onyx-50 via-onyx-50/85 to-onyx-50/40" />
         </div>
         <div className="container-onyx relative py-16 md:py-24">
@@ -74,19 +88,29 @@ function GoalPage() {
             ← Go back
           </button>
           <div className="mt-6 flex items-center gap-2 flex-wrap">
-            <span className="rounded-full border border-electric/40 bg-electric/5 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-electric">{g.tag}</span>
+            <span className="rounded-full border border-electric/40 bg-electric/5 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-electric">
+              {g.tag}
+            </span>
             {g.comingSoon && (
-              <span className="rounded-full bg-electric/90 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-onyx-50">Coming soon</span>
+              <span className="rounded-full bg-electric/90 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-onyx-50">
+                Coming soon
+              </span>
             )}
           </div>
-          <h1 className="mt-4 font-display text-5xl md:text-7xl font-bold leading-[1.02] max-w-3xl">{g.title}</h1>
+          <h1 className="mt-4 font-display text-5xl md:text-7xl font-bold leading-[1.02] max-w-3xl">
+            {g.title}
+          </h1>
           <p className="mt-4 text-xl text-electric font-semibold">{g.tagline}</p>
           <p className="mt-3 text-muted-foreground max-w-2xl">{g.desc}</p>
           <dl className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl">
             {g.stats.map((s) => (
               <div key={s.label}>
-                <dt className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</dt>
-                <dd className="mt-1 font-display text-2xl md:text-3xl font-bold text-electric">{s.value}</dd>
+                <dt className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {s.label}
+                </dt>
+                <dd className="mt-1 font-display text-2xl md:text-3xl font-bold text-electric">
+                  {s.value}
+                </dd>
               </div>
             ))}
           </dl>
@@ -97,23 +121,39 @@ function GoalPage() {
         <div className="space-y-16 min-w-0">
           {/* OVERVIEW */}
           <section id="overview">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Overview</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              Overview
+            </p>
             <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">What this is</h2>
             <p className="mt-4 text-foreground/90 leading-relaxed">{g.overview}</p>
             <div className="mt-6 surface-card rounded-xl p-6 border-l-2 border-electric">
-              <p className="text-xs uppercase tracking-wider text-electric font-semibold mb-2">Why it works</p>
+              <p className="text-xs uppercase tracking-wider text-electric font-semibold mb-2">
+                Why it works
+              </p>
               <p className="text-foreground/90 leading-relaxed">{g.whyItWorks}</p>
             </div>
           </section>
 
           {/* HIGHLIGHTS */}
           <section id="highlights">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">What's inside</p>
-            <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">Built into every block</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              What's inside
+            </p>
+            <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">
+              Built into every block
+            </h2>
             <ul className="mt-6 grid sm:grid-cols-2 gap-3">
               {g.highlights.map((h) => (
                 <li key={h} className="surface-card rounded-lg p-4 flex gap-3">
-                  <svg className="h-5 w-5 mt-0.5 shrink-0 text-electric" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                  <svg
+                    className="h-5 w-5 mt-0.5 shrink-0 text-electric"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
                   <span className="text-sm leading-relaxed">{h}</span>
                 </li>
               ))}
@@ -122,13 +162,22 @@ function GoalPage() {
 
           {/* STRUCTURE */}
           <section id="structure">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Training structure</p>
-            <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">Block-by-block breakdown</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              Training structure
+            </p>
+            <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">
+              Block-by-block breakdown
+            </h2>
             <div className="mt-6 space-y-4">
               {g.structure.map((p, i) => (
-                <div key={p.name} className="surface-card rounded-xl p-5 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6">
+                <div
+                  key={p.name}
+                  className="surface-card rounded-xl p-5 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6"
+                >
                   <div className="md:w-48 shrink-0">
-                    <div className="text-[10px] uppercase tracking-wider text-electric font-semibold">Phase {i + 1}</div>
+                    <div className="text-[10px] uppercase tracking-wider text-electric font-semibold">
+                      Phase {i + 1}
+                    </div>
                     <div className="font-display text-xl font-bold mt-1">{p.name}</div>
                     <div className="text-xs text-muted-foreground mt-1">{p.weeks}</div>
                   </div>
@@ -143,15 +192,23 @@ function GoalPage() {
 
           {/* SAMPLE WEEK */}
           <section id="sample-week">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Sample training week</p>
-            <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">A week in the program</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              Sample training week
+            </p>
+            <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">
+              A week in the program
+            </h2>
             <div className="mt-6 surface-card rounded-xl overflow-hidden">
               <div className="divide-y divide-border">
                 {g.sampleWeek.map((s) => (
                   <div key={s.day} className="p-5 md:p-6 grid md:grid-cols-[100px_1fr] gap-4">
                     <div>
-                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Day</div>
-                      <div className="font-display text-xl font-bold text-electric mt-1">{s.day}</div>
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                        Day
+                      </div>
+                      <div className="font-display text-xl font-bold text-electric mt-1">
+                        {s.day}
+                      </div>
                     </div>
                     <div>
                       <div className="font-semibold">{s.title}</div>
@@ -169,14 +226,26 @@ function GoalPage() {
                                   title="Watch demo video"
                                 >
                                   <span className="grid h-5 w-5 mt-0.5 place-items-center rounded-full bg-electric/15 border border-electric/30 group-hover:bg-electric/30 transition-colors shrink-0">
-                                    <svg className="h-2.5 w-2.5 text-electric translate-x-[1px]" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                    <svg
+                                      className="h-2.5 w-2.5 text-electric translate-x-[1px]"
+                                      viewBox="0 0 24 24"
+                                      fill="currentColor"
+                                    >
+                                      <path d="M8 5v14l11-7z" />
+                                    </svg>
                                   </span>
                                   <span className="underline-offset-4 group-hover:underline">
-                                    {name}{scheme && <span className="text-muted-foreground"> {scheme}</span>}
+                                    {name}
+                                    {scheme && (
+                                      <span className="text-muted-foreground"> {scheme}</span>
+                                    )}
                                   </span>
                                 </Link>
                               ) : (
-                                <span className="flex gap-2"><span className="text-electric/70">-</span><span>{l}</span></span>
+                                <span className="flex gap-2">
+                                  <span className="text-electric/70">-</span>
+                                  <span>{l}</span>
+                                </span>
                               )}
                             </li>
                           );
@@ -191,7 +260,9 @@ function GoalPage() {
 
           {/* PRINCIPLES */}
           <section id="principles">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Coaching principles</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              Coaching principles
+            </p>
             <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">Rules of the road</h2>
             <div className="mt-6 grid sm:grid-cols-2 gap-4">
               {g.principles.map((p) => (
@@ -206,24 +277,44 @@ function GoalPage() {
           {/* NUTRITION + RECOVERY */}
           <section id="support" className="grid md:grid-cols-2 gap-6">
             <div className="surface-card rounded-xl p-6">
-              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Nutrition</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+                Nutrition
+              </p>
               <h3 className="mt-2 font-display text-2xl font-bold">Fuel the work</h3>
               <ul className="mt-4 space-y-2.5">
                 {g.nutrition.map((n) => (
                   <li key={n} className="flex gap-2.5 text-sm">
-                    <svg className="h-4 w-4 mt-0.5 shrink-0 text-electric" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    <svg
+                      className="h-4 w-4 mt-0.5 shrink-0 text-electric"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
                     <span>{n}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="surface-card rounded-xl p-6">
-              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Recovery</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+                Recovery
+              </p>
               <h3 className="mt-2 font-display text-2xl font-bold">Recover to repeat</h3>
               <ul className="mt-4 space-y-2.5">
                 {g.recovery.map((r) => (
                   <li key={r} className="flex gap-2.5 text-sm">
-                    <svg className="h-4 w-4 mt-0.5 shrink-0 text-electric" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    <svg
+                      className="h-4 w-4 mt-0.5 shrink-0 text-electric"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
                     <span>{r}</span>
                   </li>
                 ))}
@@ -234,24 +325,32 @@ function GoalPage() {
           {/* WHO FOR */}
           <section id="who-for" className="grid md:grid-cols-2 gap-6">
             <div className="surface-card rounded-xl p-6 border-l-2 border-electric">
-              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Who it's for</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+                Who it's for
+              </p>
               <p className="mt-3 text-foreground/90 leading-relaxed">{g.whoFor}</p>
             </div>
             <div className="surface-card rounded-xl p-6 border-l-2 border-border">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">Who it's not for</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">
+                Who it's not for
+              </p>
               <p className="mt-3 text-foreground/90 leading-relaxed">{g.notFor}</p>
             </div>
           </section>
 
           {/* FAQ */}
           <section id="faq">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Frequently asked</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              Frequently asked
+            </p>
             <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold">Answers, fast</h2>
             <Accordion type="single" collapsible className="mt-6">
               {g.faqs.map((f, i) => (
                 <AccordionItem key={i} value={`q${i}`} className="border-border">
                   <AccordionTrigger className="text-left">{f.q}</AccordionTrigger>
-                  <AccordionContent className="text-foreground/85 leading-relaxed">{f.a}</AccordionContent>
+                  <AccordionContent className="text-foreground/85 leading-relaxed">
+                    {f.a}
+                  </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
@@ -259,11 +358,17 @@ function GoalPage() {
 
           {/* CTA */}
           <section className="relative overflow-hidden rounded-2xl surface-card">
-            <img src={g.img} alt="" className="absolute inset-0 h-full w-full object-cover opacity-30" decoding="async" />
+            <img
+              src={g.img}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover opacity-30"
+              decoding="async"
+            />
             <div className="absolute inset-0 bg-gradient-to-r from-onyx-50 via-onyx-50/85 to-onyx-50/40" />
             <div className="relative p-8 md:p-12 max-w-xl">
               <h2 className="font-display text-3xl md:text-4xl font-bold leading-tight">
-                Ready to start <span className="text-gradient-electric">{g.title.toLowerCase()}</span>?
+                Ready to start{" "}
+                <span className="text-gradient-electric">{g.title.toLowerCase()}</span>?
               </h2>
               <p className="mt-3 text-muted-foreground">
                 {g.comingSoon
@@ -271,11 +376,25 @@ function GoalPage() {
                   : "Open the Onyx app and pick the program tier that fits your level."}
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link to={g.ctaTo} className="inline-flex items-center gap-2 rounded-md bg-electric px-5 py-3 text-sm font-semibold text-onyx-50 hover:bg-electric-glow hover:shadow-electric">
+                <Link
+                  to={g.ctaTo}
+                  className="inline-flex items-center gap-2 rounded-md bg-electric px-5 py-3 text-sm font-semibold text-onyx-50 hover:bg-electric-glow hover:shadow-electric"
+                >
                   {g.ctaLabel}
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                  <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12h14M13 5l7 7-7 7" />
+                  </svg>
                 </Link>
-                <Link to="/exercises" className="inline-flex items-center rounded-md border border-border bg-onyx-100/60 px-5 py-3 text-sm font-semibold hover:bg-onyx-200">
+                <Link
+                  to="/exercises"
+                  className="inline-flex items-center rounded-md border border-border bg-onyx-100/60 px-5 py-3 text-sm font-semibold hover:bg-onyx-200"
+                >
                   Browse exercise library
                 </Link>
               </div>
@@ -286,7 +405,9 @@ function GoalPage() {
         {/* SIDEBAR TOC */}
         <aside className="hidden lg:block">
           <div className="sticky top-24 surface-card rounded-xl p-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">On this page</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+              On this page
+            </p>
             <nav className="mt-3 flex flex-col gap-2 text-sm">
               {[
                 ["overview", "Overview"],
@@ -298,15 +419,27 @@ function GoalPage() {
                 ["who-for", "Who it's for"],
                 ["faq", "FAQ"],
               ].map(([id, label]) => (
-                <a key={id} href={`#${id}`} className="text-muted-foreground hover:text-electric transition-colors">{label}</a>
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  className="text-muted-foreground hover:text-electric transition-colors"
+                >
+                  {label}
+                </a>
               ))}
             </nav>
             <div className="mt-6 pt-5 border-t border-border">
-              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">Other goals</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-electric font-semibold">
+                Other goals
+              </p>
               <ul className="mt-3 space-y-2">
                 {related.map((r) => (
                   <li key={r.slug}>
-                    <Link to="/train/$slug" params={{ slug: r.slug }} className="text-sm hover:text-electric transition-colors flex items-center gap-2">
+                    <Link
+                      to="/train/$slug"
+                      params={{ slug: r.slug }}
+                      className="text-sm hover:text-electric transition-colors flex items-center gap-2"
+                    >
                       <span className="h-1 w-1 rounded-full bg-electric" />
                       {r.title}
                     </Link>

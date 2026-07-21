@@ -33,7 +33,8 @@ export interface Challenge {
   slug: string;
   title: string;
   tagline: string;
-  category: "Strength" | "Conditioning" | "Mobility" | "Discipline" | "Steps" | "Mindset" | "Nutrition";
+  category:
+    "Strength" | "Conditioning" | "Mobility" | "Discipline" | "Steps" | "Mindset" | "Nutrition";
   durationDays: number;
   difficulty: "Beginner" | "Intermediate" | "Advanced";
   image: string;
@@ -69,7 +70,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Beginner",
     image: imgPushup,
-    summary: "A progressive push-up ladder that adds volume every 48 hours. Builds chest, triceps, shoulders and core endurance, anywhere.",
+    summary:
+      "A progressive push-up ladder that adds volume every 48 hours. Builds chest, triceps, shoulders and core endurance, anywhere.",
     rules: [
       "Every push-up must reach full lockout and chest within a fist of the floor.",
       "Rest as needed between sets, but log the total reps for the day.",
@@ -86,10 +88,22 @@ export const challenges: Challenge[] = [
       "Breathe in on the way down, exhale hard on the press.",
     ],
     protocol: [
-      { label: "Week 1 (Days 1–7)", detail: "20 / 25 / 30 / rest / 35 / 40 / 45 total reps. Sets of 5–10." },
-      { label: "Week 2 (Days 8–14)", detail: "50 / 55 / 60 / rest / 65 / 70 / 75 total reps. Try sets of 10–15." },
-      { label: "Week 3 (Days 15–21)", detail: "80 / 85 / 90 / rest / 90 / 95 / 100 reps. Aim for ≤4 sets." },
-      { label: "Week 4 (Days 22–30)", detail: "Daily 100 reps. Last day: max unbroken set, log your number." },
+      {
+        label: "Week 1 (Days 1–7)",
+        detail: "20 / 25 / 30 / rest / 35 / 40 / 45 total reps. Sets of 5–10.",
+      },
+      {
+        label: "Week 2 (Days 8–14)",
+        detail: "50 / 55 / 60 / rest / 65 / 70 / 75 total reps. Try sets of 10–15.",
+      },
+      {
+        label: "Week 3 (Days 15–21)",
+        detail: "80 / 85 / 90 / rest / 90 / 95 / 100 reps. Aim for ≤4 sets.",
+      },
+      {
+        label: "Week 4 (Days 22–30)",
+        detail: "Daily 100 reps. Last day: max unbroken set, log your number.",
+      },
     ],
     mistakes: [
       "Sagging hips or piked butt, break form = stop the set.",
@@ -105,7 +119,8 @@ export const challenges: Challenge[] = [
     durationDays: 75,
     difficulty: "Advanced",
     image: img75hard,
-    summary: "The hardest mental challenge on the platform. Five non-negotiables for 75 days straight. Miss one, restart from Day 1.",
+    summary:
+      "The hardest mental challenge on the platform. Five non-negotiables for 75 days straight. Miss one, restart from Day 1.",
     rules: [
       "Two 45-min workouts daily, one MUST be outdoors.",
       "Follow a diet you set in writing. Zero alcohol. Zero cheat meals.",
@@ -122,9 +137,18 @@ export const challenges: Challenge[] = [
       "Photo: same spot, same light, same outfit every day.",
     ],
     protocol: [
-      { label: "Phase 1 (Days 1–25)", detail: "Survive. Focus only on hitting all 5 tasks, performance comes later." },
-      { label: "Phase 2 (Days 26–50)", detail: "Optimise. Improve workout quality and food choices. Strength gains start." },
-      { label: "Phase 3 (Days 51–75)", detail: "Refine. Add intent to every task, heavier lifts, longer walks, deeper reading." },
+      {
+        label: "Phase 1 (Days 1–25)",
+        detail: "Survive. Focus only on hitting all 5 tasks, performance comes later.",
+      },
+      {
+        label: "Phase 2 (Days 26–50)",
+        detail: "Optimise. Improve workout quality and food choices. Strength gains start.",
+      },
+      {
+        label: "Phase 3 (Days 51–75)",
+        detail: "Refine. Add intent to every task, heavier lifts, longer walks, deeper reading.",
+      },
     ],
     mistakes: [
       "Treating the outdoor workout as a leisurely walk, it must be 45 min of intent.",
@@ -140,7 +164,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Advanced",
     image: imgPullup,
-    summary: "Greasing the groove with 100 strict pull-ups every day. Split into as many sets as you need.",
+    summary:
+      "Greasing the groove with 100 strict pull-ups every day. Split into as many sets as you need.",
     rules: [
       "Strict reps only, full hang to chin above the bar.",
       "Bands allowed for the first week, then strict only.",
@@ -175,7 +200,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Beginner",
     image: imgPlank,
-    summary: "A progressive plank protocol that builds an iron core for every lift, run and posture.",
+    summary:
+      "A progressive plank protocol that builds an iron core for every lift, run and posture.",
     rules: [
       "Hard-style plank, squeeze glutes, brace abs, no sagging hips.",
       "Time stops the moment form breaks.",
@@ -193,9 +219,18 @@ export const challenges: Challenge[] = [
     ],
     protocol: [
       { label: "Week 1 (Days 1–7)", detail: "30s → 45s → 60s → rest → 75s → 90s → 90s. AM only." },
-      { label: "Week 2 (Days 8–14)", detail: "2 min → 2:15 → 2:30 → rest → 2:30 → 2:45 → 3 min. Add PM hold of 1 min." },
-      { label: "Week 3 (Days 15–21)", detail: "3 → 3:15 → 3:30 → rest → 3:30 → 3:45 → 4 min. Add side planks 30s each side." },
-      { label: "Week 4 (Days 22–30)", detail: "4 → 4:15 → 4:30 → rest → 4:30 → 4:45 → 5 min. Final 3 days: max hold test." },
+      {
+        label: "Week 2 (Days 8–14)",
+        detail: "2 min → 2:15 → 2:30 → rest → 2:30 → 2:45 → 3 min. Add PM hold of 1 min.",
+      },
+      {
+        label: "Week 3 (Days 15–21)",
+        detail: "3 → 3:15 → 3:30 → rest → 3:30 → 3:45 → 4 min. Add side planks 30s each side.",
+      },
+      {
+        label: "Week 4 (Days 22–30)",
+        detail: "4 → 4:15 → 4:30 → rest → 4:30 → 4:45 → 5 min. Final 3 days: max hold test.",
+      },
     ],
     mistakes: [
       "Hips sagging = lower back doing the work. Stop and reset.",
@@ -212,7 +247,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Intermediate",
     image: imgDry30,
-    summary: "Cut alcohol for 30 days and feel what your body is actually capable of. The single biggest performance upgrade most people never try.",
+    summary:
+      "Cut alcohol for 30 days and feel what your body is actually capable of. The single biggest performance upgrade most people never try.",
     rules: [
       "Zero alcohol of any kind, including beer, wine, kombucha alcohol.",
       "Log sleep hours and morning energy 1-10 each day.",
@@ -228,10 +264,16 @@ export const challenges: Challenge[] = [
       "When cravings hit (always around Day 4 and Day 10), walk 10 minutes.",
     ],
     protocol: [
-      { label: "Days 1–7", detail: "Worst sleep ever. Push through. Energy crash around Day 4 is normal." },
+      {
+        label: "Days 1–7",
+        detail: "Worst sleep ever. Push through. Energy crash around Day 4 is normal.",
+      },
       { label: "Days 8–14", detail: "Sleep deepens. Mornings get sharp. Cravings drop hard." },
       { label: "Days 15–21", detail: "Body composition starts visibly changing. Lifts go up." },
-      { label: "Days 22–30", detail: "Decide your post-30 relationship with alcohol, write it down." },
+      {
+        label: "Days 22–30",
+        detail: "Decide your post-30 relationship with alcohol, write it down.",
+      },
     ],
     mistakes: [
       "'I'll just have one', restart the streak.",
@@ -247,7 +289,8 @@ export const challenges: Challenge[] = [
     durationDays: 56,
     difficulty: "Beginner",
     image: imgC25k,
-    summary: "The classic beginner-friendly running protocol. Walk-run intervals that build to a non-stop 5 km finish.",
+    summary:
+      "The classic beginner-friendly running protocol. Walk-run intervals that build to a non-stop 5 km finish.",
     rules: [
       "Run 3 days per week minimum (M / W / F).",
       "Follow the day's run-walk intervals exactly.",
@@ -266,8 +309,14 @@ export const challenges: Challenge[] = [
       { label: "Week 1", detail: "8 rounds of: 60s jog + 90s walk. 20 min total." },
       { label: "Week 2", detail: "6 rounds of: 90s jog + 2 min walk." },
       { label: "Week 3", detail: "2 rounds of: 90s jog, 90s walk, 3 min jog, 3 min walk." },
-      { label: "Week 4", detail: "3 min jog, 90s walk, 5 min jog, 2:30 walk, 3 min jog, 90s walk, 5 min jog." },
-      { label: "Week 5", detail: "Day 1: 5/3/5 jog. Day 2: 8/5/8 jog. Day 3: 20 min straight jog." },
+      {
+        label: "Week 4",
+        detail: "3 min jog, 90s walk, 5 min jog, 2:30 walk, 3 min jog, 90s walk, 5 min jog.",
+      },
+      {
+        label: "Week 5",
+        detail: "Day 1: 5/3/5 jog. Day 2: 8/5/8 jog. Day 3: 20 min straight jog.",
+      },
       { label: "Week 6", detail: "Day 1: 5/8/5. Day 2: 10/3/10. Day 3: 25 min straight." },
       { label: "Week 7", detail: "3 sessions of 25-min nonstop run." },
       { label: "Week 8", detail: "Day 1: 28 min. Day 2: 28 min. Day 3: 5K finish line, go." },
@@ -286,7 +335,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Intermediate",
     image: imgCold,
-    summary: "End every shower with 2 minutes of cold water for 30 days. Build stress tolerance, kill brain fog, sleep like a rock.",
+    summary:
+      "End every shower with 2 minutes of cold water for 30 days. Build stress tolerance, kill brain fog, sleep like a rock.",
     rules: [
       "Cold = the coldest your tap goes, no warm-up cheats.",
       "Minimum 2 minutes uninterrupted.",
@@ -302,7 +352,10 @@ export const challenges: Challenge[] = [
       "Step out, don't towel off frantically, let body re-warm itself.",
     ],
     protocol: [
-      { label: "Week 1", detail: "30s on Day 1, +15s each day until you hit 2:00. Pure shock survival." },
+      {
+        label: "Week 1",
+        detail: "30s on Day 1, +15s each day until you hit 2:00. Pure shock survival.",
+      },
       { label: "Week 2", detail: "Hold 2:00 every day. Focus on calm nasal breathing." },
       { label: "Week 3", detail: "Push to 3:00. Add a contrast: 60s hot, 90s cold × 2." },
       { label: "Week 4", detail: "3-min finishers. Final day: 5 min, log how you feel after." },
@@ -321,7 +374,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Beginner",
     image: imgSquat,
-    summary: "100 bodyweight squats every single day for 30 days. Hits below parallel, chest tall, no momentum.",
+    summary:
+      "100 bodyweight squats every single day for 30 days. Hits below parallel, chest tall, no momentum.",
     rules: [
       "Full depth, hip crease below the knee.",
       "Split into as many sets as you need.",
@@ -356,7 +410,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Beginner",
     image: imgGallon,
-    summary: "A simple, savage hydration challenge. Get a 1 gallon jug and finish it every single day for 30 days.",
+    summary:
+      "A simple, savage hydration challenge. Get a 1 gallon jug and finish it every single day for 30 days.",
     rules: [
       "Plain water only, tea and coffee don't count.",
       "Finish before bed or it doesn't count.",
@@ -375,7 +430,10 @@ export const challenges: Challenge[] = [
       { label: "Week 1", detail: "You'll pee every 30 min. Normal. Body adapts by Day 5." },
       { label: "Week 2", detail: "Energy climbs. Skin clears. Hunger drops." },
       { label: "Week 3", detail: "Add electrolytes daily. Sleep deepens noticeably." },
-      { label: "Week 4", detail: "Test the impact, skip one day on Day 31 and feel the difference." },
+      {
+        label: "Week 4",
+        detail: "Test the impact, skip one day on Day 31 and feel the difference.",
+      },
     ],
     mistakes: [
       "Chugging 2 L at 8 PM to catch up, guarantees broken sleep.",
@@ -391,7 +449,8 @@ export const challenges: Challenge[] = [
     durationDays: 60,
     difficulty: "Advanced",
     image: imgSplits,
-    summary: "Two months of progressive stretching protocol used by gymnasts and martial artists. Measure depth weekly.",
+    summary:
+      "Two months of progressive stretching protocol used by gymnasts and martial artists. Measure depth weekly.",
     rules: [
       "Warm up 5 min before any stretching.",
       "Hold each position 60–90 seconds, breathe slow.",
@@ -407,10 +466,16 @@ export const challenges: Challenge[] = [
       "Use blocks under the hands as your range improves.",
     ],
     protocol: [
-      { label: "Weeks 1–2", detail: "Pancake fold + butterfly + half-split. 60s holds × 3 rounds." },
+      {
+        label: "Weeks 1–2",
+        detail: "Pancake fold + butterfly + half-split. 60s holds × 3 rounds.",
+      },
       { label: "Weeks 3–4", detail: "Add box stretch + PNF contractions on the side splits." },
       { label: "Weeks 5–6", detail: "Hands-free middle split attempts daily. Measure weekly." },
-      { label: "Weeks 7–8 (Days 49–60)", detail: "Hold final position 2 min × 3. Test full split on Day 60." },
+      {
+        label: "Weeks 7–8 (Days 49–60)",
+        detail: "Hold final position 2 min × 3. Test full split on Day 60.",
+      },
     ],
     mistakes: [
       "Stretching cold, fastest path to injury.",
@@ -426,7 +491,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Advanced",
     image: imgPistol,
-    summary: "Progressions for ankle mobility, single-leg balance, and eccentric strength until you nail a clean pistol both sides.",
+    summary:
+      "Progressions for ankle mobility, single-leg balance, and eccentric strength until you nail a clean pistol both sides.",
     rules: [
       "Train 5 days per week, rest 2.",
       "Film every Sunday for form check.",
@@ -461,7 +527,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Advanced",
     image: imgHandstand,
-    summary: "Daily wall holds, shoulder prep and balance drills. By Day 30, you're holding 10s freestanding.",
+    summary:
+      "Daily wall holds, shoulder prep and balance drills. By Day 30, you're holding 10s freestanding.",
     rules: [
       "5 minutes of practice every day, no off days.",
       "Wrist prep before every session, non-negotiable.",
@@ -477,9 +544,15 @@ export const challenges: Challenge[] = [
       "Balance with fingertips, not whole hand, like piano keys.",
     ],
     protocol: [
-      { label: "Week 1", detail: "Wall facing handstand holds 3 × 30s. Build straight-line shape." },
+      {
+        label: "Week 1",
+        detail: "Wall facing handstand holds 3 × 30s. Build straight-line shape.",
+      },
       { label: "Week 2", detail: "Back-to-wall holds 3 × 45s. Practise toe-taps off the wall." },
-      { label: "Week 3", detail: "Freestanding kick-ups from wall. Catch yourself in balance for 2–5s." },
+      {
+        label: "Week 3",
+        detail: "Freestanding kick-ups from wall. Catch yourself in balance for 2–5s.",
+      },
       { label: "Week 4", detail: "Freestanding holds. Day 30: film a 10-second hold." },
     ],
     mistakes: [
@@ -496,7 +569,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Intermediate",
     image: imgNoPhone,
-    summary: "The simplest dopamine reset there is. First 60 minutes of every day, the phone stays face down. Watch your focus return.",
+    summary:
+      "The simplest dopamine reset there is. First 60 minutes of every day, the phone stays face down. Watch your focus return.",
     rules: [
       "Alarm clock OK, phone stays in another room or face down.",
       "No social, no email, no news for the first 60 min.",
@@ -531,7 +605,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Advanced",
     image: imgBurpee,
-    summary: "100 burpees every day for 30 days. Chest to floor, full jump, clap overhead. Split however you need.",
+    summary:
+      "100 burpees every day for 30 days. Chest to floor, full jump, clap overhead. Split however you need.",
     rules: [
       "Chest must touch the floor every rep.",
       "Vertical jump with hands overhead at the top.",
@@ -566,7 +641,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Intermediate",
     image: imgSleep,
-    summary: "Eight hours of sleep every night for 30 nights. Phone off, room cold, dark, quiet. Watch every other metric improve.",
+    summary:
+      "Eight hours of sleep every night for 30 nights. Phone off, room cold, dark, quiet. Watch every other metric improve.",
     rules: [
       "8h minimum in bed, lights off.",
       "Phone in airplane mode by 10 PM.",
@@ -574,7 +650,8 @@ export const challenges: Challenge[] = [
     ],
     dailyTask: "Log 8+ hours of sleep.",
     reward: "Rested Badge + Sleep Optimisation guide.",
-    timing: "Work backwards from wake time: 7 AM wake = lights out 10:30 PM (sleep latency ~30 min).",
+    timing:
+      "Work backwards from wake time: 7 AM wake = lights out 10:30 PM (sleep latency ~30 min).",
     howTo: [
       "Bedroom: 17–19 °C, blackout dark, completely silent.",
       "No screens 60 min before bed, read paper or stretch.",
@@ -601,7 +678,8 @@ export const challenges: Challenge[] = [
     durationDays: 84,
     difficulty: "Advanced",
     image: imgDeadlift,
-    summary: "Linear progression program to hit a 2x bodyweight deadlift. Three lifts per week, programmed pulls and accessories.",
+    summary:
+      "Linear progression program to hit a 2x bodyweight deadlift. Three lifts per week, programmed pulls and accessories.",
     rules: [
       "Follow the percentage chart exactly.",
       "Eat in surplus or maintenance, no aggressive cuts.",
@@ -617,9 +695,15 @@ export const challenges: Challenge[] = [
       "Lock out hips and knees together, no hyperextension.",
     ],
     protocol: [
-      { label: "Weeks 1–4 (Foundation)", detail: "3 × 5 @ 70% 1RM. Pause deadlifts on Wednesdays." },
+      {
+        label: "Weeks 1–4 (Foundation)",
+        detail: "3 × 5 @ 70% 1RM. Pause deadlifts on Wednesdays.",
+      },
       { label: "Weeks 5–8 (Volume)", detail: "5 × 3 @ 80%. Add deficit deadlifts and RDLs." },
-      { label: "Weeks 9–11 (Intensity)", detail: "Work up to a top single @ 90%. Back-off sets at 80%." },
+      {
+        label: "Weeks 9–11 (Intensity)",
+        detail: "Work up to a top single @ 90%. Back-off sets at 80%.",
+      },
       { label: "Week 12 (Peak)", detail: "Light deload Mon/Wed. Friday: attempt 2× bodyweight." },
     ],
     mistakes: [
@@ -636,7 +720,8 @@ export const challenges: Challenge[] = [
     durationDays: 30,
     difficulty: "Beginner",
     image: imgVeggies,
-    summary: "Most adults eat zero vegetables before dinner. Fix that for 30 days and rebuild your gut, energy and recovery.",
+    summary:
+      "Most adults eat zero vegetables before dinner. Fix that for 30 days and rebuild your gut, energy and recovery.",
     rules: [
       "At least one fist-sized portion of veg every meal.",
       "Fries don't count. Sorry.",
@@ -653,7 +738,10 @@ export const challenges: Challenge[] = [
     ],
     protocol: [
       { label: "Week 1", detail: "Easy wins: add spinach, tomato, cucumber to existing meals." },
-      { label: "Week 2", detail: "Add a roasted veg tray to your weekly prep. Use it on everything." },
+      {
+        label: "Week 2",
+        detail: "Add a roasted veg tray to your weekly prep. Use it on everything.",
+      },
       { label: "Week 3", detail: "Try 2 new vegetables you've never cooked." },
       { label: "Week 4", detail: "Hit 30+ unique plant foods over 7 days for gut microbiome." },
     ],
@@ -681,7 +769,8 @@ export const challenges: Challenge[] = [
     ],
     dailyTask: "Log today's session before midnight.",
     reward: "Founder 365 Badge + 1 FREE Onyx program of your choice + permanent leaderboard.",
-    timing: "Anytime. Build it into the same slot every day so it becomes identity, not motivation.",
+    timing:
+      "Anytime. Build it into the same slot every day so it becomes identity, not motivation.",
     howTo: [
       "Plan the week on Sunday, block 30 min every day in your calendar.",
       "Lower the bar on bad days: a 20-min walk preserves the streak.",
@@ -689,11 +778,29 @@ export const challenges: Challenge[] = [
       "Track in the Onyx app, the visible streak is the strongest motivator you have.",
     ],
     protocol: [
-      { label: "Month 1 (Days 1–30)", detail: "Build the habit. Easy sessions, low pressure. Hit Day 30 = halfway-home psychologically." },
-      { label: "Months 2–3 (Days 31–90)", detail: "Add structure. Run an Onyx program inside the streak. Don't chase intensity, chase consistency." },
-      { label: "Months 4–6 (Days 91–180)", detail: "Test progress. Re-test a benchmark from Month 1 (5K time, bench, pull-up max)." },
-      { label: "Months 7–9 (Days 181–270)", detail: "Danger zone. Most people quit here. Schedule lighter weeks, more walks, more mobility." },
-      { label: "Months 10–12 (Days 271–365)", detail: "Finish strong. Final 30 days = a peak block of your choosing. Document Day 365." },
+      {
+        label: "Month 1 (Days 1–30)",
+        detail:
+          "Build the habit. Easy sessions, low pressure. Hit Day 30 = halfway-home psychologically.",
+      },
+      {
+        label: "Months 2–3 (Days 31–90)",
+        detail:
+          "Add structure. Run an Onyx program inside the streak. Don't chase intensity, chase consistency.",
+      },
+      {
+        label: "Months 4–6 (Days 91–180)",
+        detail: "Test progress. Re-test a benchmark from Month 1 (5K time, bench, pull-up max).",
+      },
+      {
+        label: "Months 7–9 (Days 181–270)",
+        detail:
+          "Danger zone. Most people quit here. Schedule lighter weeks, more walks, more mobility.",
+      },
+      {
+        label: "Months 10–12 (Days 271–365)",
+        detail: "Finish strong. Final 30 days = a peak block of your choosing. Document Day 365.",
+      },
     ],
     mistakes: [
       "Going too hard in Month 1, burnout kills 90% of streaks before Day 60.",

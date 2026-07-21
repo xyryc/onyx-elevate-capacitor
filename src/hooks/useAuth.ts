@@ -71,12 +71,18 @@ export function useAuth() {
           window.localStorage.removeItem("onyx.pending.lang");
           window.localStorage.removeItem("onyx.access.cache.v1");
           window.sessionStorage.removeItem("onyx.access.cache.v1");
-        } catch { /* noop */ }
+        } catch {
+          /* noop */
+        }
       }
+      // Also clear from native Capacitor Preferences so the splash resets properly
+      import("@capacitor/preferences")
+        .then(({ Preferences }) => {
+          void Preferences.remove({ key: "onyx.languageSplash.done" });
+          void Preferences.remove({ key: "onyx.lang" });
+        })
+        .catch(() => {});
       await supabase.auth.signOut();
     },
   };
 }
-
-
-

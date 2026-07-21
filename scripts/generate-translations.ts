@@ -40,7 +40,11 @@ const { goals } = await import("../src/data/goals.ts");
 const { coaches } = await import("../src/data/coaches.ts");
 const { supplements } = await import("../src/data/supplements.ts");
 const { categories: exerciseCategories, exercises } = await import("../src/data/exercises.ts");
-const { poses: yogaPoses, articles: yogaArticles, introCards: yogaIntroCards } = await import("../src/routes/yoga-mobility.tsx");
+const {
+  poses: yogaPoses,
+  articles: yogaArticles,
+  introCards: yogaIntroCards,
+} = await import("../src/routes/yoga-mobility.tsx");
 const { translations } = await import("../src/i18n/translations.ts");
 const { SEED } = await import("../src/i18n/seedDictionary.ts");
 
@@ -55,10 +59,7 @@ const LANG_NAMES: Record<Lang, string> = {
 
 const HAS_LETTER = /\p{L}{2,}/u;
 
-const NEVER_TRANSLATE_EXACT = new Set<string>([
-  "Onyx",
-  "Onyx Elevate",
-]);
+const NEVER_TRANSLATE_EXACT = new Set<string>(["Onyx", "Onyx Elevate"]);
 
 function push(values: string[], v: unknown) {
   if (typeof v === "string") values.push(v);
@@ -69,7 +70,11 @@ function pushAll(values: string[], arr?: unknown[]) {
 
 function collectDeep(value: unknown, out: string[], key = "") {
   if (typeof value === "string") {
-    if (!/^(slug|image|img|gallery|url|videoUrl|thumbnailUrl|paddlePriceId|alternatives|id)$/i.test(key)) {
+    if (
+      !/^(slug|image|img|gallery|url|videoUrl|thumbnailUrl|paddlePriceId|alternatives|id)$/i.test(
+        key,
+      )
+    ) {
       out.push(value);
     }
     return;
@@ -91,8 +96,20 @@ function collectAll(): string[] {
 
   // Programs
   programs.forEach((p: any) => {
-    [p.title, p.tagline, p.category, p.level, p.duration, p.goal, p.summary,
-      p.nutrition, p.supplementation, p.recovery, p.trainingOverview, p.progression, p.price
+    [
+      p.title,
+      p.tagline,
+      p.category,
+      p.level,
+      p.duration,
+      p.goal,
+      p.summary,
+      p.nutrition,
+      p.supplementation,
+      p.recovery,
+      p.trainingOverview,
+      p.progression,
+      p.price,
     ].forEach((v) => push(values, v));
     pushAll(values, p.whoItsFor);
     pushAll(values, p.whatYouGet);
@@ -100,13 +117,19 @@ function collectAll(): string[] {
     p.weeklySchedule?.forEach((d: any) => [d.day, d.session].forEach((v) => push(values, v)));
     p.workouts?.forEach((w: any) => {
       [w.day, w.title, w.focus].forEach((v) => push(values, v));
-      w.exercises?.forEach((ex: any) => [ex.name, ex.sets, ex.reps, ex.rest].forEach((v) => push(values, v)));
+      w.exercises?.forEach((ex: any) =>
+        [ex.name, ex.sets, ex.reps, ex.rest].forEach((v) => push(values, v)),
+      );
     });
     p.faqs?.forEach((f: any) => [f.question, f.answer].forEach((v) => push(values, v)));
     const warmup = p.warmup ?? warmupByCategory[p.category];
     if (warmup) {
       push(values, warmup.intro);
-      [...(warmup.generalPrep ?? []), ...(warmup.specificPrep ?? []), ...(warmup.activation ?? [])].forEach((s: any) => {
+      [
+        ...(warmup.generalPrep ?? []),
+        ...(warmup.specificPrep ?? []),
+        ...(warmup.activation ?? []),
+      ].forEach((s: any) => {
         [s.name, s.detail, s.duration].forEach((v) => push(values, v));
       });
       pushAll(values, warmup.rules);
@@ -115,7 +138,11 @@ function collectAll(): string[] {
 
   Object.values(warmupByCategory).forEach((warmup: any) => {
     push(values, warmup.intro);
-    [...(warmup.generalPrep ?? []), ...(warmup.specificPrep ?? []), ...(warmup.activation ?? [])].forEach((s: any) => {
+    [
+      ...(warmup.generalPrep ?? []),
+      ...(warmup.specificPrep ?? []),
+      ...(warmup.activation ?? []),
+    ].forEach((s: any) => {
       [s.name, s.detail, s.duration].forEach((v) => push(values, v));
     });
     pushAll(values, warmup.rules);
@@ -168,8 +195,18 @@ function collectAll(): string[] {
 
   exerciseCategories.forEach((c: any) => [c.label, c.blurb].forEach((v) => push(values, v)));
   exercises.forEach((e: any) => {
-    [e.name, e.shortDescription, e.category, e.primaryMuscle, e.exerciseType, e.equipment,
-      e.mechanics, e.forceType, e.level, e.overview].forEach((v) => push(values, v));
+    [
+      e.name,
+      e.shortDescription,
+      e.category,
+      e.primaryMuscle,
+      e.exerciseType,
+      e.equipment,
+      e.mechanics,
+      e.forceType,
+      e.level,
+      e.overview,
+    ].forEach((v) => push(values, v));
     pushAll(values, e.secondaryMuscles);
     e.steps?.forEach((s: any) => [s.title, s.body].forEach((v) => push(values, v)));
     pushAll(values, e.proTips);
@@ -190,7 +227,9 @@ function collectAll(): string[] {
   return out;
 }
 
-const SYSTEM = (lang: Lang) => `You are a professional translator for a fitness/training website (brand: Onyx Elevate).
+const SYSTEM = (
+  lang: Lang,
+) => `You are a professional translator for a fitness/training website (brand: Onyx Elevate).
 Translate every item in the JSON array from English to ${LANG_NAMES[lang]}.
 Rules:
 - Preserve the array order and length exactly.
@@ -269,7 +308,9 @@ async function main() {
     const file = join(outDir, `${lang}.json`);
     let dict: Record<string, string> = {};
     if (existsSync(file)) {
-      try { dict = JSON.parse(await readFile(file, "utf8")); } catch {}
+      try {
+        dict = JSON.parse(await readFile(file, "utf8"));
+      } catch {}
     }
 
     // Seed dict wins — never re-translate hand-verified entries.
@@ -280,7 +321,9 @@ async function main() {
     ) as Record<string, string>;
 
     const needs = strings.filter((s) => !dict[s] && !seedFor[s]);
-    console.log(`[${lang}] existing=${Object.keys(dict).length} seed=${Object.keys(seedFor).length} to-translate=${needs.length}`);
+    console.log(
+      `[${lang}] existing=${Object.keys(dict).length} seed=${Object.keys(seedFor).length} to-translate=${needs.length}`,
+    );
 
     const BATCH = 80;
     const batches: string[][] = [];

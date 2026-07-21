@@ -127,7 +127,6 @@ function buildTimeLevels(opts: {
             ],
             note: "Light day, but still log it. Recovery is part of the work.",
           });
-
         } else {
           days.push({
             day,
@@ -609,7 +608,8 @@ const BUILDERS: Record<string, () => Level[]> = {
       durationDays: 30,
       beginner: {
         summary: "Gradual ramp: 30s → 2 min over the month.",
-        perDay: (d) => `End shower with ${Math.min(30 + (d - 1) * 5, 120)}s of cold. Nasal breathing.`,
+        perDay: (d) =>
+          `End shower with ${Math.min(30 + (d - 1) * 5, 120)}s of cold. Nasal breathing.`,
       },
       intermediate: {
         summary: "2 min daily. Add weekly contrast finishers.",
@@ -640,8 +640,7 @@ const BUILDERS: Record<string, () => Level[]> = {
       },
       advanced: {
         summary: "Zero alcohol + zero caffeine after 12 PM + 8h sleep window.",
-        perDay: () =>
-          "Zero alcohol · no caffeine after noon · 8h in bed · log sleep, HRV, energy.",
+        perDay: () => "Zero alcohol · no caffeine after noon · 8h in bed · log sleep, HRV, energy.",
       },
     }),
 
@@ -695,7 +694,8 @@ const BUILDERS: Record<string, () => Level[]> = {
       },
       advanced: {
         summary: "1 gallon + electrolytes daily + morning 500 ml on waking.",
-        perDay: () => "500 ml on waking · 1 gallon by 8 PM · electrolytes mid-morning + post-training.",
+        perDay: () =>
+          "500 ml on waking · 1 gallon by 8 PM · electrolytes mid-morning + post-training.",
       },
     }),
 
@@ -721,17 +721,36 @@ const BUILDERS: Record<string, () => Level[]> = {
   "no-phone-morning": () =>
     buildHabitLevels({
       durationDays: 30,
-      beginner: { summary: "30 min phone-free on waking.", perDay: () => "First 30 min phone-free." },
-      intermediate: { summary: "60 min phone-free + one chosen habit.", perDay: () => "First 60 min phone-free + one chosen habit." },
-      advanced: { summary: "90 min phone-free + no phone at meals.", perDay: () => "First 90 min phone-free · no phone at any meal today." },
+      beginner: {
+        summary: "30 min phone-free on waking.",
+        perDay: () => "First 30 min phone-free.",
+      },
+      intermediate: {
+        summary: "60 min phone-free + one chosen habit.",
+        perDay: () => "First 60 min phone-free + one chosen habit.",
+      },
+      advanced: {
+        summary: "90 min phone-free + no phone at meals.",
+        perDay: () => "First 90 min phone-free · no phone at any meal today.",
+      },
     }),
 
   "8h-sleep-30": () =>
     buildHabitLevels({
       durationDays: 30,
-      beginner: { summary: "7 hours in bed minimum.", perDay: () => "7+ hours in bed, lights off." },
-      intermediate: { summary: "8h in bed + no screens 30 min pre-bed.", perDay: () => "8h in bed · no screens 30 min before sleep · log sleep score." },
-      advanced: { summary: "8h + bedroom 18°C + last caffeine by 12 PM.", perDay: () => "8h in bed · room 17–19°C · last caffeine before noon · last meal 3h pre-bed." },
+      beginner: {
+        summary: "7 hours in bed minimum.",
+        perDay: () => "7+ hours in bed, lights off.",
+      },
+      intermediate: {
+        summary: "8h in bed + no screens 30 min pre-bed.",
+        perDay: () => "8h in bed · no screens 30 min before sleep · log sleep score.",
+      },
+      advanced: {
+        summary: "8h + bedroom 18°C + last caffeine by 12 PM.",
+        perDay: () =>
+          "8h in bed · room 17–19°C · last caffeine before noon · last meal 3h pre-bed.",
+      },
     }),
 
   "deadlift-bodyweight": () =>
@@ -742,7 +761,8 @@ const BUILDERS: Record<string, () => Level[]> = {
         perDay: (d) => {
           const mod = (d - 1) % 7;
           if (mod === 0) return `Day ${d}: Deadlift 5 × 5 @ 60% · row 4 × 8 · plank.`;
-          if (mod === 2) return `Day ${d}: Romanian DL 4 × 8 · split squat 3 × 8 · hanging knee raise.`;
+          if (mod === 2)
+            return `Day ${d}: Romanian DL 4 × 8 · split squat 3 × 8 · hanging knee raise.`;
           if (mod === 4) return `Day ${d}: Deadlift 3 × 5 @ 70% · pull-ups · loaded carry.`;
           return `Day ${d}: Rest or 30-min walk + mobility.`;
         },
@@ -773,9 +793,18 @@ const BUILDERS: Record<string, () => Level[]> = {
   "veggie-everyday": () =>
     buildHabitLevels({
       durationDays: 30,
-      beginner: { summary: "1 fist of veg at dinner.", perDay: () => "1 fist-sized portion of vegetables at dinner today." },
-      intermediate: { summary: "Veg at lunch + dinner.", perDay: () => "Vegetables at lunch AND dinner, photo one of them." },
-      advanced: { summary: "Veg at every meal + 30 plant species this week.", perDay: () => "Vegetables at all 3 meals · log unique plant foods toward 30/week." },
+      beginner: {
+        summary: "1 fist of veg at dinner.",
+        perDay: () => "1 fist-sized portion of vegetables at dinner today.",
+      },
+      intermediate: {
+        summary: "Veg at lunch + dinner.",
+        perDay: () => "Vegetables at lunch AND dinner, photo one of them.",
+      },
+      advanced: {
+        summary: "Veg at every meal + 30 plant species this week.",
+        perDay: () => "Vegetables at all 3 meals · log unique plant foods toward 30/week.",
+      },
     }),
 };
 

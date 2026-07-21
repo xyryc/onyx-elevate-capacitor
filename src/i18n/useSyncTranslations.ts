@@ -11,15 +11,23 @@ export function useSyncTranslations() {
   const location = useRouterState({ select: (s) => s.location.pathname });
 
   useLayoutEffect(() => {
-    const applyNow = (window as unknown as { __onyxApplyCachedNow?: () => void }).__onyxApplyCachedNow;
+    const applyNow = (window as unknown as { __onyxApplyCachedNow?: () => void })
+      .__onyxApplyCachedNow;
     if (applyNow) {
-      try { applyNow(); } catch {}
+      try {
+        applyNow();
+      } catch {}
     }
     // Second pass on the next frame to catch late-mounted subtrees (Suspense,
     // lazy components, images that trigger layout).
     const raf = window.requestAnimationFrame(() => {
-      const again = (window as unknown as { __onyxApplyCachedNow?: () => void }).__onyxApplyCachedNow;
-      if (again) { try { again(); } catch {} }
+      const again = (window as unknown as { __onyxApplyCachedNow?: () => void })
+        .__onyxApplyCachedNow;
+      if (again) {
+        try {
+          again();
+        } catch {}
+      }
     });
     return () => window.cancelAnimationFrame(raf);
   }, [location]);

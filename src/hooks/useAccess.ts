@@ -90,7 +90,9 @@ export function refreshAccess() {
   try {
     window.localStorage.removeItem(CACHE_KEY);
     window.sessionStorage.removeItem(CACHE_KEY);
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
   window.dispatchEvent(new Event(ACCESS_REFRESH_EVENT));
 }
 
@@ -125,7 +127,9 @@ export function useAccess(): AccessState & {
           try {
             window.sessionStorage.removeItem(CACHE_KEY);
             window.localStorage.removeItem(CACHE_KEY);
-          } catch { /* noop */ }
+          } catch {
+            /* noop */
+          }
         }
         if (!cancelled) setState({ ...empty, loading: false });
         return;
@@ -139,10 +143,7 @@ export function useAccess(): AccessState & {
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
           .limit(5),
-        supabase
-          .from("purchases")
-          .select("product_kind,product_slug")
-          .eq("user_id", user.id),
+        supabase.from("purchases").select("product_kind,product_slug").eq("user_id", user.id),
       ]);
       const now = new Date();
       let hasSubscription = (subRes.data ?? []).some((s: any) => {
@@ -180,9 +181,10 @@ export function useAccess(): AccessState & {
       }
     }
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user?.id, authLoading, refreshTick]);
-
 
   const bundleOrSub = state.hasBundle || state.hasSubscription;
   return {

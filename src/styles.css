@@ -81,8 +81,11 @@
   --gradient-hero: radial-gradient(ellipse at top, oklch(0.7 0.22 240 / 0.25), transparent 60%);
   --gradient-card: linear-gradient(180deg, var(--onyx-100), var(--onyx-50));
   --gradient-electric: linear-gradient(135deg, var(--electric), var(--electric-glow));
-  --shadow-electric: 0 0 0 1px oklch(0.7 0.22 240 / 0.2), 0 20px 60px -20px oklch(0.7 0.22 240 / 0.4);
-  --shadow-electric-glow: 0 0 0 1px oklch(0.78 0.2 235 / 0.45), 0 0 35px -5px oklch(0.78 0.2 235 / 0.55), 0 20px 60px -20px oklch(0.7 0.22 240 / 0.5);
+  --shadow-electric:
+    0 0 0 1px oklch(0.7 0.22 240 / 0.2), 0 20px 60px -20px oklch(0.7 0.22 240 / 0.4);
+  --shadow-electric-glow:
+    0 0 0 1px oklch(0.78 0.2 235 / 0.45), 0 0 35px -5px oklch(0.78 0.2 235 / 0.55),
+    0 20px 60px -20px oklch(0.7 0.22 240 / 0.5);
   --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 20px 40px -20px oklch(0 0 0 / 0.6);
 }
 
@@ -107,7 +110,10 @@
     text-size-adjust: 100%;
     overscroll-behavior-y: none;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -143,8 +149,12 @@
 }
 
 @keyframes supp-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @utility animate-supp-scroll {
@@ -152,9 +162,15 @@
 }
 
 @keyframes shimmer-sweep {
-  0% { transform: translateX(-120%); }
-  45% { transform: translateX(120%); }
-  100% { transform: translateX(120%); }
+  0% {
+    transform: translateX(-120%);
+  }
+  45% {
+    transform: translateX(120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
 }
 
 @utility animate-shimmer-sweep {
@@ -179,7 +195,14 @@
 
 @utility chat-bg {
   background-image:
-    radial-gradient(circle at 20% 10%, color-mix(in oklab, var(--electric) 8%, transparent), transparent 40%),
-    radial-gradient(circle at 80% 90%, color-mix(in oklab, var(--electric) 6%, transparent), transparent 45%);
+    radial-gradient(
+      circle at 20% 10%,
+      color-mix(in oklab, var(--electric) 8%, transparent),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 90%,
+      color-mix(in oklab, var(--electric) 6%, transparent),
+      transparent 45%
+    );
 }
-

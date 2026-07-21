@@ -462,7 +462,10 @@ function Home() {
               return <div key={g.title}>{card}</div>;
             }
             return (
-              <GoalDialog key={g.title} goal={{ ...goalData, img: goalImg[g.title] ?? g.img ?? goalData.img }}>
+              <GoalDialog
+                key={g.title}
+                goal={{ ...goalData, img: goalImg[g.title] ?? g.img ?? goalData.img }}
+              >
                 {card}
               </GoalDialog>
             );

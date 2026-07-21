@@ -63,7 +63,14 @@ export function unlockProgram(slug: string): void {
 
 /** Handle any checkout success slug, bundle, plan:<slug>, or program:<slug>. */
 export function unlockFromSuccessSlug(slug: string): void {
-  if (slug === BUNDLE_KEY || slug === "all-access" || slug === "bundle" || slug === "all_access_lifetime" || slug === "all_access_monthly" || slug === "all_access_yearly") {
+  if (
+    slug === BUNDLE_KEY ||
+    slug === "all-access" ||
+    slug === "bundle" ||
+    slug === "all_access_lifetime" ||
+    slug === "all_access_monthly" ||
+    slug === "all_access_yearly"
+  ) {
     unlockBundle();
     return;
   }
@@ -85,6 +92,9 @@ export function unlockFromSuccessSlug(slug: string): void {
  */
 export function clearAllUnlocks(): void {
   if (typeof window === "undefined") return;
-  try { window.localStorage.removeItem(KEY); } catch { /* noop */ }
+  try {
+    window.localStorage.removeItem(KEY);
+  } catch {
+    /* noop */
+  }
 }
-

@@ -3,7 +3,17 @@ import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { CalendarPlus, Check, X, Users, CheckCircle2, ChefHat, ShoppingBasket, Flame, Calendar } from "lucide-react";
+import {
+  CalendarPlus,
+  Check,
+  X,
+  Users,
+  CheckCircle2,
+  ChefHat,
+  ShoppingBasket,
+  Flame,
+  Calendar,
+} from "lucide-react";
 
 import {
   findNutritionPlan,
@@ -25,9 +35,6 @@ import { useT } from "@/i18n/LanguageProvider";
 import { logDraftBatch, listSourceRefDates } from "@/lib/nutrition.functions";
 import { DatePickerRow, todayISO } from "@/components/DatePickerRow";
 import nutritionBg from "@/assets/nutrition-bg.jpg";
-
-
-
 
 export const Route = createFileRoute("/meal-plans/$slug")({
   loader: ({ params }) => {
@@ -61,7 +68,6 @@ export const Route = createFileRoute("/meal-plans/$slug")({
   },
 });
 
-
 function MealPlanDetail() {
   const { plan } = Route.useLoaderData() as { plan: NutritionPlan };
   return <MealPlanDetailView plan={plan} />;
@@ -76,10 +82,7 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
   const monthlyIntro = usePrice("monthlyIntro");
   const t = useT();
 
-
-
   // (unlock state now derives from useAccess, no local state needed)
-
 
   const week = plan.weeks.find((w) => w.week === activeWeek) ?? plan.weeks[0];
   const isLocked = activeWeek > 1 && !unlocked;
@@ -93,8 +96,6 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
     });
   };
 
-
-
   return (
     <div className="relative min-h-screen">
       <div
@@ -104,7 +105,12 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
       />
       {/* HERO IMAGE — always on top */}
       <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] overflow-hidden bg-onyx-200">
-        <img src={plan.image} alt={plan.title} className="h-full w-full object-cover" decoding="async" />
+        <img
+          src={plan.image}
+          alt={plan.title}
+          className="h-full w-full object-cover"
+          decoding="async"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-onyx-50 via-onyx-50/40 to-transparent" />
       </div>
       {/* HERO */}
@@ -117,7 +123,9 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
                   <Flame className="h-3 w-3" /> {plan.goal}
                 </span>
                 <span className="text-muted-foreground">·</span>
-                <span>{plan.durationWeeks} {t("mealPlan.weeks")}</span>
+                <span>
+                  {plan.durationWeeks} {t("mealPlan.weeks")}
+                </span>
                 <span className="text-muted-foreground">·</span>
                 <span>{plan.difficulty}</span>
               </div>
@@ -130,7 +138,12 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
                 {plan.heroPitch}
               </p>
               <div className="mt-5 sm:mt-6 flex flex-wrap gap-2">
-                {[plan.calorieRange, `Protein ${plan.targetMacros.protein}`, `Carbs ${plan.targetMacros.carbs}`, `Fat ${plan.targetMacros.fat}`].map((c) => (
+                {[
+                  plan.calorieRange,
+                  `Protein ${plan.targetMacros.protein}`,
+                  `Carbs ${plan.targetMacros.carbs}`,
+                  `Fat ${plan.targetMacros.fat}`,
+                ].map((c) => (
                   <span
                     key={c}
                     className="inline-flex items-center rounded-full border border-border/60 bg-onyx-50/70 px-3 py-1 text-[11px] sm:text-xs font-semibold"
@@ -161,10 +174,10 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
                   <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400">
                     <CheckCircle2 className="h-4 w-4" /> {t("mealPlan.unlocked")}
                   </div>
-                  <div className="mt-2 font-display text-xl sm:text-2xl font-bold">{t("mealPlan.allWeeksUnlocked")}</div>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {t("mealPlan.unlockedNote")}
-                  </p>
+                  <div className="mt-2 font-display text-xl sm:text-2xl font-bold">
+                    {t("mealPlan.allWeeksUnlocked")}
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">{t("mealPlan.unlockedNote")}</p>
                 </>
               ) : (
                 <>
@@ -173,11 +186,14 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
                   </div>
                   <div className="mt-2 flex items-baseline gap-2">
                     <span className="font-display text-3xl font-bold">{monthlyIntro}</span>
-                    <span className="text-base font-normal text-muted-foreground">{t("mealPlan.firstMonth")}</span>
+                    <span className="text-base font-normal text-muted-foreground">
+                      {t("mealPlan.firstMonth")}
+                    </span>
                     <span className="text-sm text-muted-foreground line-through">{mealPrice}</span>
                   </div>
                   <p className="mt-1 text-[11px] text-muted-foreground">
-                    {t("mealPlan.thenPrefix")} {mealPrice}{t("mealPlan.thenSuffix")}
+                    {t("mealPlan.thenPrefix")} {mealPrice}
+                    {t("mealPlan.thenSuffix")}
                   </p>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {t("mealPlan.unlockBenefit")}
@@ -187,16 +203,16 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
                     disabled={loading}
                     className="mt-4 w-full inline-flex items-center justify-center rounded-md bg-electric px-5 py-3 text-sm font-bold text-onyx-50 hover:bg-electric-glow disabled:opacity-50 transition-all"
                   >
-                    {loading ? t("mealPlan.openingCheckout") : `${t("mealPlan.unlockFor")} ${monthlyIntro}`}
+                    {loading
+                      ? t("mealPlan.openingCheckout")
+                      : `${t("mealPlan.unlockFor")} ${monthlyIntro}`}
                   </button>
                   <div className="mt-3 text-[11px] text-center text-muted-foreground">
                     {t("mealPlan.secureCheckout")}
                   </div>
                 </>
-
               )}
             </div>
-
           </div>
         </div>
       </section>
@@ -212,7 +228,10 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
           </div>
           <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
             {plan.whoItsFor.map((x) => (
-              <li key={x} className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2">
+              <li
+                key={x}
+                className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2"
+              >
                 <span className="text-electric mt-0.5">→</span>
                 <span>{x}</span>
               </li>
@@ -224,11 +243,16 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
             <div className="grid h-8 w-8 place-items-center rounded-lg border border-electric/30 bg-electric/10 text-electric">
               <CheckCircle2 className="h-4 w-4" />
             </div>
-            <h2 className="font-display text-lg sm:text-xl font-bold">{t("mealPlan.whatYouGet")}</h2>
+            <h2 className="font-display text-lg sm:text-xl font-bold">
+              {t("mealPlan.whatYouGet")}
+            </h2>
           </div>
           <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
             {plan.whatYouGet.map((x) => (
-              <li key={x} className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2">
+              <li
+                key={x}
+                className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2"
+              >
                 <span className="text-emerald-400 mt-0.5">✓</span>
                 <span>{x}</span>
               </li>
@@ -244,12 +268,13 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
             <div className="grid h-8 w-8 place-items-center rounded-lg border border-electric/30 bg-electric/10 text-electric">
               <Calendar className="h-4 w-4" />
             </div>
-            <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold">{t("mealPlan.schedule")}</h2>
+            <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold">
+              {t("mealPlan.schedule")}
+            </h2>
           </div>
           <div className="text-[11px] sm:text-xs text-muted-foreground">
             {t("mealPlan.freePreview")}
           </div>
-
         </div>
         <div className="mt-5 sm:mt-6 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
           {plan.weeks.map((w) => {
@@ -268,7 +293,9 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
                 {t("mealPlan.week")} {w.week}
                 {locked && <span className="ml-1.5 text-[10px]">🔒</span>}
                 {w.week === 1 && !unlocked && (
-                  <span className="ml-1.5 text-[10px] uppercase tracking-wider opacity-80">{t("mealPlan.free")}</span>
+                  <span className="ml-1.5 text-[10px] uppercase tracking-wider opacity-80">
+                    {t("mealPlan.free")}
+                  </span>
                 )}
               </button>
             );
@@ -282,12 +309,13 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
               <div className="text-xs font-semibold uppercase tracking-wider text-electric">
                 {t("mealPlan.week")} {week.week} · {week.focus}
               </div>
-              <h3 className="mt-1 font-display text-xl sm:text-2xl font-bold">{t("mealPlan.coachNotes")}</h3>
+              <h3 className="mt-1 font-display text-xl sm:text-2xl font-bold">
+                {t("mealPlan.coachNotes")}
+              </h3>
             </div>
           </div>
           <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{week.coachNote}</p>
         </div>
-
 
         {/* WEEK CONTENT */}
         {isLocked ? (
@@ -309,7 +337,10 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
             </div>
             <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
               {plan.groceryStaples.map((g) => (
-                <li key={g} className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2">
+                <li
+                  key={g}
+                  className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2"
+                >
                   <span className="text-electric">·</span>
                   <span>{g}</span>
                 </li>
@@ -326,7 +357,10 @@ export function MealPlanDetailView({ plan }: { plan: NutritionPlan }) {
 
             <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
               {plan.cookingTips.map((g) => (
-                <li key={g} className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2">
+                <li
+                  key={g}
+                  className="flex gap-3 rounded-lg border border-border/40 bg-onyx-50/50 px-3 py-2"
+                >
                   <span className="text-emerald-400">✓</span>
                   <span>{g}</span>
                 </li>
@@ -368,13 +402,17 @@ function WeekDays({ plan, week }: { plan: NutritionPlan; week: WeekPlan }) {
                   <span className="text-[9px] font-bold uppercase tracking-wider leading-none text-electric">
                     {dayLabels[idx]}
                   </span>
-                  <span className="font-display text-lg font-bold leading-none mt-0.5 text-foreground">{idx + 1}</span>
+                  <span className="font-display text-lg font-bold leading-none mt-0.5 text-foreground">
+                    {idx + 1}
+                  </span>
                 </div>
                 <div className="min-w-0">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                     {t("mealPlan.day")} {idx + 1}
                   </div>
-                  <div className="font-display text-base sm:text-lg font-bold truncate">{day.label}</div>
+                  <div className="font-display text-base sm:text-lg font-bold truncate">
+                    {day.label}
+                  </div>
                 </div>
               </div>
 
@@ -403,7 +441,15 @@ function WeekDays({ plan, week }: { plan: NutritionPlan; week: WeekPlan }) {
   );
 }
 
-function AddDayButton({ plan, dayId, dayLabel }: { plan: NutritionPlan; dayId: string; dayLabel: string }) {
+function AddDayButton({
+  plan,
+  dayId,
+  dayLabel,
+}: {
+  plan: NutritionPlan;
+  dayId: string;
+  dayLabel: string;
+}) {
   const t = useT();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -420,12 +466,8 @@ function AddDayButton({ plan, dayId, dayLabel }: { plan: NutritionPlan; dayId: s
     enabled: !!user && open,
     staleTime: 30_000,
   });
-  const takenDates = new Set([
-    ...(loggedQ.data?.logged ?? []),
-    ...(loggedQ.data?.drafted ?? []),
-  ]);
+  const takenDates = new Set([...(loggedQ.data?.logged ?? []), ...(loggedQ.data?.drafted ?? [])]);
   const alreadyLogged = takenDates.has(date);
-
 
   const SLOT_MAP: Record<string, "breakfast" | "lunch" | "dinner" | "snack"> = {
     Breakfast: "breakfast",
@@ -438,9 +480,7 @@ function AddDayButton({ plan, dayId, dayLabel }: { plan: NutritionPlan; dayId: s
     mutationFn: async () => {
       const day = getDayById(plan, dayId);
       if (!day) throw new Error("Day not found");
-      const meals = day.mealIds
-        .map((mid) => getMealById(plan, mid))
-        .filter((m): m is Meal => !!m);
+      const meals = day.mealIds.map((mid) => getMealById(plan, mid)).filter((m): m is Meal => !!m);
       const items = meals.map((m) => ({
         meal_slot: SLOT_MAP[m.slot] ?? "snack",
         name: m.name,
@@ -539,10 +579,7 @@ function AddDayButton({ plan, dayId, dayLabel }: { plan: NutritionPlan; dayId: s
               </div>
             ) : takenDates.size > 0 ? (
               <p className="mb-4 text-[11px] text-muted-foreground">
-                {t("mealPlan.addDay.otherDatesLogged").replace(
-                  "{count}",
-                  String(takenDates.size),
-                )}
+                {t("mealPlan.addDay.otherDatesLogged").replace("{count}", String(takenDates.size))}
               </p>
             ) : (
               <div className="mb-4" />
@@ -569,7 +606,6 @@ function AddDayButton({ plan, dayId, dayLabel }: { plan: NutritionPlan; dayId: s
                     : t("mealPlan.addDay.confirm")}
               </button>
             </div>
-
           </div>
         </div>
       )}
@@ -586,7 +622,15 @@ const STAT_TONE: Record<StatTone, { value: string }> = {
   f: { value: "text-rose-300" },
 };
 
-function Stat({ label, value, tone = "kcal" }: { label: string; value: string | number; tone?: StatTone }) {
+function Stat({
+  label,
+  value,
+  tone = "kcal",
+}: {
+  label: string;
+  value: string | number;
+  tone?: StatTone;
+}) {
   const c = STAT_TONE[tone];
   return (
     <div className="rounded-md border border-border/60 bg-onyx-50/70 px-2.5 py-1 shadow-sm">
@@ -625,7 +669,8 @@ function LockedWeekCard({
         <span className="text-sm text-muted-foreground line-through">{mealPrice}</span>
       </div>
       <div className="mt-1 text-[11px] text-muted-foreground">
-        {t("mealPlan.thenPrefix")} {mealPrice}{t("mealPlan.thenSuffix")}
+        {t("mealPlan.thenPrefix")} {mealPrice}
+        {t("mealPlan.thenSuffix")}
       </div>
       <button
         onClick={onUnlock}
@@ -634,13 +679,10 @@ function LockedWeekCard({
       >
         {loading ? t("mealPlan.openingCheckout") : `${t("mealPlan.unlockFor")} ${monthlyIntro}`}
       </button>
-      <div className="mt-3 text-[11px] text-muted-foreground">
-        {t("mealPlan.secureCheckout")}
-      </div>
+      <div className="mt-3 text-[11px] text-muted-foreground">{t("mealPlan.secureCheckout")}</div>
     </div>
   );
 }
-
 
 // Slot theming — keep emoji, drop strong background colors
 const SLOT_STYLE: Record<string, { icon: string }> = {
@@ -664,8 +706,6 @@ function parseIngredient(raw: string): { qty: string; name: string } {
 function decorateStep(text: string): React.ReactNode {
   return text;
 }
-
-
 
 function MealItem({ meal }: { meal: Meal }) {
   const [open, setOpen] = useState(false);
@@ -729,7 +769,6 @@ function MealItem({ meal }: { meal: Meal }) {
         )}
       </div>
 
-
       {open && (
         <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
           {/* How to make */}
@@ -781,12 +820,9 @@ function MealItem({ meal }: { meal: Meal }) {
                 </li>
               ))}
             </ul>
-
           </div>
         </div>
       )}
     </div>
   );
 }
-
-

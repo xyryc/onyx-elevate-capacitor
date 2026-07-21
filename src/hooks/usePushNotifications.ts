@@ -20,7 +20,11 @@ export function usePushNotifications() {
 
   const refresh = useCallback(() => {
     if (typeof window === "undefined") return;
-    if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+    if (
+      !("Notification" in window) ||
+      !("serviceWorker" in navigator) ||
+      !("PushManager" in window)
+    ) {
       setStatus("unsupported");
       return;
     }

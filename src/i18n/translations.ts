@@ -40,7 +40,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.eyebrow": "Programs",
     "programs.heroTitle1": "Real plans for real goals.",
     "programs.heroTitle2": "No fluff.",
-    "programs.heroDesc": "Browse the full Onyx program library. Hypertrophy, powerlifting, fat loss, running, home training, every plan ships with workouts, nutrition, supplementation, recovery and FAQs. All free to read.",
+    "programs.heroDesc":
+      "Browse the full Onyx program library. Hypertrophy, powerlifting, fat loss, running, home training, every plan ships with workouts, nutrition, supplementation, recovery and FAQs. All free to read.",
     "programs.searchPlaceholder": "Search programs by goal, lift, or style…",
     "programs.all": "All",
     "programs.featuredEyebrow": "New on Onyx",
@@ -56,7 +57,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.comments": "comments",
     "programs.freeEyebrow": "Try before you buy",
     "programs.freeTitle": "1 Week Free",
-    "programs.freeSubtitle": "Test the Onyx method before you buy. A full week, every exercise, set and rep.",
+    "programs.freeSubtitle":
+      "Test the Onyx method before you buy. A full week, every exercise, set and rep.",
 
     "program.workoutSummary": "Workout Summary",
     "program.nutrition": "Nutrition",
@@ -80,12 +82,14 @@ export const translations: Record<Lang, Dict> = {
     "program.table.rest": "Rest",
     "program.cross.eyebrow": "Run this in the Onyx app",
     "program.cross.title": "Track every set. Auto-progress every week.",
-    "program.cross.desc": "This program is built right into Onyx, videos, logging, deload triggers and PR alerts.",
+    "program.cross.desc":
+      "This program is built right into Onyx, videos, logging, deload triggers and PR alerts.",
 
     "recipes.eyebrow": "Recipes",
     "recipes.heroTitle1": "Eat to train.",
     "recipes.heroTitle2": "No fad diets.",
-    "recipes.heroDesc": "High-protein recipes built for athletes, post-workout meals, smoothies, breakfasts, vegan and low-carb options. Full macros, prep times and pro tips. All free.",
+    "recipes.heroDesc":
+      "High-protein recipes built for athletes, post-workout meals, smoothies, breakfasts, vegan and low-carb options. Full macros, prep times and pro tips. All free.",
     "recipes.searchPlaceholder": "Search recipes by ingredient, meal or diet…",
     "recipes.all": "All",
     "recipes.featuredEyebrow": "New in the kitchen",
@@ -118,7 +122,8 @@ export const translations: Record<Lang, Dict> = {
     "recipe.perServing": "Macros per serving",
     "recipe.cross.eyebrow": "Pair with a program",
     "recipe.cross.title": "Eating right is half the result.",
-    "recipe.cross.desc": "Plug this recipe into an Onyx program for the other half, periodized training that actually moves the needle.",
+    "recipe.cross.desc":
+      "Plug this recipe into an Onyx program for the other half, periodized training that actually moves the needle.",
     "recipe.cross.cta": "Browse programs",
 
     "lang.label": "Language",
@@ -174,7 +179,8 @@ export const translations: Record<Lang, Dict> = {
     "cta.downloadPdf": "Baixar PDF",
     "cta.join": "Entrar",
 
-    "footer.tagline": "Onyx Elevate, a biblioteca gratuita de exercícios para um treino mais inteligente e intenso.",
+    "footer.tagline":
+      "Onyx Elevate, a biblioteca gratuita de exercícios para um treino mais inteligente e intenso.",
     "footer.library": "Biblioteca",
     "footer.allExercises": "Todos os exercícios",
     "footer.onyx": "Onyx",
@@ -190,7 +196,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.eyebrow": "Programas",
     "programs.heroTitle1": "Planos reais para metas reais.",
     "programs.heroTitle2": "Sem enrolação.",
-    "programs.heroDesc": "Explore toda a biblioteca de programas Onyx. Hipertrofia, powerlifting, perda de gordura, corrida, treino em casa, cada plano vem com treinos, nutrição, suplementação, recuperação e FAQs. Tudo de graça.",
+    "programs.heroDesc":
+      "Explore toda a biblioteca de programas Onyx. Hipertrofia, powerlifting, perda de gordura, corrida, treino em casa, cada plano vem com treinos, nutrição, suplementação, recuperação e FAQs. Tudo de graça.",
     "programs.searchPlaceholder": "Pesquise programas por meta, exercício ou estilo…",
     "programs.all": "Todos",
     "programs.featuredEyebrow": "Novidade na Onyx",
@@ -206,7 +213,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.comments": "comentários",
     "programs.freeEyebrow": "Experimente antes de comprar",
     "programs.freeTitle": "1 Semana Grátis",
-    "programs.freeSubtitle": "Teste o método Onyx antes de comprar. Uma semana completa, cada exercício, série e repetição.",
+    "programs.freeSubtitle":
+      "Teste o método Onyx antes de comprar. Uma semana completa, cada exercício, série e repetição.",
 
     "program.workoutSummary": "Resumo do Treino",
     "program.nutrition": "Nutrição",
@@ -230,12 +238,14 @@ export const translations: Record<Lang, Dict> = {
     "program.table.rest": "Descanso",
     "program.cross.eyebrow": "Faça esse programa no app Onyx",
     "program.cross.title": "Registre cada série. Progrida automaticamente toda semana.",
-    "program.cross.desc": "Este programa já vem no Onyx, vídeos, registro, gatilhos de deload e alertas de PR.",
+    "program.cross.desc":
+      "Este programa já vem no Onyx, vídeos, registro, gatilhos de deload e alertas de PR.",
 
     "recipes.eyebrow": "Receitas",
     "recipes.heroTitle1": "Coma para treinar.",
     "recipes.heroTitle2": "Sem dietas da moda.",
-    "recipes.heroDesc": "Receitas com alta proteína feitas para atletas, refeições pós-treino, vitaminas, cafés da manhã, opções veganas e low-carb. Macros completos, tempos de preparo e dicas de coach. Tudo grátis.",
+    "recipes.heroDesc":
+      "Receitas com alta proteína feitas para atletas, refeições pós-treino, vitaminas, cafés da manhã, opções veganas e low-carb. Macros completos, tempos de preparo e dicas de coach. Tudo grátis.",
     "recipes.searchPlaceholder": "Busque receitas por ingrediente, refeição ou dieta…",
     "recipes.all": "Todas",
     "recipes.featuredEyebrow": "Nova na cozinha",
@@ -268,7 +278,8 @@ export const translations: Record<Lang, Dict> = {
     "recipe.perServing": "Macros por porção",
     "recipe.cross.eyebrow": "Combine com um programa",
     "recipe.cross.title": "Comer bem é metade do resultado.",
-    "recipe.cross.desc": "Use essa receita junto a um programa Onyx para a outra metade, treino periodizado que realmente move o ponteiro.",
+    "recipe.cross.desc":
+      "Use essa receita junto a um programa Onyx para a outra metade, treino periodizado que realmente move o ponteiro.",
     "recipe.cross.cta": "Ver programas",
 
     "lang.label": "Idioma",
@@ -324,7 +335,8 @@ export const translations: Record<Lang, Dict> = {
     "cta.downloadPdf": "Descargar PDF",
     "cta.join": "Unirme",
 
-    "footer.tagline": "Onyx Elevate, la biblioteca gratuita de ejercicios para entrenar más inteligente y más duro.",
+    "footer.tagline":
+      "Onyx Elevate, la biblioteca gratuita de ejercicios para entrenar más inteligente y más duro.",
     "footer.library": "Biblioteca",
     "footer.allExercises": "Todos los ejercicios",
     "footer.onyx": "Onyx",
@@ -340,7 +352,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.eyebrow": "Programas",
     "programs.heroTitle1": "Planes reales para metas reales.",
     "programs.heroTitle2": "Sin relleno.",
-    "programs.heroDesc": "Explora la biblioteca completa de programas Onyx. Hipertrofia, powerlifting, pérdida de grasa, running, entrenamiento en casa, cada plan incluye entrenamientos, nutrición, suplementación, recuperación y FAQs. Todo gratis.",
+    "programs.heroDesc":
+      "Explora la biblioteca completa de programas Onyx. Hipertrofia, powerlifting, pérdida de grasa, running, entrenamiento en casa, cada plan incluye entrenamientos, nutrición, suplementación, recuperación y FAQs. Todo gratis.",
     "programs.searchPlaceholder": "Busca programas por meta, ejercicio o estilo…",
     "programs.all": "Todos",
     "programs.featuredEyebrow": "Nuevo en Onyx",
@@ -356,7 +369,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.comments": "comentarios",
     "programs.freeEyebrow": "Prueba antes de comprar",
     "programs.freeTitle": "1 Semana Gratis",
-    "programs.freeSubtitle": "Prueba el método Onyx antes de comprar. Una semana completa, cada ejercicio, serie y repetición.",
+    "programs.freeSubtitle":
+      "Prueba el método Onyx antes de comprar. Una semana completa, cada ejercicio, serie y repetición.",
 
     "program.workoutSummary": "Resumen del Entrenamiento",
     "program.nutrition": "Nutrición",
@@ -380,12 +394,14 @@ export const translations: Record<Lang, Dict> = {
     "program.table.rest": "Descanso",
     "program.cross.eyebrow": "Sigue este programa en la app de Onyx",
     "program.cross.title": "Registra cada serie. Progresa automáticamente cada semana.",
-    "program.cross.desc": "Este programa está integrado en Onyx, vídeos, registro, deloads y alertas de PR.",
+    "program.cross.desc":
+      "Este programa está integrado en Onyx, vídeos, registro, deloads y alertas de PR.",
 
     "recipes.eyebrow": "Recetas",
     "recipes.heroTitle1": "Come para entrenar.",
     "recipes.heroTitle2": "Sin dietas de moda.",
-    "recipes.heroDesc": "Recetas altas en proteína para atletas, comidas post-entreno, batidos, desayunos, opciones veganas y bajas en carbos. Macros completos, tiempos de preparación y consejos de coach. Todo gratis.",
+    "recipes.heroDesc":
+      "Recetas altas en proteína para atletas, comidas post-entreno, batidos, desayunos, opciones veganas y bajas en carbos. Macros completos, tiempos de preparación y consejos de coach. Todo gratis.",
     "recipes.searchPlaceholder": "Busca recetas por ingrediente, comida o dieta…",
     "recipes.all": "Todas",
     "recipes.featuredEyebrow": "Nuevo en la cocina",
@@ -418,7 +434,8 @@ export const translations: Record<Lang, Dict> = {
     "recipe.perServing": "Macros por porción",
     "recipe.cross.eyebrow": "Combínala con un programa",
     "recipe.cross.title": "Comer bien es la mitad del resultado.",
-    "recipe.cross.desc": "Suma esta receta a un programa Onyx para la otra mitad, entrenamiento periodizado que realmente mueve la aguja.",
+    "recipe.cross.desc":
+      "Suma esta receta a un programa Onyx para la otra mitad, entrenamiento periodizado que realmente mueve la aguja.",
     "recipe.cross.cta": "Ver programas",
 
     "lang.label": "Idioma",
@@ -474,7 +491,8 @@ export const translations: Record<Lang, Dict> = {
     "cta.downloadPdf": "Last ned PDF",
     "cta.join": "Bli med",
 
-    "footer.tagline": "Onyx Elevate, det gratis øvelsesbiblioteket som driver smartere og hardere trening.",
+    "footer.tagline":
+      "Onyx Elevate, det gratis øvelsesbiblioteket som driver smartere og hardere trening.",
     "footer.library": "Bibliotek",
     "footer.allExercises": "Alle øvelser",
     "footer.onyx": "Onyx",
@@ -490,7 +508,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.eyebrow": "Programmer",
     "programs.heroTitle1": "Ekte planer for ekte mål.",
     "programs.heroTitle2": "Ingen tomprat.",
-    "programs.heroDesc": "Utforsk hele Onyx-programbiblioteket. Hypertrofi, styrkeløft, fettforbrenning, løping, hjemmetrening, hvert program kommer med økter, kosthold, kosttilskudd, restitusjon og FAQ. Alt gratis.",
+    "programs.heroDesc":
+      "Utforsk hele Onyx-programbiblioteket. Hypertrofi, styrkeløft, fettforbrenning, løping, hjemmetrening, hvert program kommer med økter, kosthold, kosttilskudd, restitusjon og FAQ. Alt gratis.",
     "programs.searchPlaceholder": "Søk etter mål, øvelse eller stil…",
     "programs.all": "Alle",
     "programs.featuredEyebrow": "Nytt hos Onyx",
@@ -506,7 +525,8 @@ export const translations: Record<Lang, Dict> = {
     "programs.comments": "kommentarer",
     "programs.freeEyebrow": "Prøv før du kjøper",
     "programs.freeTitle": "1 uke gratis",
-    "programs.freeSubtitle": "Test Onyx-metoden før du kjøper. En hel uke, hver øvelse, sett og rep.",
+    "programs.freeSubtitle":
+      "Test Onyx-metoden før du kjøper. En hel uke, hver øvelse, sett og rep.",
 
     "program.workoutSummary": "Treningssammendrag",
     "program.nutrition": "Kosthold",
@@ -530,12 +550,14 @@ export const translations: Record<Lang, Dict> = {
     "program.table.rest": "Hvile",
     "program.cross.eyebrow": "Kjør dette i Onyx-appen",
     "program.cross.title": "Logg hvert sett. Progresjon hver uke, automatisk.",
-    "program.cross.desc": "Programmet ligger inne i Onyx, videoer, logging, deload-triggere og PR-varsler.",
+    "program.cross.desc":
+      "Programmet ligger inne i Onyx, videoer, logging, deload-triggere og PR-varsler.",
 
     "recipes.eyebrow": "Oppskrifter",
     "recipes.heroTitle1": "Spis for å trene.",
     "recipes.heroTitle2": "Ingen motedietter.",
-    "recipes.heroDesc": "Proteinrike oppskrifter laget for utøvere, måltider etter trening, smoothies, frokost, veganske og lavkarbo-alternativer. Fullstendige makroer, tidsbruk og coach-tips. Alt gratis.",
+    "recipes.heroDesc":
+      "Proteinrike oppskrifter laget for utøvere, måltider etter trening, smoothies, frokost, veganske og lavkarbo-alternativer. Fullstendige makroer, tidsbruk og coach-tips. Alt gratis.",
     "recipes.searchPlaceholder": "Søk etter ingrediens, måltid eller diett…",
     "recipes.all": "Alle",
     "recipes.featuredEyebrow": "Nytt på kjøkkenet",
@@ -568,7 +590,8 @@ export const translations: Record<Lang, Dict> = {
     "recipe.perServing": "Makroer per porsjon",
     "recipe.cross.eyebrow": "Kombiner med et program",
     "recipe.cross.title": "Riktig kosthold er halve resultatet.",
-    "recipe.cross.desc": "Bruk denne oppskriften sammen med et Onyx-program for den andre halvdelen, periodisert trening som faktisk gir resultater.",
+    "recipe.cross.desc":
+      "Bruk denne oppskriften sammen med et Onyx-program for den andre halvdelen, periodisert trening som faktisk gir resultater.",
     "recipe.cross.cta": "Se programmer",
 
     "lang.label": "Språk",

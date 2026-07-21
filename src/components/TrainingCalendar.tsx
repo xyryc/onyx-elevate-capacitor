@@ -4,7 +4,15 @@ import { ChevronLeft, ChevronRight, Flame } from "lucide-react";
 import { listMyTrainingLog } from "@/lib/engagement";
 import { useLang, useT } from "@/i18n/LanguageProvider";
 
-const DOW_KEYS = ["calendar.mon", "calendar.tue", "calendar.wed", "calendar.thu", "calendar.fri", "calendar.sat", "calendar.sun"];
+const DOW_KEYS = [
+  "calendar.mon",
+  "calendar.tue",
+  "calendar.wed",
+  "calendar.thu",
+  "calendar.fri",
+  "calendar.sat",
+  "calendar.sun",
+];
 const DATE_LOCALE = { en: "en-US", "pt-BR": "pt-BR", es: "es-ES", no: "nb-NO" } as const;
 
 function ymd(d: Date) {
@@ -66,7 +74,9 @@ export function TrainingCalendar() {
     <div className="rounded-xl border border-border bg-onyx-100 p-5">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">{t("calendar.title")}</div>
+          <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">
+            {t("calendar.title")}
+          </div>
           <div className="mt-1 font-display text-lg font-bold">
             {monthName.charAt(0).toUpperCase() + monthName.slice(1)} {view.y}
           </div>
@@ -80,7 +90,10 @@ export function TrainingCalendar() {
             <ChevronLeft className="h-4 w-4" />
           </button>
           <button
-            onClick={() => { setView({ y: today.getFullYear(), m: today.getMonth() }); setSelectedKey(todayKey); }}
+            onClick={() => {
+              setView({ y: today.getFullYear(), m: today.getMonth() });
+              setSelectedKey(todayKey);
+            }}
             className="px-2 h-8 rounded-md border border-border text-xs font-semibold hover:border-electric hover:text-electric"
           >
             {t("calendar.today")}
@@ -96,7 +109,11 @@ export function TrainingCalendar() {
       </div>
 
       <div className="mt-4 grid grid-cols-7 gap-1 text-[10px] uppercase tracking-wider text-muted-foreground text-center">
-        {DOW_KEYS.map((d) => <div key={d} className="py-1">{t(d)}</div>)}
+        {DOW_KEYS.map((d) => (
+          <div key={d} className="py-1">
+            {t(d)}
+          </div>
+        ))}
       </div>
 
       <div className="mt-1 grid grid-cols-7 gap-1">
@@ -115,10 +132,10 @@ export function TrainingCalendar() {
                 isSelected
                   ? "border-electric bg-electric/25 text-electric font-bold ring-2 ring-electric/40"
                   : trained
-                  ? "border-electric bg-electric/15 text-electric font-bold hover:bg-electric/20"
-                  : isToday
-                  ? "border-electric/50 text-foreground hover:border-electric"
-                  : "border-border/60 text-muted-foreground hover:border-border hover:bg-onyx-50"
+                    ? "border-electric bg-electric/15 text-electric font-bold hover:bg-electric/20"
+                    : isToday
+                      ? "border-electric/50 text-foreground hover:border-electric"
+                      : "border-border/60 text-muted-foreground hover:border-border hover:bg-onyx-50"
               }`}
             >
               <span>{c.date.getDate()}</span>
@@ -130,7 +147,9 @@ export function TrainingCalendar() {
 
       <div className="mt-4 flex items-center justify-between text-xs">
         <div className="text-muted-foreground">
-          {t(monthCount === 1 ? "calendar.monthCountSingular" : "calendar.monthCountPlural").replace("{{count}}", String(monthCount))}
+          {t(
+            monthCount === 1 ? "calendar.monthCountSingular" : "calendar.monthCountPlural",
+          ).replace("{{count}}", String(monthCount))}
         </div>
         <div className="text-muted-foreground">{t("calendar.tapDay")}</div>
       </div>
@@ -138,14 +157,12 @@ export function TrainingCalendar() {
       {/* Selected day details */}
       <div className="mt-5 border-t border-border/60 pt-4">
         {!selectedKey ? (
-          <div className="text-xs text-muted-foreground">
-            {t("calendar.pickDay")}
-          </div>
+          <div className="text-xs text-muted-foreground">{t("calendar.pickDay")}</div>
         ) : (
           <>
             <div className="flex items-center justify-between gap-3">
               <div className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">
-                 {new Date(selectedKey).toLocaleDateString(locale, {
+                {new Date(selectedKey).toLocaleDateString(locale, {
                   weekday: "long",
                   day: "numeric",
                   month: "long",
@@ -172,9 +189,7 @@ export function TrainingCalendar() {
                 ))}
               </ul>
             ) : (
-              <div className="mt-2 text-xs text-muted-foreground">
-                {t("calendar.restDay")}
-              </div>
+              <div className="mt-2 text-xs text-muted-foreground">{t("calendar.restDay")}</div>
             )}
           </>
         )}
@@ -182,4 +197,3 @@ export function TrainingCalendar() {
     </div>
   );
 }
-

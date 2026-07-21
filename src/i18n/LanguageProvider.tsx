@@ -1,6 +1,20 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { I18nextProvider, useTranslation } from "react-i18next";
-import i18n, { APP_TO_I18N, detectPreferredI18nLanguage, I18N_STORAGE_KEY, I18N_TO_APP, type Lang } from "@/i18n";
+import i18n, {
+  APP_TO_I18N,
+  detectPreferredI18nLanguage,
+  I18N_STORAGE_KEY,
+  I18N_TO_APP,
+  type Lang,
+} from "@/i18n";
 import { purgeStaleTranslationCache } from "./translationCache";
 
 if (typeof window !== "undefined") purgeStaleTranslationCache();
@@ -15,9 +29,7 @@ export const LanguageContext = createContext<Ctx | null>(null);
 
 function InnerProvider({ children }: { children: ReactNode }) {
   const { t: i18nT, i18n: i18nInstance } = useTranslation();
-  const [lang, setLangState] = useState<Lang>(
-    () => I18N_TO_APP[i18nInstance.language] ?? "en",
-  );
+  const [lang, setLangState] = useState<Lang>(() => I18N_TO_APP[i18nInstance.language] ?? "en");
 
   useEffect(() => {
     const onChange = (lng: string) => {
@@ -41,12 +53,15 @@ function InnerProvider({ children }: { children: ReactNode }) {
     }
   }, [i18nInstance]);
 
-  const setLang = useCallback((l: Lang) => {
-    try {
-      if (typeof window !== "undefined") window.localStorage.setItem(I18N_STORAGE_KEY, l);
-    } catch {}
-    void i18nInstance.changeLanguage(APP_TO_I18N[l] ?? "en");
-  }, [i18nInstance]);
+  const setLang = useCallback(
+    (l: Lang) => {
+      try {
+        if (typeof window !== "undefined") window.localStorage.setItem(I18N_STORAGE_KEY, l);
+      } catch {}
+      void i18nInstance.changeLanguage(APP_TO_I18N[l] ?? "en");
+    },
+    [i18nInstance],
+  );
 
   const t = useCallback(
     (key: string, options?: Record<string, unknown>): string => {

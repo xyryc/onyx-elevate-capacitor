@@ -55,9 +55,15 @@ if (!i18n.isInitialized) {
   void i18n.use(initReactI18next).init({
     resources: {
       en: { translation: en },
-      pt: { translation: { ...(generatedPt as Record<string, string>), ...seedBundle("pt-BR"), ...pt } },
-      es: { translation: { ...(generatedEs as Record<string, string>), ...seedBundle("es"), ...es } },
-      no: { translation: { ...(generatedNo as Record<string, string>), ...seedBundle("no"), ...no } },
+      pt: {
+        translation: { ...(generatedPt as Record<string, string>), ...seedBundle("pt-BR"), ...pt },
+      },
+      es: {
+        translation: { ...(generatedEs as Record<string, string>), ...seedBundle("es"), ...es },
+      },
+      no: {
+        translation: { ...(generatedNo as Record<string, string>), ...seedBundle("no"), ...no },
+      },
     },
     // Keep the first client render identical to SSR to avoid hydration errors.
     // LanguageProvider switches to the stored/browser language immediately after mount.

@@ -5,7 +5,12 @@ import { ArrowLeft, Check, CheckCircle2, Flame, Info, Lock, Zap } from "lucide-r
 import { toast } from "sonner";
 import { getProgram, type Program, type WorkoutDay } from "@/data/programs";
 import { findExerciseSlugByName } from "@/data/exercises";
-import { getLoggedTrainingToday, getProgress, markSingleTrainingDayComplete, setDayCompletion } from "@/lib/engagement";
+import {
+  getLoggedTrainingToday,
+  getProgress,
+  markSingleTrainingDayComplete,
+  setDayCompletion,
+} from "@/lib/engagement";
 import { logActivity } from "@/lib/engagement-extra";
 import { getMyPurchases } from "@/lib/purchases.functions";
 import { useAccess } from "@/hooks/useAccess";
@@ -14,10 +19,7 @@ import { LiveWorkoutPlayer } from "@/components/LiveWorkoutPlayer";
 import { useT } from "@/i18n/LanguageProvider";
 import type { QuickWorkout } from "@/data/quickWorkouts";
 
-function programDayToQuickWorkout(
-  w: WorkoutDay,
-  liveSlug: string,
-): QuickWorkout {
+function programDayToQuickWorkout(w: WorkoutDay, liveSlug: string): QuickWorkout {
   const clean = w.exercises.filter((ex) => !ex.name.startsWith("- "));
   const minutes = Math.max(15, Math.round(clean.length * 3.5));
   return {
@@ -56,14 +58,21 @@ export const Route = createFileRoute("/_authenticated/training/$slug")({
   notFoundComponent: () => (
     <div className="container-onyx py-24 text-center">
       <h1 className="font-display text-3xl font-bold">Program not found</h1>
-      <Link to="/my-library" className="mt-6 inline-block text-electric font-semibold">← Back to dashboard</Link>
+      <Link to="/my-library" className="mt-6 inline-block text-electric font-semibold">
+        ← Back to dashboard
+      </Link>
     </div>
   ),
   errorComponent: ({ error, reset }) => (
     <div className="container-onyx py-24 text-center">
       <h1 className="font-display text-2xl font-bold">Couldn't load training.</h1>
       <p className="text-muted-foreground mt-2 text-sm">{error.message}</p>
-      <button onClick={reset} className="mt-6 rounded-md bg-electric px-4 py-2 text-sm font-semibold text-onyx-50">Try again</button>
+      <button
+        onClick={reset}
+        className="mt-6 rounded-md bg-electric px-4 py-2 text-sm font-semibold text-onyx-50"
+      >
+        Try again
+      </button>
     </div>
   ),
   component: TrainingView,
@@ -77,7 +86,12 @@ const RECOVERY_TEMPLATES: WorkoutDay[] = [
     focus: "Easy 30-40 min walk, conversational pace.",
     exercises: [
       { name: "Treadmill Walking", sets: "1", reps: "30-40 min", rest: "-" },
-      { name: "Treadmill Incline Walking", sets: "Optional", reps: "2 × 5 min @ 6%", rest: "2 min" },
+      {
+        name: "Treadmill Incline Walking",
+        sets: "Optional",
+        reps: "2 × 5 min @ 6%",
+        rest: "2 min",
+      },
     ],
   },
   {
@@ -109,8 +123,13 @@ const RECOVERY_TEMPLATES: WorkoutDay[] = [
 ];
 
 const TRAINING_POSITIONS: Record<number, number[]> = {
-  1: [0], 2: [0, 3], 3: [0, 2, 4], 4: [0, 1, 3, 4],
-  5: [0, 1, 2, 4, 5], 6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6],
+  1: [0],
+  2: [0, 3],
+  3: [0, 2, 4],
+  4: [0, 1, 3, 4],
+  5: [0, 1, 2, 4, 5],
+  6: [0, 1, 2, 3, 4, 5],
+  7: [0, 1, 2, 3, 4, 5, 6],
 };
 
 type Slot = { workout: WorkoutDay; optional: boolean };
@@ -119,7 +138,9 @@ function expandWeek(days: WorkoutDay[], weekIdx: number): Slot[] {
   const n = Math.min(days.length, 7);
   const positions = TRAINING_POSITIONS[n] ?? TRAINING_POSITIONS[3];
   const slots: Slot[] = new Array(7).fill(null);
-  positions.forEach((pos, i) => { if (days[i]) slots[pos] = { workout: days[i], optional: false }; });
+  positions.forEach((pos, i) => {
+    if (days[i]) slots[pos] = { workout: days[i], optional: false };
+  });
   let r = weekIdx - 1;
   for (let i = 0; i < 7; i++) {
     if (!slots[i]) {
@@ -143,7 +164,15 @@ function TrainingView() {
   return <TrainingBody program={p} variant="route" />;
 }
 
-export function TrainingBody({ program: p, variant = "route", exactDays = false }: { program: Program; variant?: "route" | "dialog"; exactDays?: boolean }) {
+export function TrainingBody({
+  program: p,
+  variant = "route",
+  exactDays = false,
+}: {
+  program: Program;
+  variant?: "route" | "dialog";
+  exactDays?: boolean;
+}) {
   const router = useRouter();
   const qc = useQueryClient();
   const totalWeeks = inferWeekCount(p);
@@ -153,10 +182,13 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
     queryFn: () => getMyPurchases(),
   });
   const access = useAccess();
-  const hasBundle = access.hasBundle || access.hasSubscription || purchases.some((x) => x.product_kind === "bundle");
-  const hasProgram = access.hasProgram(p.slug) || purchases.some(
-    (x) => x.product_kind === "program" && x.product_slug === p.slug,
-  );
+  const hasBundle =
+    access.hasBundle ||
+    access.hasSubscription ||
+    purchases.some((x) => x.product_kind === "bundle");
+  const hasProgram =
+    access.hasProgram(p.slug) ||
+    purchases.some((x) => x.product_kind === "program" && x.product_slug === p.slug);
   const hasAccess = p.isFree === true || hasBundle || hasProgram;
 
   const availableWeeks = hasAccess ? totalWeeks : 1;
@@ -173,9 +205,10 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
   });
   const currentDays = weekMap[activeWeek] ?? weekMap[1] ?? [];
   const slots = useMemo(
-    () => exactDays
-      ? currentDays.map((w) => ({ workout: w, optional: false }))
-      : expandWeek(currentDays, activeWeek),
+    () =>
+      exactDays
+        ? currentDays.map((w) => ({ workout: w, optional: false }))
+        : expandWeek(currentDays, activeWeek),
     [currentDays, activeWeek, exactDays],
   );
   const hasDistinctWeeks = Object.keys(weekMap).length > 1;
@@ -194,7 +227,9 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
   }, [progress]);
 
   const totalDays = exactDays
-    ? Object.values(weekMap).slice(0, availableWeeks).reduce((s, arr) => s + arr.length, 0) || slots.length
+    ? Object.values(weekMap)
+        .slice(0, availableWeeks)
+        .reduce((s, arr) => s + arr.length, 0) || slots.length
     : availableWeeks * 7;
   const pct = totalDays ? Math.round((completed.size / totalDays) * 100) : 0;
 
@@ -247,10 +282,16 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
               <ArrowLeft className="h-4 w-4" /> Go back
             </button>
             <div className="text-center min-w-0">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">Under trening</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">
+                Under trening
+              </p>
               <p className="font-display font-bold text-sm md:text-base truncate">{p.title}</p>
             </div>
-            <Link to="/programs/$slug" params={{ slug: p.slug }} className="text-xs text-muted-foreground hover:text-electric font-semibold">
+            <Link
+              to="/programs/$slug"
+              params={{ slug: p.slug }}
+              className="text-xs text-muted-foreground hover:text-electric font-semibold"
+            >
               Full info
             </Link>
           </div>
@@ -272,7 +313,9 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
       {isDialog && (
         <div className="px-4 sm:px-6 pt-[max(env(safe-area-inset-top),1rem)] pb-3 border-b border-border bg-background/95">
           <div className="text-center min-w-0 pr-10">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">Under trening</p>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-electric font-bold">
+              Under trening
+            </p>
             <p className="font-display font-bold text-sm md:text-base truncate">{p.title}</p>
           </div>
           <div className="mt-3 flex items-end justify-between text-xs">
@@ -287,8 +330,9 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
         </div>
       )}
 
-
-      <div className={`${isDialog ? "px-4 sm:px-6 py-6" : "container-onyx py-6 md:py-8"} space-y-6`}>
+      <div
+        className={`${isDialog ? "px-4 sm:px-6 py-6" : "container-onyx py-6 md:py-8"} space-y-6`}
+      >
         {/* Locked banner, paid program, user hasn't purchased */}
         {!hasAccess && !purchasesLoading && (
           <div className="rounded-xl border border-electric/50 bg-electric/[0.08] p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4">
@@ -299,7 +343,8 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
                   You're previewing Week 1 for free
                 </p>
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  Unlock all {totalWeeks} weeks, progression, and full logging by purchasing this program or the All Access bundle.
+                  Unlock all {totalWeeks} weeks, progression, and full logging by purchasing this
+                  program or the All Access bundle.
                 </p>
               </div>
             </div>
@@ -317,16 +362,22 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
         <div className="rounded-xl border border-electric/30 bg-electric/[0.06] px-4 py-3 flex items-start gap-3">
           <Info className="h-4 w-4 text-electric shrink-0 mt-0.5" />
           <p className="text-xs text-foreground/85 leading-relaxed">
-            <span className="font-bold text-electric">Trykk på haken</span> på økten du har fullført.
-            Du kan åpne alle dagene, men streaken teller bare én registrering per dag.
-            <span className="block mt-1 text-muted-foreground">Velg riktig økt · markering kan ikke angres, så trykk først når du faktisk har trent.</span>
+            <span className="font-bold text-electric">Trykk på haken</span> på økten du har
+            fullført. Du kan åpne alle dagene, men streaken teller bare én registrering per dag.
+            <span className="block mt-1 text-muted-foreground">
+              Velg riktig økt · markering kan ikke angres, så trykk først når du faktisk har trent.
+            </span>
           </p>
         </div>
 
         {/* Progressive-overload note when data is a single template repeated per week */}
         {hasAccess && totalWeeks > 1 && !hasDistinctWeeks && (
           <div className="rounded-xl border border-border bg-onyx-100/40 px-4 py-3 text-xs text-muted-foreground leading-relaxed">
-            This {totalWeeks}-week block repeats the same weekly template, <span className="text-foreground font-semibold">add a little weight or a rep each week</span> to drive progressive overload.
+            This {totalWeeks}-week block repeats the same weekly template,{" "}
+            <span className="text-foreground font-semibold">
+              add a little weight or a rep each week
+            </span>{" "}
+            to drive progressive overload.
           </div>
         )}
 
@@ -336,7 +387,9 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
             {Array.from({ length: totalWeeks }, (_, i) => i + 1).map((wk) => {
               const active = wk === activeWeek;
               const locked = wk > availableWeeks;
-              const weekDone = Array.from({ length: 7 }).every((_, d) => completed.has(`w${wk}-d${d + 1}`));
+              const weekDone = Array.from({ length: 7 }).every((_, d) =>
+                completed.has(`w${wk}-d${d + 1}`),
+              );
               return (
                 <button
                   key={wk}
@@ -362,7 +415,9 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
         {/* Locked weeks preview (paid program, locked users) */}
         {!hasAccess && totalWeeks > 1 && (
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-md border border-electric bg-electric px-4 py-2 text-sm font-semibold text-onyx-50">Week 1</span>
+            <span className="rounded-md border border-electric bg-electric px-4 py-2 text-sm font-semibold text-onyx-50">
+              Week 1
+            </span>
             {Array.from({ length: totalWeeks - 1 }, (_, i) => i + 2).map((wk) => (
               <span
                 key={wk}
@@ -380,10 +435,15 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
             let nextUnlockKey: string | null = null;
             outer: for (let wk = 1; wk <= availableWeeks; wk++) {
               const wkDays = weekMap[wk] ?? weekMap[1] ?? [];
-              const wkSlots = exactDays ? wkDays.map((w) => ({ workout: w, optional: false })) : expandWeek(wkDays, wk);
+              const wkSlots = exactDays
+                ? wkDays.map((w) => ({ workout: w, optional: false }))
+                : expandWeek(wkDays, wk);
               for (let d = 0; d < wkSlots.length; d++) {
                 const k = `w${wk}-d${d + 1}`;
-                if (!completed.has(k)) { nextUnlockKey = k; break outer; }
+                if (!completed.has(k)) {
+                  nextUnlockKey = k;
+                  break outer;
+                }
               }
             }
             return slots.map((slot, i) => {
@@ -391,7 +451,7 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
               const key = `w${activeWeek}-d${dayNum}`;
               const done = completed.has(key);
               const isNext = key === nextUnlockKey;
-              const locked = exactDays ? false : (!done && !isNext);
+              const locked = exactDays ? false : !done && !isNext;
               return (
                 <DayCard
                   key={key}
@@ -415,8 +475,26 @@ export function TrainingBody({ program: p, variant = "route", exactDays = false 
 }
 
 function DayCard({
-  slot, dayNum, dayLabel, done, loggedToday, locked, programSlug, weekNum, onMark,
-}: { slot: Slot; dayNum: number; dayLabel: string; done: boolean; loggedToday: boolean; locked: boolean; programSlug: string; weekNum: number; onMark: () => void }) {
+  slot,
+  dayNum,
+  dayLabel,
+  done,
+  loggedToday,
+  locked,
+  programSlug,
+  weekNum,
+  onMark,
+}: {
+  slot: Slot;
+  dayNum: number;
+  dayLabel: string;
+  done: boolean;
+  loggedToday: boolean;
+  locked: boolean;
+  programSlug: string;
+  weekNum: number;
+  onMark: () => void;
+}) {
   const w = slot.workout;
   const t = useT();
   const [liveOpen, setLiveOpen] = useState(false);
@@ -427,13 +505,21 @@ function DayCard({
   return (
     <div
       className={`surface-card rounded-xl overflow-hidden transition-all ${
-        done ? "border-2 border-electric bg-electric/[0.04]" : locked ? "border border-border/60 opacity-60" : slot.optional ? "border border-dashed border-border/70" : "border border-border"
+        done
+          ? "border-2 border-electric bg-electric/[0.04]"
+          : locked
+            ? "border border-border/60 opacity-60"
+            : slot.optional
+              ? "border border-dashed border-border/70"
+              : "border border-border"
       }`}
     >
       <div className="px-5 py-4 border-b border-border flex items-start justify-between gap-3 bg-onyx-100/40">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <p className={`text-[11px] uppercase tracking-[0.25em] font-bold ${slot.optional ? "text-muted-foreground" : "text-electric"}`}>
+            <p
+              className={`text-[11px] uppercase tracking-[0.25em] font-bold ${slot.optional ? "text-muted-foreground" : "text-electric"}`}
+            >
               {dayLabel} · Day {dayNum}
             </p>
             {slot.optional && (
@@ -452,7 +538,9 @@ function DayCard({
               </span>
             )}
           </div>
-          <h3 className="font-display text-lg md:text-xl font-bold mt-1 leading-tight">{w.title}</h3>
+          <h3 className="font-display text-lg md:text-xl font-bold mt-1 leading-tight">
+            {w.title}
+          </h3>
           {w.focus && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{w.focus}</p>}
         </div>
 
@@ -467,10 +555,26 @@ function DayCard({
                 ? "border-border bg-onyx-100/40 text-muted-foreground/50 cursor-not-allowed"
                 : "border-dashed border-electric/50 bg-background text-electric hover:bg-electric hover:text-onyx-50 hover:border-electric hover:shadow-[0_0_16px_rgba(0,180,255,0.35)]"
           }`}
-          title={done ? "Allerede markert" : loggedToday ? "Kom tilbake i morgen for å logge en ny dag" : "Marker denne økten som fullført"}
-          aria-label={done ? "Allerede markert" : loggedToday ? "Kom tilbake i morgen for å logge en ny dag" : "Marker økt fullført"}
+          title={
+            done
+              ? "Allerede markert"
+              : loggedToday
+                ? "Kom tilbake i morgen for å logge en ny dag"
+                : "Marker denne økten som fullført"
+          }
+          aria-label={
+            done
+              ? "Allerede markert"
+              : loggedToday
+                ? "Kom tilbake i morgen for å logge en ny dag"
+                : "Marker økt fullført"
+          }
         >
-          {locked && !done ? <Lock className="h-3.5 w-3.5" /> : <Check className="h-4 w-4" strokeWidth={3} />}
+          {locked && !done ? (
+            <Lock className="h-3.5 w-3.5" />
+          ) : (
+            <Check className="h-4 w-4" strokeWidth={3} />
+          )}
         </button>
       </div>
 
@@ -483,22 +587,42 @@ function DayCard({
             className="inline-flex items-center justify-center gap-1.5 rounded-full bg-electric px-4 py-2 text-xs font-bold text-onyx-50 hover:bg-electric-glow shadow-[0_0_16px_rgba(0,180,255,0.35)] whitespace-nowrap"
             aria-label={t("live.start") || "Start live workout"}
           >
-            <Zap className="h-3.5 w-3.5" fill="currentColor" /> {t("live.start") || "Start live økt"}
+            <Zap className="h-3.5 w-3.5" fill="currentColor" />{" "}
+            {t("live.start") || "Start live økt"}
           </button>
         </div>
       )}
 
       <LiveWorkoutPlayer workout={liveWorkout} open={liveOpen} onOpenChange={setLiveOpen} />
 
-
       <div>
         <table className="w-full text-sm table-fixed">
           <thead className="bg-onyx-100 text-[9px] sm:text-[11px] uppercase tracking-normal sm:tracking-wider text-muted-foreground">
             <tr>
-              <th data-no-translate className="text-left px-2 py-2 sm:px-5 sm:py-2.5 font-semibold w-[43%] sm:w-auto whitespace-nowrap">Øvelse</th>
-              <th data-no-translate className="text-left px-1 py-2 sm:px-3 sm:py-2.5 font-semibold w-[13%] sm:w-14 whitespace-nowrap">Sett</th>
-              <th data-no-translate className="text-left px-1 py-2 sm:px-3 sm:py-2.5 font-semibold w-[22%] sm:w-28 whitespace-nowrap">Reps</th>
-              <th data-no-translate className="text-left px-1 py-2 sm:px-5 sm:py-2.5 font-semibold w-[22%] sm:w-24 whitespace-nowrap">Hvile</th>
+              <th
+                data-no-translate
+                className="text-left px-2 py-2 sm:px-5 sm:py-2.5 font-semibold w-[43%] sm:w-auto whitespace-nowrap"
+              >
+                Øvelse
+              </th>
+              <th
+                data-no-translate
+                className="text-left px-1 py-2 sm:px-3 sm:py-2.5 font-semibold w-[13%] sm:w-14 whitespace-nowrap"
+              >
+                Sett
+              </th>
+              <th
+                data-no-translate
+                className="text-left px-1 py-2 sm:px-3 sm:py-2.5 font-semibold w-[22%] sm:w-28 whitespace-nowrap"
+              >
+                Reps
+              </th>
+              <th
+                data-no-translate
+                className="text-left px-1 py-2 sm:px-5 sm:py-2.5 font-semibold w-[22%] sm:w-24 whitespace-nowrap"
+              >
+                Hvile
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -514,17 +638,31 @@ function DayCard({
                         className="group flex items-start gap-1.5 sm:gap-2 hover:text-electric min-w-0"
                       >
                         <span className="grid h-4 w-4 sm:h-5 sm:w-5 shrink-0 place-items-center rounded-full bg-electric/15 border border-electric/30 mt-0.5">
-                          <svg className="h-2 w-2 sm:h-2.5 sm:w-2.5 text-electric translate-x-[1px]" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                          <svg
+                            className="h-2 w-2 sm:h-2.5 sm:w-2.5 text-electric translate-x-[1px]"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
                         </span>
-                        <span className="min-w-0 break-words underline-offset-4 group-hover:underline">{ex.name}</span>
+                        <span className="min-w-0 break-words underline-offset-4 group-hover:underline">
+                          {ex.name}
+                        </span>
                       </Link>
                     ) : (
                       <span className="block break-words">{ex.name}</span>
                     )}
                   </td>
-                  <td className="px-1 py-2 sm:px-3 sm:py-2.5 text-muted-foreground break-words">{ex.sets}</td>
-                  <td className="px-1 py-2 sm:px-3 sm:py-2.5 text-muted-foreground break-words">{ex.reps}</td>
-                  <td className="px-1 py-2 sm:px-5 sm:py-2.5 text-muted-foreground break-words">{ex.rest}</td>
+                  <td className="px-1 py-2 sm:px-3 sm:py-2.5 text-muted-foreground break-words">
+                    {ex.sets}
+                  </td>
+                  <td className="px-1 py-2 sm:px-3 sm:py-2.5 text-muted-foreground break-words">
+                    {ex.reps}
+                  </td>
+                  <td className="px-1 py-2 sm:px-5 sm:py-2.5 text-muted-foreground break-words">
+                    {ex.rest}
+                  </td>
                 </tr>
               );
             })}

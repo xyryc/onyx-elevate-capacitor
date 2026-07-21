@@ -17,7 +17,11 @@ function makeCode(challengeSlug: string): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // unambiguous
   let suffix = "";
   for (let i = 0; i < 8; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
-  const tag = challengeSlug.replace(/[^a-z0-9]/gi, "").toUpperCase().slice(0, 6) || "ONYX";
+  const tag =
+    challengeSlug
+      .replace(/[^a-z0-9]/gi, "")
+      .toUpperCase()
+      .slice(0, 6) || "ONYX";
   return `ONYX-${tag}-${suffix}`;
 }
 
@@ -77,7 +81,9 @@ export const claimChallengeReward = createServerFn({ method: "POST" })
       .lt("created_at", nextMonthStart)
       .limit(1);
     if ((monthRewards.data?.length ?? 0) > 0) {
-      throw new Error("You've already claimed a reward code this month. Come back next month for your next one.");
+      throw new Error(
+        "You've already claimed a reward code this month. Come back next month for your next one.",
+      );
     }
 
     // Every code is a shareable 20% off, usable once, by the owner OR a friend
@@ -110,7 +116,9 @@ export const listMyRewards = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("challenge_rewards")
-      .select("challenge_slug, code, discount_percent, redeemed_at, redeemed_for_slug, created_at, code_kind")
+      .select(
+        "challenge_slug, code, discount_percent, redeemed_at, redeemed_for_slug, created_at, code_kind",
+      )
       .order("created_at", { ascending: false });
     if (error) throw error;
     return data ?? [];

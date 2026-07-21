@@ -98,7 +98,8 @@ function QuickWorkoutDialogBody({ workout }: { workout: QuickWorkout }) {
 
         <div className="mt-4 flex flex-wrap gap-2 text-xs">
           <span className="inline-flex items-center gap-1 rounded-full border border-border bg-onyx-100 px-2.5 py-1">
-            <Clock className="h-3.5 w-3.5 text-electric" /> {workout.minutes} {t("programs.quick.min")}
+            <Clock className="h-3.5 w-3.5 text-electric" /> {workout.minutes}{" "}
+            {t("programs.quick.min")}
           </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-border bg-onyx-100 px-2.5 py-1">
             <Dumbbell className="h-3.5 w-3.5 text-electric" /> {workout.equipment}
@@ -106,7 +107,9 @@ function QuickWorkoutDialogBody({ workout }: { workout: QuickWorkout }) {
         </div>
 
         {stillResolving ? (
-          <p className="mt-8 text-center text-sm text-muted-foreground">{t("Loading…") || "Loading…"}</p>
+          <p className="mt-8 text-center text-sm text-muted-foreground">
+            {t("Loading…") || "Loading…"}
+          </p>
         ) : !user || !hasMembership ? (
           <LockedInline slug={workout.slug} signedIn={!!user} />
         ) : (
@@ -141,7 +144,11 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
   async function finishAndLog() {
     if (logging) return;
     if (logged || dailyLocked) {
-      toast.info(progressQuery.data?.title ? `${comeBackMessage} ${progressQuery.data.title}` : comeBackMessage);
+      toast.info(
+        progressQuery.data?.title
+          ? `${comeBackMessage} ${progressQuery.data.title}`
+          : comeBackMessage,
+      );
       return;
     }
     setLogging(true);
@@ -168,7 +175,6 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
     }
   }
 
-
   return (
     <>
       <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -193,8 +199,8 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
               onClick={finishAndLog}
               disabled={logging}
               className="absolute top-3 right-3 inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 bg-transparent p-0 transition-colors disabled:opacity-60"
-              aria-label={logged ? (t("live.logged") || "Logged") : (t("live.finish") || "Log")}
-              title={logged ? comeBackMessage : (t("live.finish") || "Log")}
+              aria-label={logged ? t("live.logged") || "Logged" : t("live.finish") || "Log"}
+              title={logged ? comeBackMessage : t("live.finish") || "Log"}
             >
               <Check
                 className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
@@ -209,9 +215,12 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
             <p className="text-[10px] uppercase tracking-[0.25em] font-semibold text-electric">
               {t("programs.quick.title")}
             </p>
-            <h2 className="font-display text-base sm:text-lg font-bold leading-tight line-clamp-2">{title}</h2>
+            <h2 className="font-display text-base sm:text-lg font-bold leading-tight line-clamp-2">
+              {title}
+            </h2>
             <span className="text-[11px] text-muted-foreground inline-flex items-center gap-1 mt-1">
-              <Clock className="h-3 w-3" /> {workout.minutes} {t("programs.quick.min")} · {totalExercises} {t("program.table.exercise")}
+              <Clock className="h-3 w-3" /> {workout.minutes} {t("programs.quick.min")} ·{" "}
+              {totalExercises} {t("program.table.exercise")}
             </span>
           </div>
           {liveEnabled && (
@@ -228,8 +237,6 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
           )}
         </header>
 
-
-
         <ul className="divide-y divide-border/60">
           {workout.blocks.flatMap((block, bi) => [
             <li key={`phase-${bi}`} className="bg-electric/5 px-4 py-2">
@@ -245,7 +252,10 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
             ...block.exercises.map((ex, j) => {
               const exObj = ex.slug ? findExercise(ex.slug) : undefined;
               const nameContent = (
-                <span className="group inline-flex items-center gap-2 text-foreground hover:text-electric transition-colors min-w-0 cursor-pointer" title={t("program.watchDemo") || "Watch demo video"}>
+                <span
+                  className="group inline-flex items-center gap-2 text-foreground hover:text-electric transition-colors min-w-0 cursor-pointer"
+                  title={t("program.watchDemo") || "Watch demo video"}
+                >
                   <span className="grid h-6 w-6 place-items-center rounded-full bg-electric/15 border border-electric/30 group-hover:bg-electric/30 transition-colors shrink-0">
                     <Play className="h-3 w-3 text-electric translate-x-[1px]" fill="currentColor" />
                   </span>
@@ -254,7 +264,9 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
               );
               const NameEl = exObj ? (
                 <ExerciseDialog exercise={exObj}>
-                  <button type="button" className="text-left min-w-0">{nameContent}</button>
+                  <button type="button" className="text-left min-w-0">
+                    {nameContent}
+                  </button>
                 </ExerciseDialog>
               ) : (
                 <span className="font-semibold truncate">{t(ex.name)}</span>
@@ -280,7 +292,11 @@ function UnlockedBody({ workout }: { workout: QuickWorkout }) {
       </section>
 
       {liveEnabled && (
-        <LiveWorkoutPlayer workout={workout} open={livePlayerOpen} onOpenChange={setLivePlayerOpen} />
+        <LiveWorkoutPlayer
+          workout={workout}
+          open={livePlayerOpen}
+          onOpenChange={setLivePlayerOpen}
+        />
       )}
     </>
   );
@@ -290,7 +306,9 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md bg-onyx-50/60 border border-border/60 px-2 py-1.5">
       <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{label}</p>
-      <p className="text-foreground font-semibold"><GlossaryText>{value}</GlossaryText></p>
+      <p className="text-foreground font-semibold">
+        <GlossaryText>{value}</GlossaryText>
+      </p>
     </div>
   );
 }
@@ -303,12 +321,17 @@ function LockedInline({ slug, signedIn }: { slug: string; signedIn: boolean }) {
         <Lock className="h-5 w-5 text-electric" />
       </div>
       <p className="mt-3 text-sm text-foreground/85">
-        {t("Quick Workouts are part of your Onyx membership. Unlock any plan, monthly, yearly or lifetime, to open every workout.")}
+        {t(
+          "Quick Workouts are part of your Onyx membership. Unlock any plan, monthly, yearly or lifetime, to open every workout.",
+        )}
       </p>
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         <MembershipModal
           trigger={
-            <button type="button" className="rounded-md bg-electric px-5 py-2.5 text-sm font-bold text-onyx-50 hover:bg-electric-glow transition-colors">
+            <button
+              type="button"
+              className="rounded-md bg-electric px-5 py-2.5 text-sm font-bold text-onyx-50 hover:bg-electric-glow transition-colors"
+            >
               {t("See membership →")}
             </button>
           }

@@ -18,7 +18,9 @@ export function SupplementsCarousel() {
             {t("Fuel the work.")}
           </h2>
           <p className="mt-3 text-muted-foreground">
-            {t("Learn about the most effective supplements for performance, recovery, and overall health.")}
+            {t(
+              "Learn about the most effective supplements for performance, recovery, and overall health.",
+            )}
           </p>
         </div>
       </div>
@@ -40,8 +42,7 @@ export function SupplementsCarousel() {
       <div
         className="hidden md:block group relative overflow-hidden pb-20"
         style={{
-          maskImage:
-            "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
+          maskImage: "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
           WebkitMaskImage:
             "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
         }}
@@ -85,7 +86,15 @@ function SuppCard({ s }: { s: (typeof supplements)[number] }) {
             <p className="mt-1.5 text-xs text-muted-foreground line-clamp-2">{s.tagline}</p>
             <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-electric">
               {t("Learn more")}
-              <svg className="h-3.5 w-3.5 transition-transform group-hover/card:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg
+                className="h-3.5 w-3.5 transition-transform group-hover/card:translate-x-1"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
             </span>
           </div>
         </button>

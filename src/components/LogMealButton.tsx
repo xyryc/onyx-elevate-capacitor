@@ -19,7 +19,15 @@ interface Props {
   className?: string;
 }
 
-export function LogMealButton({ name, kcal, protein_g, carbs_g, fat_g, sourceRef, className }: Props) {
+export function LogMealButton({
+  name,
+  kcal,
+  protein_g,
+  carbs_g,
+  fat_g,
+  sourceRef,
+  className,
+}: Props) {
   const { user } = useAuth();
   const t = useT();
   const navigate = useNavigate();

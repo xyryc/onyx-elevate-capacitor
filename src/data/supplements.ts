@@ -46,8 +46,7 @@ export const supplements: Supplement[] = [
     image: creatineImg,
     intro:
       "Creatine monohydrate is the single most studied performance supplement on the planet - proven safe and effective in hundreds of peer-reviewed trials.",
-    lead:
-      "If you could pick one supplement and throw the rest away, this is the one worth keeping. Creatine has more peer-reviewed backing than every trendy powder on the shelf combined - and it costs less than your morning coffee.",
+    lead: "If you could pick one supplement and throw the rest away, this is the one worth keeping. Creatine has more peer-reviewed backing than every trendy powder on the shelf combined - and it costs less than your morning coffee.",
     stats: [
       { label: "Daily dose", value: "3-5 g" },
       { label: "Strength gain", value: "5-15%" },
@@ -63,36 +62,62 @@ export const supplements: Supplement[] = [
         kicker: "The science",
         heading: "How creatine actually works",
         blocks: [
-          { type: "p", text: "Every explosive movement you make - a heavy triple, a 40m sprint, a jump - is powered by ATP. Your body can only store a few seconds of it at a time. Creatine phosphate is the recycling system that regenerates ATP so you can keep firing." },
-          { type: "p", text: "Supplementing simply topping up the tank. Fully saturated muscles produce more force, resist fatigue longer, and recover between sets faster. That is the whole story." },
-          { type: "callout", title: "Bottom line", text: "More stored creatine = more reps at the same weight, and heavier weight at the same reps. Over months, that math adds up to real muscle." },
+          {
+            type: "p",
+            text: "Every explosive movement you make - a heavy triple, a 40m sprint, a jump - is powered by ATP. Your body can only store a few seconds of it at a time. Creatine phosphate is the recycling system that regenerates ATP so you can keep firing.",
+          },
+          {
+            type: "p",
+            text: "Supplementing simply topping up the tank. Fully saturated muscles produce more force, resist fatigue longer, and recover between sets faster. That is the whole story.",
+          },
+          {
+            type: "callout",
+            title: "Bottom line",
+            text: "More stored creatine = more reps at the same weight, and heavier weight at the same reps. Over months, that math adds up to real muscle.",
+          },
         ],
       },
       {
         kicker: "Dosing",
         heading: "How to take it (spoiler: it's boring)",
         blocks: [
-          { type: "p", text: "You do not need timing hacks, cycling protocols, or fancy delivery systems. Consistency wins." },
-          { type: "list", items: [
-            "3-5 g every single day, including rest days",
-            "Mix with water, juice, protein shake - it does not matter",
-            "Loading phase (20 g/day for a week) is optional, not required",
-            "Full saturation with 5 g/day takes about 3-4 weeks",
-          ]},
-          { type: "quote", text: "The lifter who takes 3 g of creatine every day for a year beats the one who loads twice, forgets it for three months, and starts over.", cite: "Thiago D., Head Coach" },
+          {
+            type: "p",
+            text: "You do not need timing hacks, cycling protocols, or fancy delivery systems. Consistency wins.",
+          },
+          {
+            type: "list",
+            items: [
+              "3-5 g every single day, including rest days",
+              "Mix with water, juice, protein shake - it does not matter",
+              "Loading phase (20 g/day for a week) is optional, not required",
+              "Full saturation with 5 g/day takes about 3-4 weeks",
+            ],
+          },
+          {
+            type: "quote",
+            text: "The lifter who takes 3 g of creatine every day for a year beats the one who loads twice, forgets it for three months, and starts over.",
+            cite: "Thiago D., Head Coach",
+          },
         ],
       },
       {
         kicker: "Myths",
         heading: "What creatine does not do",
         blocks: [
-          { type: "p", text: "The internet has decided creatine causes hair loss, kidney damage, and bloating. The research says otherwise, but the myths outlive the studies." },
-          { type: "list", items: [
-            "It does not damage healthy kidneys - decades of data confirm this",
-            "It does not cause hair loss - the single 2009 study everyone cites has never been replicated",
-            "It does not make women 'bulky' - dose and effect are identical across sexes",
-            "The 'water weight' is inside your muscles, not under your skin",
-          ]},
+          {
+            type: "p",
+            text: "The internet has decided creatine causes hair loss, kidney damage, and bloating. The research says otherwise, but the myths outlive the studies.",
+          },
+          {
+            type: "list",
+            items: [
+              "It does not damage healthy kidneys - decades of data confirm this",
+              "It does not cause hair loss - the single 2009 study everyone cites has never been replicated",
+              "It does not make women 'bulky' - dose and effect are identical across sexes",
+              "The 'water weight' is inside your muscles, not under your skin",
+            ],
+          },
         ],
       },
     ],
@@ -125,11 +150,26 @@ export const supplements: Supplement[] = [
       "Consult a healthcare professional if you have kidney issues or are on medication",
     ],
     faqs: [
-      { q: "Do I need a loading phase?", a: "No. Loading saturates muscles faster (~1 week vs ~3-4 weeks), but the end result is identical. 3-5 g daily works perfectly." },
-      { q: "Is creatine safe?", a: "Yes. Decades of research show it's safe for healthy adults at the standard 3-5 g daily dose." },
-      { q: "Can women use creatine?", a: "Absolutely. The benefits and dosing are the same. It does not cause bulkiness." },
-      { q: "Can teenagers use creatine?", a: "Research suggests it's safe for adolescent athletes, but check with a doctor or coach first." },
-      { q: "Will creatine make me bloated?", a: "Some people retain a little water inside the muscle, not under the skin. This typically settles within the first 2 weeks." },
+      {
+        q: "Do I need a loading phase?",
+        a: "No. Loading saturates muscles faster (~1 week vs ~3-4 weeks), but the end result is identical. 3-5 g daily works perfectly.",
+      },
+      {
+        q: "Is creatine safe?",
+        a: "Yes. Decades of research show it's safe for healthy adults at the standard 3-5 g daily dose.",
+      },
+      {
+        q: "Can women use creatine?",
+        a: "Absolutely. The benefits and dosing are the same. It does not cause bulkiness.",
+      },
+      {
+        q: "Can teenagers use creatine?",
+        a: "Research suggests it's safe for adolescent athletes, but check with a doctor or coach first.",
+      },
+      {
+        q: "Will creatine make me bloated?",
+        a: "Some people retain a little water inside the muscle, not under the skin. This typically settles within the first 2 weeks.",
+      },
     ],
   },
   {
@@ -139,8 +179,7 @@ export const supplements: Supplement[] = [
     image: wheyImg,
     intro:
       "Whey is a fast-digesting, complete protein derived from milk. It's the most practical way to hit your daily protein target when whole-food meals aren't convenient.",
-    lead:
-      "Whey is not magic. It is a tool. And like any tool, its value depends on what you build with it. For most lifters, that value comes down to one boring, unglamorous truth: you probably are not eating enough protein, and a shaker bottle fixes it in 30 seconds.",
+    lead: "Whey is not magic. It is a tool. And like any tool, its value depends on what you build with it. For most lifters, that value comes down to one boring, unglamorous truth: you probably are not eating enough protein, and a shaker bottle fixes it in 30 seconds.",
     stats: [
       { label: "Protein target", value: "1.6-2.2 g/kg" },
       { label: "Per scoop", value: "20-25 g" },
@@ -156,30 +195,56 @@ export const supplements: Supplement[] = [
         kicker: "First principles",
         heading: "Why protein matters more than any powder",
         blocks: [
-          { type: "p", text: "Muscle protein synthesis - the process that repairs and builds muscle tissue - runs on amino acids from the protein you eat. Miss the target, and no amount of training progresses you the way it should." },
-          { type: "p", text: "Whole food should always come first. Chicken, fish, eggs, dairy, tofu, lentils. Whey exists for the days when whole food is not practical - the 6am start, the flight, the meeting that ate your lunch." },
-          { type: "callout", title: "The rule", text: "Whey fills the gap between what you ate today and what your body needs. It does not replace meals." },
+          {
+            type: "p",
+            text: "Muscle protein synthesis - the process that repairs and builds muscle tissue - runs on amino acids from the protein you eat. Miss the target, and no amount of training progresses you the way it should.",
+          },
+          {
+            type: "p",
+            text: "Whole food should always come first. Chicken, fish, eggs, dairy, tofu, lentils. Whey exists for the days when whole food is not practical - the 6am start, the flight, the meeting that ate your lunch.",
+          },
+          {
+            type: "callout",
+            title: "The rule",
+            text: "Whey fills the gap between what you ate today and what your body needs. It does not replace meals.",
+          },
         ],
       },
       {
         kicker: "Types",
         heading: "Concentrate vs isolate vs hydrolysate",
         blocks: [
-          { type: "list", items: [
-            "Concentrate - 70-80% protein, cheapest, works for 90% of people",
-            "Isolate - 90%+ protein, near-zero lactose, better for sensitive stomachs",
-            "Hydrolysate - pre-digested, absorbs fastest, most expensive, marginal benefit",
-          ]},
-          { type: "p", text: "Unless you have a specific reason to spend more, concentrate is the correct default. It is the same amino acid profile at a fraction of the price." },
+          {
+            type: "list",
+            items: [
+              "Concentrate - 70-80% protein, cheapest, works for 90% of people",
+              "Isolate - 90%+ protein, near-zero lactose, better for sensitive stomachs",
+              "Hydrolysate - pre-digested, absorbs fastest, most expensive, marginal benefit",
+            ],
+          },
+          {
+            type: "p",
+            text: "Unless you have a specific reason to spend more, concentrate is the correct default. It is the same amino acid profile at a fraction of the price.",
+          },
         ],
       },
       {
         kicker: "Timing",
         heading: "The anabolic window is bigger than you think",
         blocks: [
-          { type: "p", text: "For years everyone believed you had 30 minutes post-workout to slam a shake or your gains evaporated. That was wrong. Meta-analyses now put the effective window at several hours on either side of training." },
-          { type: "quote", text: "Total daily protein and consistency across meals matter far more than shaking a bottle within 45 minutes of your last set.", cite: "Reviewed in JISSN, 2018" },
-          { type: "p", text: "Aim for 4-5 protein-rich feedings spaced across the day, 0.3-0.4 g/kg per feeding. Use whey to fill in whichever slots your kitchen cannot cover." },
+          {
+            type: "p",
+            text: "For years everyone believed you had 30 minutes post-workout to slam a shake or your gains evaporated. That was wrong. Meta-analyses now put the effective window at several hours on either side of training.",
+          },
+          {
+            type: "quote",
+            text: "Total daily protein and consistency across meals matter far more than shaking a bottle within 45 minutes of your last set.",
+            cite: "Reviewed in JISSN, 2018",
+          },
+          {
+            type: "p",
+            text: "Aim for 4-5 protein-rich feedings spaced across the day, 0.3-0.4 g/kg per feeding. Use whey to fill in whichever slots your kitchen cannot cover.",
+          },
         ],
       },
     ],
@@ -210,9 +275,18 @@ export const supplements: Supplement[] = [
       "Look for third-party tested products (Informed Sport, NSF)",
     ],
     faqs: [
-      { q: "Whey concentrate vs isolate?", a: "Isolate is more filtered, lower in lactose and slightly higher in protein per scoop. Concentrate is cheaper and works for most people." },
-      { q: "Do I need protein powder?", a: "No - but it makes hitting your target dramatically easier, especially on busy days." },
-      { q: "Is whey only for men?", a: "No. Protein needs are based on bodyweight and activity, not gender." },
+      {
+        q: "Whey concentrate vs isolate?",
+        a: "Isolate is more filtered, lower in lactose and slightly higher in protein per scoop. Concentrate is cheaper and works for most people.",
+      },
+      {
+        q: "Do I need protein powder?",
+        a: "No - but it makes hitting your target dramatically easier, especially on busy days.",
+      },
+      {
+        q: "Is whey only for men?",
+        a: "No. Protein needs are based on bodyweight and activity, not gender.",
+      },
     ],
   },
   {
@@ -222,8 +296,7 @@ export const supplements: Supplement[] = [
     image: pwoImg,
     intro:
       "A well-formulated pre-workout helps you push harder, focus deeper, and squeeze more quality reps out of every session.",
-    lead:
-      "Pre-workout is the most oversold product in fitness. Half of what's in a scoop is theatrics - fizzing color, tingling skin, a psychological edge. But the other half is real, measurable performance you can feel by rep three. The trick is knowing which half you are paying for.",
+    lead: "Pre-workout is the most oversold product in fitness. Half of what's in a scoop is theatrics - fizzing color, tingling skin, a psychological edge. But the other half is real, measurable performance you can feel by rep three. The trick is knowing which half you are paying for.",
     stats: [
       { label: "Caffeine range", value: "150-300 mg" },
       { label: "Beta-alanine", value: "3.2 g" },
@@ -239,34 +312,54 @@ export const supplements: Supplement[] = [
         kicker: "The ingredients that actually work",
         heading: "Read the label, not the marketing",
         blocks: [
-          { type: "p", text: "Most pre-workout formulas hide low doses of real ingredients behind proprietary blends. If the label does not tell you exactly how many milligrams of each active you are getting, keep walking." },
-          { type: "list", items: [
-            "Caffeine (150-300 mg) - the single most effective ingredient in the industry",
-            "Beta-alanine (3.2 g) - buffers acid, extends muscular endurance in the 30-90 sec range",
-            "Citrulline malate (6-8 g) - improves blood flow, that is where the pump comes from",
-            "Electrolytes - keep you firing on longer sessions",
-          ]},
-          { type: "callout", title: "Watch out for", text: "Under-dosed formulas, exotic 'proprietary blends,' and stimulant stacks that make you feel wired without actually improving performance." },
+          {
+            type: "p",
+            text: "Most pre-workout formulas hide low doses of real ingredients behind proprietary blends. If the label does not tell you exactly how many milligrams of each active you are getting, keep walking.",
+          },
+          {
+            type: "list",
+            items: [
+              "Caffeine (150-300 mg) - the single most effective ingredient in the industry",
+              "Beta-alanine (3.2 g) - buffers acid, extends muscular endurance in the 30-90 sec range",
+              "Citrulline malate (6-8 g) - improves blood flow, that is where the pump comes from",
+              "Electrolytes - keep you firing on longer sessions",
+            ],
+          },
+          {
+            type: "callout",
+            title: "Watch out for",
+            text: "Under-dosed formulas, exotic 'proprietary blends,' and stimulant stacks that make you feel wired without actually improving performance.",
+          },
         ],
       },
       {
         kicker: "How to use it",
         heading: "Save it for the sessions that matter",
         blocks: [
-          { type: "p", text: "Use pre-workout on your hardest sessions - heavy lower body, a big pull day, a competition warm-up. If you take it every session, your tolerance climbs and the effect fades." },
-          { type: "quote", text: "The best time to use pre-workout is when you feel like you should not train. It is not a daily driver - it is a rescue vehicle.", cite: "Onyx coaching floor" },
+          {
+            type: "p",
+            text: "Use pre-workout on your hardest sessions - heavy lower body, a big pull day, a competition warm-up. If you take it every session, your tolerance climbs and the effect fades.",
+          },
+          {
+            type: "quote",
+            text: "The best time to use pre-workout is when you feel like you should not train. It is not a daily driver - it is a rescue vehicle.",
+            cite: "Onyx coaching floor",
+          },
         ],
       },
       {
         kicker: "Warnings",
         heading: "When to skip it entirely",
         blocks: [
-          { type: "list", items: [
-            "Anything after 3pm if you value your sleep",
-            "If you already had coffee - stacking caffeine is where jitters live",
-            "Pregnancy, high blood pressure, or heart conditions",
-            "Athletes under 18 - your baseline nervous system is already firing on all cylinders",
-          ]},
+          {
+            type: "list",
+            items: [
+              "Anything after 3pm if you value your sleep",
+              "If you already had coffee - stacking caffeine is where jitters live",
+              "Pregnancy, high blood pressure, or heart conditions",
+              "Athletes under 18 - your baseline nervous system is already firing on all cylinders",
+            ],
+          },
         ],
       },
     ],
@@ -297,8 +390,14 @@ export const supplements: Supplement[] = [
       "Not recommended under 18 or during pregnancy",
     ],
     faqs: [
-      { q: "Do I really need a pre-workout?", a: "No. Black coffee + a pre-training meal gets you 90% of the way there. PWO is a convenience and edge, not a requirement." },
-      { q: "Why does my skin tingle?", a: "That's beta-alanine. It's harmless and fades after 20 minutes." },
+      {
+        q: "Do I really need a pre-workout?",
+        a: "No. Black coffee + a pre-training meal gets you 90% of the way there. PWO is a convenience and edge, not a requirement.",
+      },
+      {
+        q: "Why does my skin tingle?",
+        a: "That's beta-alanine. It's harmless and fades after 20 minutes.",
+      },
     ],
   },
   {
@@ -308,8 +407,7 @@ export const supplements: Supplement[] = [
     image: multiImg,
     intro:
       "A daily multivitamin acts as nutritional insurance - filling the small gaps that even a well-planned diet can leave behind.",
-    lead:
-      "A multivitamin is not going to build you a body. It is going to keep the small deficiencies that quietly stall your progress from ever developing. Think of it as an oil change - unglamorous, cheap, and the reason the engine still runs at 100,000 km.",
+    lead: "A multivitamin is not going to build you a body. It is going to keep the small deficiencies that quietly stall your progress from ever developing. Think of it as an oil change - unglamorous, cheap, and the reason the engine still runs at 100,000 km.",
     stats: [
       { label: "Nutrients covered", value: "20+" },
       { label: "Cost per day", value: "~2 kr" },
@@ -325,28 +423,48 @@ export const supplements: Supplement[] = [
         kicker: "The context",
         heading: "Why even careful eaters have gaps",
         blocks: [
-          { type: "p", text: "The soil is more depleted than it was fifty years ago. The average diet varies less week to week than we like to admit. Training athletes chew through more micronutrients than sedentary adults. All of it stacks." },
-          { type: "list", items: [
-            "Vitamin D - most people north of Barcelona are low six months a year",
-            "Magnesium - training and sweat losses outpace typical intake",
-            "Zinc - critical for immune function and hormones",
-            "B-vitamins - burned through faster the harder you train",
-          ]},
-          { type: "callout", title: "Reality check", text: "A multi will not turn a diet of takeaway pizza into a healthy one. It is insurance on top of decent eating, not a substitute for it." },
+          {
+            type: "p",
+            text: "The soil is more depleted than it was fifty years ago. The average diet varies less week to week than we like to admit. Training athletes chew through more micronutrients than sedentary adults. All of it stacks.",
+          },
+          {
+            type: "list",
+            items: [
+              "Vitamin D - most people north of Barcelona are low six months a year",
+              "Magnesium - training and sweat losses outpace typical intake",
+              "Zinc - critical for immune function and hormones",
+              "B-vitamins - burned through faster the harder you train",
+            ],
+          },
+          {
+            type: "callout",
+            title: "Reality check",
+            text: "A multi will not turn a diet of takeaway pizza into a healthy one. It is insurance on top of decent eating, not a substitute for it.",
+          },
         ],
       },
       {
         kicker: "What to look for",
         heading: "Reading a label without the marketing haze",
         blocks: [
-          { type: "p", text: "Good multivitamins share three traits: sensible doses, well-absorbed forms of each nutrient, and third-party testing you can verify online." },
-          { type: "list", items: [
-            "Doses at or near RDA, not 5000% mega-doses",
-            "Methylated B-vitamins where possible (B12 as methylcobalamin)",
-            "Chelated minerals (glycinate, bisglycinate) - much better absorbed than oxide",
-            "Third-party tested - Informed Sport, NSF, or equivalent",
-          ]},
-          { type: "quote", text: "More is not better. A multi that dumps 5000% of every vitamin is a marketing product, not a health product.", cite: "Reviewed in the Journal of Nutrition, 2021" },
+          {
+            type: "p",
+            text: "Good multivitamins share three traits: sensible doses, well-absorbed forms of each nutrient, and third-party testing you can verify online.",
+          },
+          {
+            type: "list",
+            items: [
+              "Doses at or near RDA, not 5000% mega-doses",
+              "Methylated B-vitamins where possible (B12 as methylcobalamin)",
+              "Chelated minerals (glycinate, bisglycinate) - much better absorbed than oxide",
+              "Third-party tested - Informed Sport, NSF, or equivalent",
+            ],
+          },
+          {
+            type: "quote",
+            text: "More is not better. A multi that dumps 5000% of every vitamin is a marketing product, not a health product.",
+            cite: "Reviewed in the Journal of Nutrition, 2021",
+          },
         ],
       },
     ],
@@ -375,7 +493,10 @@ export const supplements: Supplement[] = [
       "If you have specific deficiencies, get blood work first",
     ],
     faqs: [
-      { q: "Do I need a multivitamin if I eat well?", a: "Maybe not, but most people fall short on at least 2-3 micronutrients. A multi is cheap insurance." },
+      {
+        q: "Do I need a multivitamin if I eat well?",
+        a: "Maybe not, but most people fall short on at least 2-3 micronutrients. A multi is cheap insurance.",
+      },
       { q: "Best time to take it?", a: "With your largest meal of the day." },
     ],
   },
@@ -386,8 +507,7 @@ export const supplements: Supplement[] = [
     image: omegaImg,
     intro:
       "EPA and DHA - the two key omega-3 fatty acids - are vital for heart health, brain function and managing inflammation.",
-    lead:
-      "Omega-3 is one of the quietest, most researched supplements in the game. It does not give you a pump. It does not spike your energy. But over years, it is the difference between joints that feel 30 at age 45, and joints that feel 45 at 30.",
+    lead: "Omega-3 is one of the quietest, most researched supplements in the game. It does not give you a pump. It does not spike your energy. But over years, it is the difference between joints that feel 30 at age 45, and joints that feel 45 at 30.",
     stats: [
       { label: "Combined EPA+DHA", value: "1-3 g/day" },
       { label: "Time to effect", value: "8-12 weeks" },
@@ -403,21 +523,38 @@ export const supplements: Supplement[] = [
         kicker: "Why it matters",
         heading: "The ratio nobody talks about",
         blocks: [
-          { type: "p", text: "Modern diets are drowning in omega-6 (seed oils, processed foods) and starved of omega-3. The ratio matters as much as the raw intake - and it drives a huge portion of chronic inflammation in Western populations." },
-          { type: "callout", title: "The signal", text: "You want the ratio of omega-6 to omega-3 in your diet to sit around 4:1. Most people are closer to 20:1 or worse." },
+          {
+            type: "p",
+            text: "Modern diets are drowning in omega-6 (seed oils, processed foods) and starved of omega-3. The ratio matters as much as the raw intake - and it drives a huge portion of chronic inflammation in Western populations.",
+          },
+          {
+            type: "callout",
+            title: "The signal",
+            text: "You want the ratio of omega-6 to omega-3 in your diet to sit around 4:1. Most people are closer to 20:1 or worse.",
+          },
         ],
       },
       {
         kicker: "Sourcing",
         heading: "Fish oil vs krill vs algae",
         blocks: [
-          { type: "list", items: [
-            "Fish oil - cheapest, highest EPA/DHA per capsule, standard choice",
-            "Krill oil - smaller doses, phospholipid form absorbs slightly better, more expensive",
-            "Algae oil - plant-based, sustainable, works well for vegans and vegetarians",
-          ]},
-          { type: "p", text: "Whatever you buy, check for oxidation. Rancid fish oil is worse than no fish oil. Look for a TOTOX (total oxidation) score under 10 on the manufacturer certificate." },
-          { type: "quote", text: "A cheap, oxidized fish oil is closer to poison than to a supplement. Spend the extra kroner on quality.", cite: "Onyx sourcing standards" },
+          {
+            type: "list",
+            items: [
+              "Fish oil - cheapest, highest EPA/DHA per capsule, standard choice",
+              "Krill oil - smaller doses, phospholipid form absorbs slightly better, more expensive",
+              "Algae oil - plant-based, sustainable, works well for vegans and vegetarians",
+            ],
+          },
+          {
+            type: "p",
+            text: "Whatever you buy, check for oxidation. Rancid fish oil is worse than no fish oil. Look for a TOTOX (total oxidation) score under 10 on the manufacturer certificate.",
+          },
+          {
+            type: "quote",
+            text: "A cheap, oxidized fish oil is closer to poison than to a supplement. Spend the extra kroner on quality.",
+            cite: "Onyx sourcing standards",
+          },
         ],
       },
     ],
@@ -446,7 +583,10 @@ export const supplements: Supplement[] = [
       "Consult a doctor if you're on blood thinners",
     ],
     faqs: [
-      { q: "Fish oil vs algae oil?", a: "Algae is the plant-based source - great for vegans, slightly more expensive." },
+      {
+        q: "Fish oil vs algae oil?",
+        a: "Algae is the plant-based source - great for vegans, slightly more expensive.",
+      },
       { q: "How long until I notice benefits?", a: "Usually 8-12 weeks of consistent daily use." },
     ],
   },
@@ -457,8 +597,7 @@ export const supplements: Supplement[] = [
     image: magnesiumImg,
     intro:
       "Magnesium is involved in over 300 enzymatic reactions, yet most lifters are mildly deficient. Supplementing can transform sleep, recovery and training output.",
-    lead:
-      "Nothing sabotages a training block quite like bad sleep and cramping calves at 3am. Magnesium is not a sleeping pill. It is not a muscle relaxant. But if you are low - and most lifters are - correcting it feels like both.",
+    lead: "Nothing sabotages a training block quite like bad sleep and cramping calves at 3am. Magnesium is not a sleeping pill. It is not a muscle relaxant. But if you are low - and most lifters are - correcting it feels like both.",
     stats: [
       { label: "Adult RDA", value: "310-420 mg" },
       { label: "Sweet spot", value: "200-400 mg" },
@@ -474,28 +613,42 @@ export const supplements: Supplement[] = [
         kicker: "Forms matter",
         heading: "Not all magnesium is created equal",
         blocks: [
-          { type: "list", items: [
-            "Glycinate - best for sleep and anxiety, gentlest on the gut",
-            "Citrate - decent absorption, mild laxative effect, good if you struggle with regularity",
-            "Malate - pairs well with muscular fatigue and daytime energy",
-            "Oxide - avoid, poor absorption, mostly causes diarrhea",
-            "Threonate - only form that crosses the blood-brain barrier well, premium price",
-          ]},
-          { type: "callout", title: "Default pick", text: "For most lifters, magnesium glycinate 200-400 mg taken 30-60 minutes before bed is the highest-return-per-krone move in the entire supplement stack." },
+          {
+            type: "list",
+            items: [
+              "Glycinate - best for sleep and anxiety, gentlest on the gut",
+              "Citrate - decent absorption, mild laxative effect, good if you struggle with regularity",
+              "Malate - pairs well with muscular fatigue and daytime energy",
+              "Oxide - avoid, poor absorption, mostly causes diarrhea",
+              "Threonate - only form that crosses the blood-brain barrier well, premium price",
+            ],
+          },
+          {
+            type: "callout",
+            title: "Default pick",
+            text: "For most lifters, magnesium glycinate 200-400 mg taken 30-60 minutes before bed is the highest-return-per-krone move in the entire supplement stack.",
+          },
         ],
       },
       {
         kicker: "The signs",
         heading: "How to know you are low",
         blocks: [
-          { type: "list", items: [
-            "Muscle cramps and twitches, especially at night",
-            "Difficulty falling asleep or staying asleep",
-            "Elevated resting heart rate on tough training weeks",
-            "Anxiety spikes without a clear cause",
-            "Restless legs, jumpy nervous system",
-          ]},
-          { type: "quote", text: "If you can only add one supplement to your evening routine, magnesium glycinate is the one that changes the most for the smallest cost.", cite: "Coach Simen" },
+          {
+            type: "list",
+            items: [
+              "Muscle cramps and twitches, especially at night",
+              "Difficulty falling asleep or staying asleep",
+              "Elevated resting heart rate on tough training weeks",
+              "Anxiety spikes without a clear cause",
+              "Restless legs, jumpy nervous system",
+            ],
+          },
+          {
+            type: "quote",
+            text: "If you can only add one supplement to your evening routine, magnesium glycinate is the one that changes the most for the smallest cost.",
+            cite: "Coach Simen",
+          },
         ],
       },
     ],
@@ -523,8 +676,14 @@ export const supplements: Supplement[] = [
       "Start at the lower dose to assess tolerance",
     ],
     faqs: [
-      { q: "Will it actually help my sleep?", a: "Most people report deeper sleep within 1-2 weeks, especially with glycinate." },
-      { q: "Can I take it with calcium?", a: "Yes, but space them by a few hours for best absorption." },
+      {
+        q: "Will it actually help my sleep?",
+        a: "Most people report deeper sleep within 1-2 weeks, especially with glycinate.",
+      },
+      {
+        q: "Can I take it with calcium?",
+        a: "Yes, but space them by a few hours for best absorption.",
+      },
     ],
   },
   {
@@ -534,8 +693,7 @@ export const supplements: Supplement[] = [
     image: electrolytesImg,
     intro:
       "Sodium, potassium and magnesium are lost through sweat. Replacing them keeps energy, focus and performance high in long or hot sessions.",
-    lead:
-      "Water alone does not hydrate you. It sounds absurd until you understand what your body is actually doing with fluid - moving sodium in, potassium out, keeping the electrical system firing. Drink plain water on a long summer session and you can end up more dehydrated than when you started.",
+    lead: "Water alone does not hydrate you. It sounds absurd until you understand what your body is actually doing with fluid - moving sodium in, potassium out, keeping the electrical system firing. Drink plain water on a long summer session and you can end up more dehydrated than when you started.",
     stats: [
       { label: "Sodium per L sweat", value: "300-1500 mg" },
       { label: "Heavy-sweater dose", value: "800-1000 mg" },
@@ -551,27 +709,44 @@ export const supplements: Supplement[] = [
         kicker: "Who actually needs them",
         heading: "Not every session needs a scoop",
         blocks: [
-          { type: "list", items: [
-            "45 min gym session, cool room - plain water is fine",
-            "60+ min session or heavy sweat - electrolytes start to matter",
-            "90+ min endurance, hot climate, or 2-a-days - electrolytes become non-negotiable",
-            "Fasted training, keto, or low-carb - you lose electrolytes faster, top up sooner",
-          ]},
-          { type: "callout", title: "Rule of thumb", text: "If your shirt has a white salt ring at the end of a session, you are a heavy sweater and probably underdosing sodium." },
+          {
+            type: "list",
+            items: [
+              "45 min gym session, cool room - plain water is fine",
+              "60+ min session or heavy sweat - electrolytes start to matter",
+              "90+ min endurance, hot climate, or 2-a-days - electrolytes become non-negotiable",
+              "Fasted training, keto, or low-carb - you lose electrolytes faster, top up sooner",
+            ],
+          },
+          {
+            type: "callout",
+            title: "Rule of thumb",
+            text: "If your shirt has a white salt ring at the end of a session, you are a heavy sweater and probably underdosing sodium.",
+          },
         ],
       },
       {
         kicker: "The formula",
         heading: "What a good electrolyte product looks like",
         blocks: [
-          { type: "p", text: "The bulk of the value in an electrolyte drink is sodium. Everything else is supporting cast. If your scoop is 60 mg sodium and 20 g sugar, you bought candy." },
-          { type: "list", items: [
-            "800-1000 mg sodium per serving for heavy sweaters",
-            "200-400 mg potassium",
-            "50-100 mg magnesium",
-            "Low or zero sugar - unless you are also training long endurance",
-          ]},
-          { type: "quote", text: "You cannot fix cramping with a banana. Bananas are a decent snack, but muscle cramps are almost always a sodium problem.", cite: "Reviewed in the British Journal of Sports Medicine" },
+          {
+            type: "p",
+            text: "The bulk of the value in an electrolyte drink is sodium. Everything else is supporting cast. If your scoop is 60 mg sodium and 20 g sugar, you bought candy.",
+          },
+          {
+            type: "list",
+            items: [
+              "800-1000 mg sodium per serving for heavy sweaters",
+              "200-400 mg potassium",
+              "50-100 mg magnesium",
+              "Low or zero sugar - unless you are also training long endurance",
+            ],
+          },
+          {
+            type: "quote",
+            text: "You cannot fix cramping with a banana. Bananas are a decent snack, but muscle cramps are almost always a sodium problem.",
+            cite: "Reviewed in the British Journal of Sports Medicine",
+          },
         ],
       },
     ],
@@ -599,8 +774,14 @@ export const supplements: Supplement[] = [
       "If you have blood pressure issues, consult your doctor before high-sodium products",
     ],
     faqs: [
-      { q: "Do I need electrolytes for a 45 min lifting session?", a: "Usually no - water is fine unless it's hot or you sweat heavily." },
-      { q: "Are sports drinks the same?", a: "No - most are mostly sugar with minimal sodium. Dedicated electrolyte products are far better." },
+      {
+        q: "Do I need electrolytes for a 45 min lifting session?",
+        a: "Usually no - water is fine unless it's hot or you sweat heavily.",
+      },
+      {
+        q: "Are sports drinks the same?",
+        a: "No - most are mostly sugar with minimal sodium. Dedicated electrolyte products are far better.",
+      },
     ],
   },
 ];

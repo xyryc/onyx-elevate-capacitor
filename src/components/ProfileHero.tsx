@@ -33,7 +33,13 @@ import {
 import type { Lang } from "@/i18n";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -102,8 +108,14 @@ export function ProfileHero({
   const router = useRouter();
   const qc = useQueryClient();
   const { data: streak } = useQuery({ queryKey: ["streak"], queryFn: getMyStreak });
-  const { data: weekDays } = useQuery({ queryKey: ["streak-week"], queryFn: getThisWeekLoggedDays });
-  const { data: checkInDays = [] } = useQuery({ queryKey: ["profile-check-ins"], queryFn: () => getRecentCheckInDays(30, 7) });
+  const { data: weekDays } = useQuery({
+    queryKey: ["streak-week"],
+    queryFn: getThisWeekLoggedDays,
+  });
+  const { data: checkInDays = [] } = useQuery({
+    queryKey: ["profile-check-ins"],
+    queryFn: () => getRecentCheckInDays(30, 7),
+  });
   const push = usePushNotifications();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -112,7 +124,9 @@ export function ProfileHero({
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [checkingIn, setCheckingIn] = useState(false);
   const [optimisticCheckedIn, setOptimisticCheckedIn] = useState(false);
-  const [celebrateQueue, setCelebrateQueue] = useState<{ key: string; label: string; icon: React.ReactNode; flame?: boolean }[]>([]);
+  const [celebrateQueue, setCelebrateQueue] = useState<
+    { key: string; label: string; icon: React.ReactNode; flame?: boolean }[]
+  >([]);
   const [nameDialogOpen, setNameDialogOpen] = useState(false);
   const [newName, setNewName] = useState(name);
   const [savingName, setSavingName] = useState(false);
@@ -132,7 +146,7 @@ export function ProfileHero({
   const handleHkToggle = async (enabled: boolean) => {
     if (enabled) {
       setSyncingHk(true);
-      
+
       // Wait 500ms to allow dropdown menu close transitions to fully finish.
       // This stabilizes the iOS view hierarchy and prevents RunningBoard (RBS) errors.
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -148,24 +162,27 @@ export function ProfileHero({
 
       try {
         console.log("[HealthKit] Starting authorization race with 8s timeout...");
-        const authorized = await Promise.race([
-          hkRequestPermissions(),
-          timeoutPromise
-        ]);
+        const authorized = await Promise.race([hkRequestPermissions(), timeoutPromise]);
 
         if (authorized) {
           await hkSetEnabled(true);
           setHkConnected(true);
-          toast.success(t("profile.healthkit.success") || "Apple Health sync enabled successfully! ✅");
+          toast.success(
+            t("profile.healthkit.success") || "Apple Health sync enabled successfully! ✅",
+          );
         } else {
           if (hasTimedOut) {
-            console.warn("[HealthKit] Request timed out. Incomplete Xcode HealthKit capabilities/plist setup is the typical cause.");
+            console.warn(
+              "[HealthKit] Request timed out. Incomplete Xcode HealthKit capabilities/plist setup is the typical cause.",
+            );
             toast.error(
               "Sync timed out. Please ensure you have added the 'HealthKit' Capability in Xcode under 'Signing & Capabilities'.",
-              { duration: 8000 }
+              { duration: 8000 },
             );
           } else {
-            toast.error(t("profile.healthkit.error") || "Permission to access Apple Health was denied.");
+            toast.error(
+              t("profile.healthkit.error") || "Permission to access Apple Health was denied.",
+            );
           }
         }
       } catch (err) {
@@ -181,10 +198,10 @@ export function ProfileHero({
     }
   };
 
-
   const initial = (name || "A").trim().charAt(0).toUpperCase();
   const dayLabels = (() => {
-    const bcp47 = lang === "no" ? "nb-NO" : lang === "es" ? "es-ES" : lang === "pt-BR" ? "pt-BR" : "en-US";
+    const bcp47 =
+      lang === "no" ? "nb-NO" : lang === "es" ? "es-ES" : lang === "pt-BR" ? "pt-BR" : "en-US";
     try {
       const fmt = new Intl.DateTimeFormat(bcp47, { weekday: "narrow" });
       // Monday 2024-01-01 through Sunday 2024-01-07
@@ -225,7 +242,9 @@ export function ProfileHero({
         .from("site-images")
         .upload(path, file, { cacheControl: "3600", upsert: true, contentType: file.type });
       if (upErr) throw upErr;
-      const { data: signed } = await supabase.storage.from("site-images").createSignedUrl(path, 60 * 60);
+      const { data: signed } = await supabase.storage
+        .from("site-images")
+        .createSignedUrl(path, 60 * 60);
       await updateMyProfile({ data: { avatar_url: path } });
       if (signed?.signedUrl) {
         setAvatarPreview(signed.signedUrl);
@@ -291,7 +310,10 @@ export function ProfileHero({
   const checkedInToday = checkInDaySet.has(todayKey) || optimisticCheckedIn;
   const alreadyCountedToday = !!(weekDays ?? [])[todayIdx];
   const displayStreak = checkedInToday
-    ? Math.max(1, (streak?.currentStreak ?? 0) + (optimisticCheckedIn && !alreadyCountedToday ? 1 : 0))
+    ? Math.max(
+        1,
+        (streak?.currentStreak ?? 0) + (optimisticCheckedIn && !alreadyCountedToday ? 1 : 0),
+      )
     : (streak?.currentStreak ?? 0);
   const todayStripRef = useRef<HTMLDivElement>(null);
 
@@ -329,7 +351,13 @@ export function ProfileHero({
           <div className="absolute -bottom-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full border border-onyx-50 bg-electric text-white">
             <Camera className="h-2.5 w-2.5" />
           </div>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFile}
+          />
         </button>
 
         <div className="flex-1 min-w-0">
@@ -343,7 +371,9 @@ export function ProfileHero({
             title={t("profile.hero.editName") || "Edit name"}
             aria-label={t("profile.hero.editName") || "Edit name"}
           >
-            <h1 className="font-display text-lg sm:text-xl font-bold leading-tight break-words">{name}</h1>
+            <h1 className="font-display text-lg sm:text-xl font-bold leading-tight break-words">
+              {name}
+            </h1>
             <Pencil className="h-3.5 w-3.5 text-white/40 group-hover:text-electric transition-colors shrink-0" />
           </button>
         </div>
@@ -434,7 +464,10 @@ export function ProfileHero({
 
       {/* Daily Check-in — glass depth card */}
       <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-onyx-100 to-onyx-50 p-5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)]">
-        <div className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-electric/10 blur-[80px]" aria-hidden />
+        <div
+          className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-electric/10 blur-[80px]"
+          aria-hidden
+        />
 
         <div className="relative flex items-center justify-between mb-5">
           <h2 className="font-display font-bold text-lg">
@@ -463,7 +496,8 @@ export function ProfileHero({
                   if (day.isToday && el && todayStripRef.current) {
                     const parent = todayStripRef.current;
                     if (parent.dataset.centered !== "1") {
-                      parent.scrollLeft = el.offsetLeft - parent.clientWidth / 2 + el.clientWidth / 2;
+                      parent.scrollLeft =
+                        el.offsetLeft - parent.clientWidth / 2 + el.clientWidth / 2;
                       parent.dataset.centered = "1";
                     }
                   }
@@ -481,7 +515,7 @@ export function ProfileHero({
                       : "text-[10px] font-medium uppercase text-muted-foreground"
                   }
                 >
-                  {day.isToday ? (t("profile.hero.today") || "Today") : dayShort[day.dowMon]}
+                  {day.isToday ? t("profile.hero.today") || "Today" : dayShort[day.dowMon]}
                 </span>
                 <span
                   className={
@@ -539,7 +573,10 @@ export function ProfileHero({
               ]);
               toast.success(t("profile.hero.checkedInToday") || "Checked in!");
               if (push.status !== "granted" && push.status !== "unsupported") {
-                push.subscribe().then(push.refresh).catch(() => {});
+                push
+                  .subscribe()
+                  .then(push.refresh)
+                  .catch(() => {});
               }
             } catch (e: any) {
               toast.error(e?.message || "Could not check in");
@@ -557,10 +594,14 @@ export function ProfileHero({
                 : t("profile.hero.checkInToday") || "Your check-in is Today"}
           </span>
           {!checkedInToday && (
-            <span aria-hidden className="text-electric group-hover:translate-x-1 transition-transform">→</span>
+            <span
+              aria-hidden
+              className="text-electric group-hover:translate-x-1 transition-transform"
+            >
+              →
+            </span>
           )}
         </button>
-
       </div>
 
       {/* Stat strip — individual glass tiles */}
@@ -633,7 +674,8 @@ export function ProfileHero({
                 {activeProgram.program.title}
               </div>
               <div className="text-xs text-muted-foreground">
-                {activeProgram.progress.completed_days.length}/{activeProgram.totalDays} {t("library.days")}
+                {activeProgram.progress.completed_days.length}/{activeProgram.totalDays}{" "}
+                {t("library.days")}
               </div>
               <Progress value={activeProgram.pct} className="mt-2" />
               <div className="mt-2 text-xs font-semibold text-electric">
@@ -647,7 +689,10 @@ export function ProfileHero({
       {/* iOS HealthKit Integration Card */}
       {isIOSNative() && !hkConnected && (
         <div className="relative overflow-hidden rounded-[1.5rem] border border-rose-500/25 bg-gradient-to-br from-rose-500/10 via-onyx-100 to-onyx-100 p-5 shadow-[0_12px_24px_rgba(244,63,94,0.06)]">
-          <div className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-rose-500/10 blur-2xl" aria-hidden />
+          <div
+            className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-rose-500/10 blur-2xl"
+            aria-hidden
+          />
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex gap-3">
               <div className="h-10 w-10 shrink-0 rounded-xl bg-rose-500/20 grid place-items-center text-rose-400">
@@ -658,7 +703,8 @@ export function ProfileHero({
                   Sync with Apple Health
                 </h3>
                 <p className="text-xs text-muted-foreground mt-0.5 max-w-md">
-                  Automatically import your body weight, sync workouts, and track daily activity calories.
+                  Automatically import your body weight, sync workouts, and track daily activity
+                  calories.
                 </p>
               </div>
             </div>
@@ -696,7 +742,10 @@ export function ProfileHero({
         >
           <DialogContent className="w-[calc(100%-3rem)] max-w-[280px] rounded-2xl border-electric/40 bg-gradient-to-b from-onyx-50 to-onyx-100 p-0 text-center text-foreground shadow-[0_20px_60px_rgba(37,99,235,0.4)]">
             <div className="relative overflow-hidden rounded-2xl p-4">
-              <div className="pointer-events-none absolute -top-10 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full bg-electric/25 blur-2xl" aria-hidden />
+              <div
+                className="pointer-events-none absolute -top-10 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full bg-electric/25 blur-2xl"
+                aria-hidden
+              />
               <div className="relative">
                 <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-electric">
                   {t("profile.hero.achievementUnlocked")}
@@ -704,10 +753,16 @@ export function ProfileHero({
                 <div className="mx-auto mt-3 grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-electric to-[#1e3a8a] shadow-[0_0_24px_rgba(37,99,235,0.6)]">
                   <div className="scale-125">
                     {isValidElement(celebrateQueue[0].icon)
-                      ? cloneElement(celebrateQueue[0].icon as React.ReactElement<{ className?: string; size?: number }>, {
-                          className: `${((celebrateQueue[0].icon as React.ReactElement<{ className?: string }>).props.className || "").replace(/h-\d+\s+w-\d+/g, "").trim()} h-8 w-8`,
-                          size: 32,
-                        })
+                      ? cloneElement(
+                          celebrateQueue[0].icon as React.ReactElement<{
+                            className?: string;
+                            size?: number;
+                          }>,
+                          {
+                            className: `${((celebrateQueue[0].icon as React.ReactElement<{ className?: string }>).props.className || "").replace(/h-\d+\s+w-\d+/g, "").trim()} h-8 w-8`,
+                            size: 32,
+                          },
+                        )
                       : celebrateQueue[0].icon}
                   </div>
                 </div>
@@ -730,10 +785,8 @@ export function ProfileHero({
               </div>
             </div>
           </DialogContent>
-
         </Dialog>
       )}
-
 
       <Dialog open={statsOpen} onOpenChange={setStatsOpen}>
         <DialogContent className="w-[calc(100%-1rem)] max-w-md rounded-2xl border-electric/25 bg-gradient-to-b from-onyx-50 to-onyx-100 p-0 text-foreground shadow-[0_24px_80px_rgba(37,99,235,0.25)]">
@@ -752,7 +805,9 @@ export function ProfileHero({
                   <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
                     {t("profile.hero.thisWeekScore")}
                   </div>
-                  <div className="mt-1 font-display text-4xl font-bold text-electric">{doneThisWeek}/7</div>
+                  <div className="mt-1 font-display text-4xl font-bold text-electric">
+                    {doneThisWeek}/7
+                  </div>
                 </div>
                 <div className="text-right">
                   <div className="font-display text-2xl font-bold">{weeklyPct}%</div>
@@ -771,7 +826,9 @@ export function ProfileHero({
                   <div
                     key={i}
                     className={`rounded-xl border p-2 text-center ${
-                      done ? "border-electric/60 bg-electric/15 text-electric" : "border-border bg-onyx-100 text-muted-foreground"
+                      done
+                        ? "border-electric/60 bg-electric/15 text-electric"
+                        : "border-border bg-onyx-100 text-muted-foreground"
                     }`}
                   >
                     <div className="text-[10px] font-bold uppercase">{d}</div>
@@ -839,7 +896,11 @@ export function ProfileHero({
 function StatCell({ value, label, accent }: { value: number; label: string; accent?: boolean }) {
   return (
     <div className="min-w-0 rounded-2xl border border-white/10 bg-white/5 px-2 py-3 text-center">
-      <div className={`font-display text-xl font-black leading-none ${accent ? "text-electric" : "text-foreground"}`}>{value}</div>
+      <div
+        className={`font-display text-xl font-black leading-none ${accent ? "text-electric" : "text-foreground"}`}
+      >
+        {value}
+      </div>
       <div className="mt-1.5 text-[9px] uppercase tracking-widest text-muted-foreground font-bold leading-tight break-words">
         {label}
       </div>
@@ -847,7 +908,17 @@ function StatCell({ value, label, accent }: { value: number; label: string; acce
   );
 }
 
-function Badge({ unlocked, icon, label, flame: _flame }: { unlocked: boolean; icon: React.ReactNode; label: string; flame?: boolean }) {
+function Badge({
+  unlocked,
+  icon,
+  label,
+  flame: _flame,
+}: {
+  unlocked: boolean;
+  icon: React.ReactNode;
+  label: string;
+  flame?: boolean;
+}) {
   return (
     <div
       className={`shrink-0 flex flex-col items-center gap-2 w-20 ${unlocked ? "" : "opacity-40"}`}
@@ -869,17 +940,24 @@ function Badge({ unlocked, icon, label, flame: _flame }: { unlocked: boolean; ic
   );
 }
 
-
 function MiniStat({ value, label }: { value: number; label: string }) {
   return (
     <div className="rounded-xl border border-border bg-onyx-100 p-3 text-center">
       <div className="font-display text-xl font-bold text-electric">{value}</div>
-      <div className="mt-1 text-[9px] font-bold uppercase tracking-widest text-muted-foreground leading-tight">{label}</div>
+      <div className="mt-1 text-[9px] font-bold uppercase tracking-widest text-muted-foreground leading-tight">
+        {label}
+      </div>
     </div>
   );
 }
 
-type AchItem = { key: string; unlocked: boolean; icon: React.ReactNode; label: string; flame?: boolean };
+type AchItem = {
+  key: string;
+  unlocked: boolean;
+  icon: React.ReactNode;
+  label: string;
+  flame?: boolean;
+};
 
 function AchievementsBlock({
   workoutsCompleted,
@@ -897,24 +975,98 @@ function AchievementsBlock({
   longestStreak: number;
   achievementsOpen: boolean;
   setAchievementsOpen: (v: boolean) => void;
-  onNewlyUnlocked: (items: { key: string; label: string; icon: React.ReactNode; flame?: boolean }[]) => void;
+  onNewlyUnlocked: (
+    items: { key: string; label: string; icon: React.ReactNode; flame?: boolean }[],
+  ) => void;
   t: (k: string) => string;
 }) {
   const flame = <Flame className="h-5 w-5 text-orange-400" fill="currentColor" />;
   const achievements: AchItem[] = [
-    { key: "first-workout", unlocked: workoutsCompleted >= 1, icon: <Dumbbell className="h-5 w-5" />, label: t("profile.hero.firstWorkout") },
-    { key: "streak-3", unlocked: longestStreak >= 3, icon: flame, label: t("profile.hero.threeDay") || "3-day streak", flame: true },
-    { key: "streak-7", unlocked: longestStreak >= 7, icon: flame, label: t("profile.hero.sevenDay"), flame: true },
-    { key: "streak-14", unlocked: longestStreak >= 14, icon: flame, label: t("profile.hero.fourteenDay") || "14-day streak", flame: true },
-    { key: "streak-30", unlocked: longestStreak >= 30, icon: flame, label: t("profile.hero.thirtyDay"), flame: true },
-    { key: "streak-60", unlocked: longestStreak >= 60, icon: flame, label: t("profile.hero.sixtyDay") || "60-day streak", flame: true },
-    { key: "streak-100", unlocked: longestStreak >= 100, icon: flame, label: t("profile.hero.hundredDay") || "100-day streak", flame: true },
-    { key: "streak-180", unlocked: longestStreak >= 180, icon: flame, label: t("profile.hero.oneEightyDay") || "180-day streak", flame: true },
-    { key: "streak-365", unlocked: longestStreak >= 365, icon: <Trophy className="h-5 w-5 text-yellow-400" />, label: t("profile.hero.yearStreak") || "1-year streak" },
-    { key: "first-challenge", unlocked: challengesDone >= 1, icon: <Trophy className="h-5 w-5 text-yellow-400" />, label: t("profile.hero.firstChallenge") },
-    { key: "recipes-10", unlocked: recipesTried >= 10, icon: <Utensils className="h-5 w-5" />, label: t("profile.hero.tenRecipes") },
-    { key: "workouts-50", unlocked: workoutsCompleted >= 50, icon: <Dumbbell className="h-5 w-5" />, label: t("profile.hero.fiftyWorkouts") },
-    { key: "workouts-100", unlocked: workoutsCompleted >= 100, icon: <Dumbbell className="h-5 w-5" />, label: t("profile.hero.hundredWorkouts") || "100 workouts" },
+    {
+      key: "first-workout",
+      unlocked: workoutsCompleted >= 1,
+      icon: <Dumbbell className="h-5 w-5" />,
+      label: t("profile.hero.firstWorkout"),
+    },
+    {
+      key: "streak-3",
+      unlocked: longestStreak >= 3,
+      icon: flame,
+      label: t("profile.hero.threeDay") || "3-day streak",
+      flame: true,
+    },
+    {
+      key: "streak-7",
+      unlocked: longestStreak >= 7,
+      icon: flame,
+      label: t("profile.hero.sevenDay"),
+      flame: true,
+    },
+    {
+      key: "streak-14",
+      unlocked: longestStreak >= 14,
+      icon: flame,
+      label: t("profile.hero.fourteenDay") || "14-day streak",
+      flame: true,
+    },
+    {
+      key: "streak-30",
+      unlocked: longestStreak >= 30,
+      icon: flame,
+      label: t("profile.hero.thirtyDay"),
+      flame: true,
+    },
+    {
+      key: "streak-60",
+      unlocked: longestStreak >= 60,
+      icon: flame,
+      label: t("profile.hero.sixtyDay") || "60-day streak",
+      flame: true,
+    },
+    {
+      key: "streak-100",
+      unlocked: longestStreak >= 100,
+      icon: flame,
+      label: t("profile.hero.hundredDay") || "100-day streak",
+      flame: true,
+    },
+    {
+      key: "streak-180",
+      unlocked: longestStreak >= 180,
+      icon: flame,
+      label: t("profile.hero.oneEightyDay") || "180-day streak",
+      flame: true,
+    },
+    {
+      key: "streak-365",
+      unlocked: longestStreak >= 365,
+      icon: <Trophy className="h-5 w-5 text-yellow-400" />,
+      label: t("profile.hero.yearStreak") || "1-year streak",
+    },
+    {
+      key: "first-challenge",
+      unlocked: challengesDone >= 1,
+      icon: <Trophy className="h-5 w-5 text-yellow-400" />,
+      label: t("profile.hero.firstChallenge"),
+    },
+    {
+      key: "recipes-10",
+      unlocked: recipesTried >= 10,
+      icon: <Utensils className="h-5 w-5" />,
+      label: t("profile.hero.tenRecipes"),
+    },
+    {
+      key: "workouts-50",
+      unlocked: workoutsCompleted >= 50,
+      icon: <Dumbbell className="h-5 w-5" />,
+      label: t("profile.hero.fiftyWorkouts"),
+    },
+    {
+      key: "workouts-100",
+      unlocked: workoutsCompleted >= 100,
+      icon: <Dumbbell className="h-5 w-5" />,
+      label: t("profile.hero.hundredWorkouts") || "100 workouts",
+    },
   ];
 
   useEffect(() => {
@@ -935,7 +1087,10 @@ function AchievementsBlock({
     const newly = unlockedNow.filter((a) => !seenSet.has(a.key));
     if (newly.length > 0) {
       onNewlyUnlocked(newly.map(({ key, label, icon, flame }) => ({ key, label, icon, flame })));
-      localStorage.setItem(STORE_KEY, JSON.stringify(Array.from(new Set([...seen, ...unlockedKeys]))));
+      localStorage.setItem(
+        STORE_KEY,
+        JSON.stringify(Array.from(new Set([...seen, ...unlockedKeys]))),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workoutsCompleted, challengesDone, recipesTried, longestStreak]);
@@ -969,7 +1124,8 @@ function AchievementsBlock({
                 {t("profile.hero.allAchievements") || "All achievements"}
               </DialogTitle>
               <DialogDescription className="mt-1 text-xs text-muted-foreground">
-                {achievements.filter((a) => a.unlocked).length} / {achievements.length} {t("profile.hero.done")}
+                {achievements.filter((a) => a.unlocked).length} / {achievements.length}{" "}
+                {t("profile.hero.done")}
               </DialogDescription>
             </div>
             <DialogClose className="absolute right-3 top-[max(env(safe-area-inset-top),0.75rem)] z-50 grid h-9 w-9 place-items-center rounded-full bg-onyx-950/70 text-white backdrop-blur-md ring-1 ring-white/20 hover:bg-onyx-950/90 transition-colors focus:outline-none focus:ring-2 focus:ring-electric">
@@ -999,8 +1155,12 @@ function AchievementsBlock({
                     <div className="text-[10px] font-bold uppercase tracking-widest leading-tight">
                       {a.label}
                     </div>
-                    <div className={`text-[9px] font-bold uppercase tracking-widest ${a.unlocked ? "text-electric" : "text-muted-foreground"}`}>
-                      {a.unlocked ? (t("profile.hero.unlocked") || "Unlocked") : (t("profile.hero.locked") || "Locked")}
+                    <div
+                      className={`text-[9px] font-bold uppercase tracking-widest ${a.unlocked ? "text-electric" : "text-muted-foreground"}`}
+                    >
+                      {a.unlocked
+                        ? t("profile.hero.unlocked") || "Unlocked"
+                        : t("profile.hero.locked") || "Locked"}
                     </div>
                   </div>
                 ))}

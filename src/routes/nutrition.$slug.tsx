@@ -23,7 +23,9 @@ export const Route = createFileRoute("/nutrition/$slug")({
   notFoundComponent: () => (
     <div className="container-onyx py-32 text-center">
       <h1 className="font-display text-3xl font-bold">Supplement not found</h1>
-      <Link to="/" className="mt-6 inline-block text-electric">← Back home</Link>
+      <Link to="/" className="mt-6 inline-block text-electric">
+        ← Back home
+      </Link>
     </div>
   ),
   errorComponent: ({ error }) => (
@@ -36,7 +38,9 @@ export const Route = createFileRoute("/nutrition/$slug")({
 });
 
 function SupplementPage() {
-  const { supplement: s } = Route.useLoaderData() as { supplement: ReturnType<typeof getSupplement> & {} };
+  const { supplement: s } = Route.useLoaderData() as {
+    supplement: ReturnType<typeof getSupplement> & {};
+  };
   const router = useRouter();
   const related = supplements.filter((x) => x.slug !== s.slug).slice(0, 3);
 
@@ -54,8 +58,14 @@ function SupplementPage() {
       <section className="relative border-b border-border/60">
         <div className="container-onyx grid lg:grid-cols-2 gap-10 py-14 md:py-20 items-center">
           <div className="relative aspect-square rounded-2xl overflow-hidden surface-card order-2 lg:order-1">
-            <img src={s.image} alt={s.name} width={1024} height={1024}
-              className="h-full w-full object-cover" decoding="async" />
+            <img
+              src={s.image}
+              alt={s.name}
+              width={1024}
+              height={1024}
+              className="h-full w-full object-cover"
+              decoding="async"
+            />
           </div>
           <div className="order-1 lg:order-2">
             <button
@@ -83,7 +93,9 @@ function SupplementPage() {
             <ul className="grid sm:grid-cols-2 gap-3">
               {s.benefits.map((b) => (
                 <li key={b} className="flex gap-3 items-start surface-card rounded-lg p-4">
-                  <span className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-electric/15 text-electric flex items-center justify-center text-xs">✓</span>
+                  <span className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-electric/15 text-electric flex items-center justify-center text-xs">
+                    ✓
+                  </span>
                   <span className="text-sm">{b}</span>
                 </li>
               ))}
@@ -118,7 +130,9 @@ function SupplementPage() {
                 <details key={f.q} className="group p-5 open:bg-onyx-100/40">
                   <summary className="flex justify-between items-center cursor-pointer font-semibold text-sm list-none">
                     {f.q}
-                    <span className="text-electric transition-transform group-open:rotate-45">+</span>
+                    <span className="text-electric transition-transform group-open:rotate-45">
+                      +
+                    </span>
                   </summary>
                   <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{f.a}</p>
                 </details>
@@ -135,20 +149,34 @@ function SupplementPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               Programs that work alongside your nutrition stack.
             </p>
-            <Link to="/app" className="mt-4 inline-flex w-full justify-center rounded-md bg-electric px-4 py-2.5 text-sm font-semibold text-onyx-50 hover:bg-electric-glow">
+            <Link
+              to="/app"
+              className="mt-4 inline-flex w-full justify-center rounded-md bg-electric px-4 py-2.5 text-sm font-semibold text-onyx-50 hover:bg-electric-glow"
+            >
               Get the App
             </Link>
           </div>
 
           <div className="surface-card rounded-xl p-6">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Related</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+              Related
+            </p>
             <ul className="mt-3 space-y-3">
               {related.map((r) => (
                 <li key={r.slug}>
-                  <Link to="/nutrition/$slug" params={{ slug: r.slug }}
-                    className="flex gap-3 items-center group">
-                    <img src={r.image} alt="" width={56} height={56}
-                      className="h-14 w-14 rounded-md object-cover" decoding="async" />
+                  <Link
+                    to="/nutrition/$slug"
+                    params={{ slug: r.slug }}
+                    className="flex gap-3 items-center group"
+                  >
+                    <img
+                      src={r.image}
+                      alt=""
+                      width={56}
+                      height={56}
+                      className="h-14 w-14 rounded-md object-cover"
+                      decoding="async"
+                    />
                     <div>
                       <p className="text-sm font-semibold group-hover:text-electric">{r.name}</p>
                       <p className="text-xs text-muted-foreground line-clamp-1">{r.tagline}</p>

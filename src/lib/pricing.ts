@@ -77,7 +77,6 @@ const PRICES: Record<PriceKey, Record<string, string>> = {
     es: "€11.99",
     no: "99 kr",
   },
-
 };
 
 export function getPrice(key: PriceKey, lang: string): string {

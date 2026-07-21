@@ -8,7 +8,7 @@ export interface FastingPlan {
   fast_hours: number;
   eat_hours: number;
   start_time: string; // HH:MM (fast start)
-  end_time: string;   // HH:MM (fast end)
+  end_time: string; // HH:MM (fast end)
   weekly_days: number[]; // 0=Sun..6=Sat
   reminders_enabled: boolean;
   active: boolean;
@@ -41,9 +41,7 @@ export async function upsertFastingPlan(input: Partial<FastingPlan>) {
     active: input.active ?? true,
     updated_at: new Date().toISOString(),
   };
-  const { error } = await supabase
-    .from("fasting_plans")
-    .upsert(payload, { onConflict: "user_id" });
+  const { error } = await supabase.from("fasting_plans").upsert(payload, { onConflict: "user_id" });
   if (error) throw error;
 }
 

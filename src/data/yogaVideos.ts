@@ -33,7 +33,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Yoga for Complete Beginners",
     category: "Beginner Yoga",
     duration: "20 min",
-    description: "A gentle, accessible introduction to foundational yoga poses and breathwork. Perfect for your very first practice.",
+    description:
+      "A gentle, accessible introduction to foundational yoga poses and breathwork. Perfect for your very first practice.",
   },
   {
     id: "beginner-2",
@@ -41,7 +42,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Yoga For Complete Beginners - Relaxation",
     category: "Beginner Yoga",
     duration: "20 min",
-    description: "Slow-paced flow focused on relaxation and body awareness, ideal for building confidence on the mat.",
+    description:
+      "Slow-paced flow focused on relaxation and body awareness, ideal for building confidence on the mat.",
   },
   {
     id: "morning-1",
@@ -57,7 +59,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Morning Yoga Flow - Energize & Awaken",
     category: "Morning Yoga",
     duration: "15 min",
-    description: "Gentle sun-salutation-based flow to boost circulation and mental focus for the day ahead.",
+    description:
+      "Gentle sun-salutation-based flow to boost circulation and mental focus for the day ahead.",
   },
   {
     id: "mobility-1",
@@ -65,7 +68,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Full Body Mobility Routine",
     category: "Mobility & Recovery",
     duration: "12 min",
-    description: "Targeted joint mobility work for hips, shoulders, and spine, great as an active recovery day.",
+    description:
+      "Targeted joint mobility work for hips, shoulders, and spine, great as an active recovery day.",
   },
   {
     id: "mobility-2",
@@ -73,7 +77,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Daily Mobility Routine For Athletes",
     category: "Mobility & Recovery",
     duration: "15 min",
-    description: "Restore range of motion and reduce stiffness with this athlete-focused mobility flow.",
+    description:
+      "Restore range of motion and reduce stiffness with this athlete-focused mobility flow.",
   },
   {
     id: "postworkout-1",
@@ -89,7 +94,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Full Body Cool Down Stretch",
     category: "Post-Workout Stretching",
     duration: "8 min",
-    description: "Gentle static stretches for the whole body, the perfect finisher for any workout.",
+    description:
+      "Gentle static stretches for the whole body, the perfect finisher for any workout.",
   },
   {
     id: "pregnancy-1",
@@ -97,7 +103,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Prenatal Yoga - Safe For All Trimesters",
     category: "Pregnancy Yoga",
     duration: "20 min",
-    description: "Gentle, modified poses safe for expecting mothers to build strength and ease discomfort.",
+    description:
+      "Gentle, modified poses safe for expecting mothers to build strength and ease discomfort.",
   },
   {
     id: "pregnancy-2",
@@ -105,7 +112,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Prenatal Yoga Flow",
     category: "Pregnancy Yoga",
     duration: "25 min",
-    description: "A calming pregnancy flow focused on hip opening, breath, and pelvic floor awareness.",
+    description:
+      "A calming pregnancy flow focused on hip opening, breath, and pelvic floor awareness.",
   },
   {
     id: "senior-1",
@@ -113,7 +121,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Chair Yoga For Seniors",
     category: "Senior Mobility",
     duration: "15 min",
-    description: "Accessible chair-based routine to maintain flexibility, balance, and joint health.",
+    description:
+      "Accessible chair-based routine to maintain flexibility, balance, and joint health.",
   },
   {
     id: "senior-2",
@@ -121,7 +130,8 @@ export const yogaVideos: YogaVideo[] = [
     title: "Gentle Yoga For Seniors",
     category: "Senior Mobility",
     duration: "20 min",
-    description: "Slow, low-impact movements designed for older adults to improve mobility and confidence.",
+    description:
+      "Slow, low-impact movements designed for older adults to improve mobility and confidence.",
   },
   {
     id: "lowback-1",

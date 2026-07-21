@@ -8,7 +8,10 @@ export const Route = createFileRoute("/_authenticated/subscription")({
   head: () => ({
     meta: [
       { title: "Subscription & billing — Onyx Elevate" },
-      { name: "description", content: "Manage your Onyx membership, billing details, invoices and cancellation." },
+      {
+        name: "description",
+        content: "Manage your Onyx membership, billing details, invoices and cancellation.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -37,7 +40,9 @@ function SubscriptionPage() {
           {t("Subscription & billing")}
         </h1>
         <p className="mt-2 max-w-xl text-sm md:text-base text-muted-foreground">
-          {t("Manage your plan, update payment details, view invoices, and cancel any time. Full control in one place.")}
+          {t(
+            "Manage your plan, update payment details, view invoices, and cancel any time. Full control in one place.",
+          )}
         </p>
       </header>
 
@@ -46,10 +51,11 @@ function SubscriptionPage() {
       {!onIOS && (
         <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-border bg-onyx-50 p-4 text-xs text-muted-foreground">
           <Shield className="h-4 w-4 mt-0.5 text-electric shrink-0" />
-          <p>{t("Payments are handled securely by Stripe. Onyx never stores your card details.")}</p>
+          <p>
+            {t("Payments are handled securely by Stripe. Onyx never stores your card details.")}
+          </p>
         </div>
       )}
     </div>
   );
 }
-

@@ -33,7 +33,7 @@ function QuickWorkoutPage() {
   const { workout } = Route.useLoaderData() as { workout: QuickWorkout };
   const access = useAccess();
   const { user, loading: authLoading } = useAuth();
-  
+
   const router = useRouter();
   const t = useT();
   const hasMembership = access.hasBundle || access.hasSubscription;
@@ -49,9 +49,10 @@ function QuickWorkoutPage() {
 
   if (stillResolving) {
     return (
-      <div className="container-onyx py-24 text-center text-muted-foreground text-sm">{t("Loading…") || "Loading…"}</div>
+      <div className="container-onyx py-24 text-center text-muted-foreground text-sm">
+        {t("Loading…") || "Loading…"}
+      </div>
     );
-
   }
 
   // Guests and non-members both see the purchase gate. Guests can sign in from there.
@@ -84,14 +85,25 @@ function QuickWorkoutPage() {
           <p className="text-[10px] uppercase tracking-[0.25em] text-electric font-semibold">
             {t("programs.quick.title")} · {t("programs.quick.eyebrow")}
           </p>
-          <h1 className="mt-2 font-display text-3xl md:text-4xl font-bold leading-tight">{t(`programs.quick.item.${workout.slug}.title`) || workout.title}</h1>
+          <h1 className="mt-2 font-display text-3xl md:text-4xl font-bold leading-tight">
+            {t(`programs.quick.item.${workout.slug}.title`) || workout.title}
+          </h1>
           <p className="mt-3 text-base text-foreground/85 max-w-2xl">{t(workout.intro)}</p>
 
           <div className="mt-5 flex flex-wrap gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-onyx-100 px-2.5 py-1"><Clock className="h-3.5 w-3.5 text-electric" /> {workout.minutes} {t("programs.quick.min")}</span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-onyx-100 px-2.5 py-1"><Dumbbell className="h-3.5 w-3.5 text-electric" /> {workout.equipment}</span>
-            <span className="rounded-full border border-border bg-onyx-100 px-2.5 py-1 uppercase tracking-wider">{t(`programs.quick.tag.${workout.tag}`)}</span>
-            <span className="rounded-full border border-border bg-onyx-100 px-2.5 py-1">{totalExercises} {t("program.table.exercise")}</span>
+            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-onyx-100 px-2.5 py-1">
+              <Clock className="h-3.5 w-3.5 text-electric" /> {workout.minutes}{" "}
+              {t("programs.quick.min")}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-onyx-100 px-2.5 py-1">
+              <Dumbbell className="h-3.5 w-3.5 text-electric" /> {workout.equipment}
+            </span>
+            <span className="rounded-full border border-border bg-onyx-100 px-2.5 py-1 uppercase tracking-wider">
+              {t(`programs.quick.tag.${workout.tag}`)}
+            </span>
+            <span className="rounded-full border border-border bg-onyx-100 px-2.5 py-1">
+              {totalExercises} {t("program.table.exercise")}
+            </span>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -118,7 +130,8 @@ function QuickWorkoutPage() {
             <FavoriteButton type="program" slug={favSlug} />
           </div>
           <p className="mt-2 text-[11px] text-muted-foreground">
-            {t("programs.quick.saveHint") || "Save this workout to My Library, you can find it any time under favorites."}
+            {t("programs.quick.saveHint") ||
+              "Save this workout to My Library, you can find it any time under favorites."}
           </p>
         </div>
       </section>
@@ -131,10 +144,13 @@ function QuickWorkoutPage() {
               <p className="text-[10px] uppercase tracking-[0.25em] font-semibold text-electric">
                 {t("programs.quick.title")}
               </p>
-              <h2 className="font-display text-lg font-bold truncate">{t(`programs.quick.item.${workout.slug}.title`) || workout.title}</h2>
+              <h2 className="font-display text-lg font-bold truncate">
+                {t(`programs.quick.item.${workout.slug}.title`) || workout.title}
+              </h2>
             </div>
             <span className="text-xs text-muted-foreground shrink-0 inline-flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> {workout.minutes} {t("programs.quick.min")} · {totalExercises} {t("program.table.exercise")}
+              <Clock className="h-3.5 w-3.5" /> {workout.minutes} {t("programs.quick.min")} ·{" "}
+              {totalExercises} {t("program.table.exercise")}
             </span>
           </header>
 
@@ -162,7 +178,10 @@ function QuickWorkoutPage() {
                     title={t("program.watchDemo") || "Watch demo video"}
                   >
                     <span className="grid h-6 w-6 place-items-center rounded-full bg-electric/15 border border-electric/30 group-hover:bg-electric/30 transition-colors shrink-0">
-                      <Play className="h-3 w-3 text-electric translate-x-[1px]" fill="currentColor" />
+                      <Play
+                        className="h-3 w-3 text-electric translate-x-[1px]"
+                        fill="currentColor"
+                      />
                     </span>
                     <span className="truncate font-semibold">{t(ex.name)}</span>
                   </Link>
@@ -179,16 +198,28 @@ function QuickWorkoutPage() {
                     )}
                     <div className="mt-2 grid grid-cols-3 gap-2 text-[11px]">
                       <div className="rounded-md bg-onyx-50/60 border border-border/60 px-2 py-1.5">
-                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("program.table.sets")}</p>
-                        <p className="text-foreground font-semibold"><GlossaryText>{String(ex.sets)}</GlossaryText></p>
+                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">
+                          {t("program.table.sets")}
+                        </p>
+                        <p className="text-foreground font-semibold">
+                          <GlossaryText>{String(ex.sets)}</GlossaryText>
+                        </p>
                       </div>
                       <div className="rounded-md bg-onyx-50/60 border border-border/60 px-2 py-1.5">
-                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("program.table.reps")}</p>
-                        <p className="text-foreground font-semibold"><GlossaryText>{String(ex.reps)}</GlossaryText></p>
+                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">
+                          {t("program.table.reps")}
+                        </p>
+                        <p className="text-foreground font-semibold">
+                          <GlossaryText>{String(ex.reps)}</GlossaryText>
+                        </p>
                       </div>
                       <div className="rounded-md bg-onyx-50/60 border border-border/60 px-2 py-1.5">
-                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("program.table.rest")}</p>
-                        <p className="text-foreground font-semibold"><GlossaryText>{String(ex.rest)}</GlossaryText></p>
+                        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">
+                          {t("program.table.rest")}
+                        </p>
+                        <p className="text-foreground font-semibold">
+                          <GlossaryText>{String(ex.rest)}</GlossaryText>
+                        </p>
                       </div>
                     </div>
                   </li>
@@ -198,24 +229,30 @@ function QuickWorkoutPage() {
           </ul>
         </section>
 
-
         {/* More quick workouts */}
         <div className="pt-6">
           <p className="text-[10px] uppercase tracking-[0.25em] text-electric font-semibold">
             {t("programs.quick.more") || "More quick workouts"}
           </p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {quickWorkouts.filter((w) => w.slug !== workout.slug).slice(0, 6).map((w) => (
-              <Link
-                key={w.slug}
-                to="/quick-workouts/$slug"
-                params={{ slug: w.slug }}
-                className="rounded-lg border border-border bg-onyx-100 p-3 hover:border-electric/50 transition-colors"
-              >
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{t(`programs.quick.tag.${w.tag}`)} · {w.minutes} {t("programs.quick.min")}</p>
-                <p className="text-sm font-semibold mt-1 truncate">{t(`programs.quick.item.${w.slug}.title`) || w.title}</p>
-              </Link>
-            ))}
+            {quickWorkouts
+              .filter((w) => w.slug !== workout.slug)
+              .slice(0, 6)
+              .map((w) => (
+                <Link
+                  key={w.slug}
+                  to="/quick-workouts/$slug"
+                  params={{ slug: w.slug }}
+                  className="rounded-lg border border-border bg-onyx-100 p-3 hover:border-electric/50 transition-colors"
+                >
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {t(`programs.quick.tag.${w.tag}`)} · {w.minutes} {t("programs.quick.min")}
+                  </p>
+                  <p className="text-sm font-semibold mt-1 truncate">
+                    {t(`programs.quick.item.${w.slug}.title`) || w.title}
+                  </p>
+                </Link>
+              ))}
           </div>
         </div>
       </div>
@@ -223,25 +260,56 @@ function QuickWorkoutPage() {
   );
 }
 
-function LockedGate({ slug, title, signedIn = true }: { slug: string; title: string; signedIn?: boolean }) {
+function LockedGate({
+  slug,
+  title,
+  signedIn = true,
+}: {
+  slug: string;
+  title: string;
+  signedIn?: boolean;
+}) {
   const t = useT();
   return (
     <div className="container-onyx py-16 max-w-xl text-center">
       <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-onyx-100 border border-border">
         <Lock className="h-6 w-6 text-electric" />
       </div>
-      <h1 className="mt-4 font-display text-2xl md:text-3xl font-bold">{title} {t("is a member workout")}</h1>
+      <h1 className="mt-4 font-display text-2xl md:text-3xl font-bold">
+        {title} {t("is a member workout")}
+      </h1>
       <p className="mt-3 text-sm text-muted-foreground">
-        {t("Quick Workouts are part of your Onyx membership. Unlock any plan, monthly, yearly or lifetime, to open every workout.")}
+        {t(
+          "Quick Workouts are part of your Onyx membership. Unlock any plan, monthly, yearly or lifetime, to open every workout.",
+        )}
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Link to="/programs" hash="all-access" className="rounded-md bg-electric px-6 py-3 text-sm font-bold text-onyx-50 hover:bg-electric-glow">{t("See membership →")}</Link>
+        <Link
+          to="/programs"
+          hash="all-access"
+          className="rounded-md bg-electric px-6 py-3 text-sm font-bold text-onyx-50 hover:bg-electric-glow"
+        >
+          {t("See membership →")}
+        </Link>
         {!signedIn && (
-          <Link to="/auth" search={{ redirect: `/quick-workouts/${slug}` }} className="rounded-md border border-electric bg-onyx-100 px-6 py-3 text-sm font-bold text-electric">{t("Sign in")}</Link>
+          <Link
+            to="/auth"
+            search={{ redirect: `/quick-workouts/${slug}` }}
+            className="rounded-md border border-electric bg-onyx-100 px-6 py-3 text-sm font-bold text-electric"
+          >
+            {t("Sign in")}
+          </Link>
         )}
-        <Link to="/programs" className="rounded-md border border-border bg-onyx-100 px-6 py-3 text-sm font-bold">{t("Back to programs")}</Link>
+        <Link
+          to="/programs"
+          className="rounded-md border border-border bg-onyx-100 px-6 py-3 text-sm font-bold"
+        >
+          {t("Back to programs")}
+        </Link>
       </div>
-      <p className="mt-6 text-[11px] text-muted-foreground">{t("Workout:")} {slug}</p>
+      <p className="mt-6 text-[11px] text-muted-foreground">
+        {t("Workout:")} {slug}
+      </p>
     </div>
   );
 }
@@ -251,7 +319,9 @@ function NotFoundBlock() {
   return (
     <div className="container-onyx py-24 text-center">
       <h1 className="font-display text-2xl font-bold">{t("Workout not found")}</h1>
-      <Link to="/programs" className="text-electric font-semibold mt-4 inline-block">← {t("Back to programs")}</Link>
+      <Link to="/programs" className="text-electric font-semibold mt-4 inline-block">
+        ← {t("Back to programs")}
+      </Link>
     </div>
   );
 }
@@ -262,9 +332,9 @@ function ErrorBlock({ message }: { message: string }) {
     <div className="container-onyx py-24 text-center">
       <h1 className="font-display text-2xl font-bold">{t("Something went wrong")}</h1>
       <p className="text-sm text-muted-foreground mt-2">{message}</p>
-      <Link to="/programs" className="text-electric font-semibold mt-4 inline-block">← {t("Back to programs")}</Link>
+      <Link to="/programs" className="text-electric font-semibold mt-4 inline-block">
+        ← {t("Back to programs")}
+      </Link>
     </div>
   );
 }
-
-

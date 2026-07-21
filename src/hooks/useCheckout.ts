@@ -25,7 +25,9 @@ export function useCheckout() {
     async (options: OpenCheckoutOptions) => {
       setLoading(true);
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         if (!session?.user) {
           const next = `${window.location.pathname}${window.location.search}`;
           window.location.href = `/auth?redirect=${encodeURIComponent(next)}`;
@@ -36,11 +38,19 @@ export function useCheckout() {
         if (isIOSNative()) {
           // Map productSlug to RevenueCat product kind
           let rcKind: RCProductKind | null = null;
-          if (options.productSlug.includes("monthly") || options.productSlug.startsWith("program:") || options.productSlug.startsWith("plan:")) {
+          if (
+            options.productSlug.includes("monthly") ||
+            options.productSlug.startsWith("program:") ||
+            options.productSlug.startsWith("plan:")
+          ) {
             rcKind = "monthly";
           } else if (options.productSlug.includes("yearly")) {
             rcKind = "yearly";
-          } else if (options.productSlug.includes("lifetime") || options.productSlug === "bundle" || options.productSlug === "__all_access__") {
+          } else if (
+            options.productSlug.includes("lifetime") ||
+            options.productSlug === "bundle" ||
+            options.productSlug === "__all_access__"
+          ) {
             rcKind = "lifetime";
           }
 
@@ -90,5 +100,3 @@ export function useCheckout() {
 
   return { openCheckout, loading };
 }
-
-
