@@ -14,18 +14,8 @@ import {
 import yogaHeroAsset from "@/assets/yoga/yoga-hero-class.png.asset.json";
 import yogaMatAsset from "@/assets/yoga/yoga-lake.png.asset.json";
 
-import poseDownwardDogAsset from "@/assets/yoga/pose-downward-dog-new.png.asset.json";
-import poseChildsPoseAsset from "@/assets/yoga/pose-childs-pose-new.png.asset.json";
-import poseCobraAsset from "@/assets/yoga/pose-cobra-new.png.asset.json";
-import poseWarriorAsset from "@/assets/yoga/pose-warrior-new.png.asset.json";
-import posePigeonAsset from "@/assets/yoga/pose-pigeon-new.png.asset.json";
-import poseForwardFoldAsset from "@/assets/yoga/pose-forward-fold-new.png.asset.json";
-import poseCatCowAsset from "@/assets/yoga/pose-cat-cow-new.png.asset.json";
-import poseBridgeAsset from "@/assets/yoga/pose-bridge-new.png.asset.json";
-import poseTreeAsset from "@/assets/yoga/pose-tree-new.png.asset.json";
-import poseLotusAsset from "@/assets/yoga/pose-lotus-new.png.asset.json";
-import poseSavasanaAsset from "@/assets/yoga/pose-savasana-new.png.asset.json";
-import poseLowLunge from "@/assets/yoga/pose-low-lunge.jpg";
+import { poses as yogaPoses, type Pose } from "@/data/yogaPoses";
+export const poses = yogaPoses;
 
 import articleMorningAsset from "@/assets/yoga/article-morning-reset-new.png.asset.json";
 import articleMobilityAsset from "@/assets/yoga/article-mobility-new.png.asset.json";
@@ -35,16 +25,16 @@ import articleBreathingImg from "@/assets/yoga/article-breathing.jpg";
 export const Route = createFileRoute("/yoga-mobility")({
   head: () => ({
     meta: [
-      { title: "Yoga & Mobility - A Calm Corner | Onyx Elevate" },
+      { title: "Yoga & Stretching - A Calm Corner | Onyx Elevate" },
       {
         name: "description",
         content:
-          "A calm home for yoga and mobility at Onyx Elevate - featured guided practice, foundational poses, and thoughtful reads on breath, recovery, and mindful movement.",
+          "A calm home for yoga and stretching at Onyx Elevate - featured guided practice, foundational poses, and thoughtful reads on breath, recovery, and mindful movement.",
       },
-      { property: "og:title", content: "Yoga & Mobility - Onyx Elevate" },
+      { property: "og:title", content: "Yoga & Stretching - Onyx Elevate" },
       {
         property: "og:description",
-        content: "A calm space for yoga and mobility - practice, breathe, recover.",
+        content: "A calm space for yoga and stretching - practice, breathe, recover.",
       },
     ],
   }),
@@ -87,436 +77,6 @@ function DialogCloseX({ className }: { className?: string }) {
     </DialogClose>
   );
 }
-
-type Pose = {
-  image: string;
-  name: string;
-  focus: string;
-  description: string;
-  sanskrit: string;
-  level: "Beginner" | "Beginner–Intermediate" | "Intermediate";
-  hold: string;
-  benefits: string[];
-  steps: string[];
-  breathing: string;
-  mistakes: string[];
-  modifications: string[];
-};
-
-export const poses: Pose[] = [
-  {
-    image: poseDownwardDogAsset.url,
-    name: "Downward Dog",
-    focus: "Full body",
-    description:
-      "A foundational inversion that lengthens the hamstrings, opens the shoulders, and decompresses the spine. Press the floor away and let your heels reach the ground.",
-    sanskrit: "Adho Mukha Svanasana",
-    level: "Beginner",
-    hold: "5–8 slow breaths",
-    benefits: [
-      "Lengthens hamstrings, calves and spine",
-      "Opens shoulders and upper back",
-      "Builds strength in arms and core",
-      "Calms the nervous system",
-    ],
-    steps: [
-      "Start on hands and knees. Wrists under shoulders, knees under hips.",
-      "Spread your fingers wide and press the whole hand firmly into the mat, especially the base of the index finger and thumb.",
-      "Tuck your toes under and, on an exhale, lift your hips up and back toward the ceiling.",
-      "Keep a soft bend in the knees at first. Focus on lengthening the spine - not on getting heels down.",
-      "Draw your shoulder blades down your back, ears in line with your upper arms.",
-      "Slowly start to straighten the legs and press the heels toward the floor. It's okay if they don't touch.",
-    ],
-    breathing:
-      "Inhale to lengthen the spine, exhale to root through the hands and press the hips higher. Long, quiet nasal breathing throughout.",
-    mistakes: [
-      "Locking the elbows and dumping weight into the wrists.",
-      "Rounding the upper back trying to force heels down.",
-      "Hands too close to the feet - this shortens the pose.",
-    ],
-    modifications: [
-      "Bend the knees generously if hamstrings are tight.",
-      "Place a folded blanket under the wrists for support.",
-      "Take Puppy Pose (forearms down) if wrists are sensitive.",
-    ],
-  },
-  {
-    image: poseChildsPoseAsset.url,
-    name: "Child's Pose",
-    focus: "Rest • Hips",
-    description:
-      "A restorative pose to return to whenever you need a breath. Knees wide, big toes touching, forehead soft on the mat. Breathe into your lower back.",
-    sanskrit: "Balasana",
-    level: "Beginner",
-    hold: "1–3 minutes",
-    benefits: [
-      "Gently opens the hips, thighs and ankles",
-      "Releases tension in the lower back",
-      "Calms the mind and slows the breath",
-      "A safe reset between any two poses",
-    ],
-    steps: [
-      "Kneel on the mat with your big toes touching and knees as wide as the mat.",
-      "Sit your hips back toward your heels.",
-      "On an exhale, walk your hands forward and lower your torso between your thighs.",
-      "Rest your forehead on the mat (or on a block/fist if it doesn't reach).",
-      "Let your arms be long in front of you, palms down, or rest them alongside your body, palms up.",
-      "Soften your jaw, shoulders and belly. Stay as long as you need.",
-    ],
-    breathing:
-      "Breathe slowly into the back of the ribs and lower back - feel the body expand behind you on the inhale and settle on the exhale.",
-    mistakes: [
-      "Tensing the shoulders up toward the ears.",
-      "Holding the breath instead of letting it deepen.",
-    ],
-    modifications: [
-      "Place a bolster or folded blanket between the thighs and rest the torso on it.",
-      "Bring the knees together if wide knees strain the hips.",
-      "Put a cushion under the ankles if the tops of the feet are tight.",
-    ],
-  },
-  {
-    image: poseCobraAsset.url,
-    name: "Cobra",
-    focus: "Spine • Chest",
-    description:
-      "A gentle backbend that strengthens the low back and opens the chest. Keep your elbows soft and lift only as high as your body allows without strain.",
-    sanskrit: "Bhujangasana",
-    level: "Beginner",
-    hold: "3–5 breaths, repeat 2–3 times",
-    benefits: [
-      "Strengthens the spine, glutes and back of the shoulders",
-      "Opens the chest and front of the body",
-      "Counters the effect of sitting all day",
-    ],
-    steps: [
-      "Lie face down. Legs straight, tops of the feet on the mat, hip-width apart.",
-      "Place your hands flat under your shoulders, elbows tucked close to the ribs.",
-      "Press the pubic bone and tops of the feet firmly into the mat.",
-      "On an inhale, gently peel your chest off the floor using your back muscles first.",
-      "Only then press lightly into the hands to lift a little higher - keep a bend in the elbows.",
-      "Draw the shoulders down and back. Gaze forward or slightly up without crunching the neck.",
-    ],
-    breathing:
-      "Inhale to lift and lengthen, exhale to lower. Never hold your breath in a backbend.",
-    mistakes: [
-      "Pushing up with the arms and dumping into the low back.",
-      "Crunching the neck by throwing the head back.",
-      "Letting the elbows flare out to the sides.",
-    ],
-    modifications: [
-      "Start with Sphinx Pose (forearms down) if the low back is sensitive.",
-      "Keep the lift low - inches off the floor is plenty.",
-    ],
-  },
-  {
-    image: poseCatCowAsset.url,
-    name: "Cat–Cow",
-    focus: "Spine mobility",
-    description:
-      "A slow flow linking breath to movement. Inhale, drop the belly and lift the chest; exhale, round the spine. The best warm-up for any session.",
-    sanskrit: "Marjaryasana–Bitilasana",
-    level: "Beginner",
-    hold: "8–12 slow rounds",
-    benefits: [
-      "Mobilises every segment of the spine",
-      "Warms up the shoulders, hips and core",
-      "Syncs breath with movement to settle the mind",
-    ],
-    steps: [
-      "Come to hands and knees. Wrists under shoulders, knees under hips, spine neutral.",
-      "Inhale (Cow): drop the belly, lift the chest and tailbone, gaze gently forward.",
-      "Exhale (Cat): tuck the tailbone, round the spine toward the ceiling, chin toward chest.",
-      "Move slowly - let each breath drive the movement, not the other way around.",
-      "Repeat 8–12 rounds, exploring side-to-side and circular movement in the final rounds.",
-    ],
-    breathing:
-      "One breath per movement. Inhale opens the front body, exhale opens the back body.",
-    mistakes: [
-      "Rushing through the movement without matching the breath.",
-      "Collapsing into the shoulders - keep the arms actively pressing the floor away.",
-    ],
-    modifications: [
-      "Pad the knees with a folded blanket.",
-      "Do the same movement seated in a chair if kneeling isn't available.",
-    ],
-  },
-  {
-    image: poseWarriorAsset.url,
-    name: "Warrior II",
-    focus: "Legs • Focus",
-    description:
-      "A grounding standing pose that builds leg strength, hip mobility, and mental steadiness. Front knee tracks the middle toes, gaze soft over the front hand.",
-    sanskrit: "Virabhadrasana II",
-    level: "Beginner–Intermediate",
-    hold: "5–8 breaths per side",
-    benefits: [
-      "Builds strength in legs, glutes and core",
-      "Opens the hips and inner thighs",
-      "Improves focus, stamina and balance",
-    ],
-    steps: [
-      "Step your feet wide apart, about one leg-length.",
-      "Turn your right foot out 90°. Turn your left toes slightly in.",
-      "Align the right heel with the arch of the left foot.",
-      "Bend the right knee to 90°, stacking it directly over the ankle. The knee tracks toward the middle toes.",
-      "Press the outer edge of the back foot firmly into the mat and straighten the back leg.",
-      "Extend your arms parallel to the floor, palms down. Shoulders relaxed.",
-      "Turn your head to gaze softly over the front middle finger.",
-      "Hold, then switch sides.",
-    ],
-    breathing:
-      "Steady, even breathing. Inhale to lengthen the spine taller; exhale to sink the hips lower.",
-    mistakes: [
-      "Front knee collapsing inward - actively press it out toward the pinky toe.",
-      "Front knee traveling past the ankle.",
-      "Leaning the torso forward over the front leg. Keep the shoulders stacked over the hips.",
-    ],
-    modifications: [
-      "Shorten your stance if the front knee wobbles.",
-      "Rest hands on hips if the shoulders fatigue.",
-    ],
-  },
-  {
-    image: posePigeonAsset.url,
-    name: "Pigeon Pose",
-    focus: "Hip opener",
-    description:
-      "A deep hip opener that releases tension in the glutes and outer hip. Move in slowly, support the front hip with a folded blanket if needed.",
-    sanskrit: "Eka Pada Rajakapotasana (prep)",
-    level: "Intermediate",
-    hold: "1–3 minutes per side",
-    benefits: [
-      "Deep release for the outer hip, glutes and piriformis",
-      "Opens hip flexors of the back leg",
-      "Relieves lower-back tightness caused by tight hips",
-    ],
-    steps: [
-      "Start in Downward Dog. Bring your right knee forward toward your right wrist.",
-      "Angle the right shin toward the left wrist - the more parallel to the front of the mat, the deeper the stretch.",
-      "Slide the left leg straight back. Top of the left foot pressing into the mat, hips square to the front.",
-      "Support the right hip with a folded blanket or block so both hips are level.",
-      "Stay tall through the chest for a lighter version, or walk the hands forward and rest the forehead down for a deeper release.",
-      "Breathe long and slow. Switch sides.",
-    ],
-    breathing:
-      "Slow nasal breathing. Each exhale, invite the front hip to soften - never force the stretch.",
-    mistakes: [
-      "Letting the front hip collapse to the floor - this twists the knee.",
-      "Forcing the shin parallel before the hip is open enough.",
-      "Holding tension in the jaw and shoulders.",
-    ],
-    modifications: [
-      "Always support the front-side hip with a blanket, bolster or block.",
-      "Try Figure-4 (Reclined Pigeon) on your back if the knee is sensitive.",
-    ],
-  },
-  {
-    image: poseForwardFoldAsset.url,
-    name: "Seated Forward Fold",
-    focus: "Hamstrings",
-    description:
-      "A calming forward fold that stretches the entire back line of the body. Lead with the chest, not the head, and let the breath deepen the pose over time.",
-    sanskrit: "Paschimottanasana",
-    level: "Beginner",
-    hold: "1–3 minutes",
-    benefits: [
-      "Stretches hamstrings, calves and the entire back body",
-      "Calms the mind and quiets the nervous system",
-      "Gently massages the abdominal organs",
-    ],
-    steps: [
-      "Sit on the floor with legs straight in front, feet flexed. Sit on a folded blanket if your low back rounds.",
-      "Inhale, reach both arms overhead and lengthen the spine tall.",
-      "Exhale, hinge forward from the hips (not the waist), reaching the chest toward the toes.",
-      "Take hold of your shins, ankles or feet - wherever you can reach without rounding.",
-      "Keep the front of the spine long. Lead with the sternum, not the forehead.",
-      "Let each exhale melt you a little deeper. Never force.",
-    ],
-    breathing:
-      "Inhale to lengthen the spine, exhale to fold a little deeper. Breath is the pose.",
-    mistakes: [
-      "Rounding the back to try to touch the toes.",
-      "Locking the knees hard - keep a micro-bend.",
-      "Pulling with the arms instead of hinging from the hips.",
-    ],
-    modifications: [
-      "Bend the knees generously and place a rolled blanket under them.",
-      "Loop a strap around the feet and hold the strap with a tall spine.",
-    ],
-  },
-  {
-    image: poseBridgeAsset.url,
-    name: "Bridge Pose",
-    focus: "Glutes • Back",
-    description:
-      "A gentle backbend that strengthens the glutes and hamstrings while opening the front of the hips. Press evenly through both feet and lift with control.",
-    sanskrit: "Setu Bandha Sarvangasana",
-    level: "Beginner",
-    hold: "5–8 breaths, repeat 2–3 times",
-    benefits: [
-      "Strengthens glutes, hamstrings and back",
-      "Opens the chest, shoulders and hip flexors",
-      "Counters the effects of sitting",
-    ],
-    steps: [
-      "Lie on your back. Bend the knees, feet flat, hip-width apart, close to the sit bones.",
-      "Arms alongside the body, palms down.",
-      "On an inhale, press evenly through both feet and lift the hips toward the ceiling.",
-      "Roll the shoulders under one at a time and interlace the fingers beneath your back if it's available.",
-      "Keep the thighs parallel - don't let the knees splay outward.",
-      "Lift the chest toward the chin, but keep the chin slightly away from the chest.",
-      "To release, unclasp the hands and lower down one vertebra at a time.",
-    ],
-    breathing:
-      "Inhale to lift, breathe steadily while holding, exhale to lower slowly.",
-    mistakes: [
-      "Knees splaying outward - squeeze a block between the thighs to feel the alignment.",
-      "Turning the head from side to side while lifted (protect the neck).",
-      "Pushing too high and dumping into the low back.",
-    ],
-    modifications: [
-      "Place a yoga block on any height under the sacrum for Supported Bridge - a passive, restorative version.",
-    ],
-  },
-  {
-    image: poseTreeAsset.url,
-    name: "Tree Pose",
-    focus: "Balance",
-    description:
-      "A single-leg balance that builds ankle stability and mental focus. Fix your gaze on one point and root down through the standing foot.",
-    sanskrit: "Vrksasana",
-    level: "Beginner",
-    hold: "30 seconds – 1 minute per side",
-    benefits: [
-      "Builds ankle, knee and hip stability",
-      "Strengthens the standing leg and core",
-      "Improves focus and balance",
-    ],
-    steps: [
-      "Stand tall in Mountain Pose, feet together, weight even.",
-      "Shift weight into the left foot. Feel all four corners of that foot press down.",
-      "Pick up the right foot and place the sole on the inside of the left ankle, calf or inner thigh - never on the knee.",
-      "Press foot and inner leg into each other equally.",
-      "Bring the hands to prayer at the heart, or extend them overhead like branches.",
-      "Fix your gaze on one still point (a drishti) about eye level.",
-      "Breathe. Switch sides.",
-    ],
-    breathing:
-      "Slow, even breathing. If the breath speeds up, you're gripping - soften and re-root.",
-    mistakes: [
-      "Placing the foot on the standing knee - always above or below.",
-      "Letting the standing hip pop out to the side.",
-      "Looking at a moving object (this kills balance).",
-    ],
-    modifications: [
-      "Keep the toes of the lifted foot on the floor with the heel against the ankle.",
-      "Stand near a wall for a fingertip touch of support.",
-    ],
-  },
-  {
-    image: poseLotusAsset.url,
-    name: "Easy Seat",
-    focus: "Meditation",
-    description:
-      "A simple cross-legged seat for breathwork and meditation. Sit tall, crown lifted, shoulders soft. Let the breath settle before you begin.",
-    sanskrit: "Sukhasana",
-    level: "Beginner",
-    hold: "3–10 minutes for meditation",
-    benefits: [
-      "Grounds the body for breathwork and meditation",
-      "Opens the hips gently over time",
-      "Encourages upright, effortless posture",
-    ],
-    steps: [
-      "Sit on a folded blanket or cushion so the hips are higher than the knees.",
-      "Cross the shins loosely in front of you, one foot in front of the other.",
-      "Root down through both sit bones evenly.",
-      "Stack the shoulders over the hips, ears over the shoulders, crown of the head lifting.",
-      "Rest the hands on the thighs or knees, palms up or down.",
-      "Soften the eyes, jaw and shoulders. Begin to breathe.",
-    ],
-    breathing:
-      "Slow, even nasal breathing. A 4-count inhale and 6-count exhale is a calming place to start.",
-    mistakes: [
-      "Sitting flat on the floor with hips lower than the knees - the low back will round.",
-      "Tilting the pelvis backward and slumping.",
-    ],
-    modifications: [
-      "Sit against a wall for support.",
-      "Sit in a chair with both feet flat on the floor, spine tall - meditation is about the mind, not the shape.",
-    ],
-  },
-  {
-    image: poseSavasanaAsset.url,
-    name: "Savasana",
-    focus: "Rest • Integration",
-    description:
-      "The final pose of every practice. Lie flat, palms facing up, and let everything soften. This is where the work is absorbed into the body.",
-    sanskrit: "Savasana",
-    level: "Beginner",
-    hold: "5–10 minutes",
-    benefits: [
-      "Allows the nervous system to fully downshift",
-      "Integrates the benefits of the practice",
-      "Reduces stress and mental fatigue",
-    ],
-    steps: [
-      "Lie on your back. Let the legs fall out to the sides, feet wider than the hips.",
-      "Arms rest away from the body, palms facing up.",
-      "Roll the shoulders down and back so the chest is open.",
-      "Slightly tuck the chin so the back of the neck is long.",
-      "Close the eyes. Let the whole body get heavy - no muscle is doing anything.",
-      "Stay 5–10 minutes. To come out, wiggle fingers and toes, then roll to your right side before sitting up slowly.",
-    ],
-    breathing:
-      "Let the breath return to its natural rhythm. No effort, no counting - just observe.",
-    mistakes: [
-      "Skipping it. Savasana is not a bonus - it's part of the practice.",
-      "Falling asleep every time. Aim for restful awareness.",
-    ],
-    modifications: [
-      "Place a bolster or rolled blanket under the knees for the low back.",
-      "Cover the eyes with an eye pillow or folded towel.",
-      "Cover the body with a blanket - the body cools quickly in stillness.",
-    ],
-  },
-  {
-    image: poseLowLunge,
-    name: "Low Lunge",
-    focus: "Hips • Legs",
-    description:
-      "A grounding lunge that opens the hip flexors, lengthens the front body, and builds steady lower-body control. Keep the chest lifted and breathe into the stretch.",
-    sanskrit: "Anjaneyasana",
-    level: "Beginner",
-    hold: "5–8 breaths per side",
-    benefits: [
-      "Deep stretch for the hip flexors and psoas",
-      "Strengthens the front leg and glutes",
-      "Opens the chest and shoulders",
-    ],
-    steps: [
-      "From Downward Dog, step your right foot forward between your hands.",
-      "Lower the left knee to the mat and untuck the back toes (top of the foot on the floor).",
-      "Slide the back knee back until you feel a stretch across the front of the left hip.",
-      "Stack the right knee directly over the right ankle.",
-      "On an inhale, sweep the arms up overhead. Reach the fingertips up as the tailbone lengthens down.",
-      "Draw the low belly in slightly to protect the low back. Gaze forward or slightly up.",
-      "Hold, then switch sides.",
-    ],
-    breathing:
-      "Inhale to lift and lengthen, exhale to root the back knee down and sink the hips slightly.",
-    mistakes: [
-      "Letting the front knee travel past the ankle.",
-      "Cranking the low back by pushing the hips too far forward.",
-      "Collapsing the shoulders up around the ears.",
-    ],
-    modifications: [
-      "Pad the back knee with a folded blanket.",
-      "Keep the hands on the front thigh or on blocks either side of the front foot if reaching up is too intense.",
-    ],
-  },
-];
 
 type ArticleSection = { heading: string; body: string; bullets?: string[] };
 type Article = {
@@ -696,7 +256,7 @@ function PoseCard({ pose: p }: { pose: Pose }) {
         >
           <div className="relative aspect-[4/3] overflow-hidden bg-onyx-100">
             <img
-              src={p.image}
+              src={`https://vz-3d635cd8-505.b-cdn.net/${p.guid}/thumbnail.jpg`}
               alt={p.name}
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -717,16 +277,17 @@ function PoseCard({ pose: p }: { pose: Pose }) {
         </article>
       </DialogTrigger>
 
-      <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
-        <DialogCloseX className="absolute right-3 top-3 z-50" />
-        <div className="relative aspect-[16/9] overflow-hidden rounded-none sm:rounded-t-2xl bg-onyx-50 border-b border-border/60">
-          <img
-            src={p.image}
-            alt={p.name}
-            className="absolute inset-0 h-full w-full object-cover"
+      <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-3xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+        <DialogCloseX className="absolute right-3 top-[calc(12px+env(safe-area-inset-top,0px))] sm:top-3 z-50" />
+        <div className="relative aspect-[16/9] overflow-hidden rounded-none sm:rounded-t-2xl bg-black border-b border-border/60">
+          <iframe
+            src={`https://iframe.mediadelivery.net/embed/709339/${p.guid}?autoplay=true&loop=false&muted=false&preload=true`}
+            title={p.name}
+            className="absolute inset-0 h-full w-full border-0"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowFullScreen
           />
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-onyx-50 to-transparent" />
-          <span className="absolute top-3 left-3 rounded-md border border-electric/40 bg-onyx-50/80 backdrop-blur-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-electric">
+          <span className="absolute top-3 left-3 rounded-md border border-electric/40 bg-onyx-50/80 backdrop-blur-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-electric z-10">
             {p.focus}
           </span>
         </div>
@@ -736,9 +297,11 @@ function PoseCard({ pose: p }: { pose: Pose }) {
             <DialogTitle className="font-display text-2xl md:text-3xl font-bold">
               {p.name}
             </DialogTitle>
-            <DialogDescription className="text-sm italic text-muted-foreground">
-              {p.sanskrit}
-            </DialogDescription>
+            {p.sanskrit && (
+              <DialogDescription className="text-sm italic text-muted-foreground">
+                {p.sanskrit}
+              </DialogDescription>
+            )}
           </DialogHeader>
 
           <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-wider">
@@ -862,11 +425,11 @@ function YogaMobilityPage() {
             Free • A calm corner of Onyx
           </span>
           <h1 className="mt-4 font-display text-4xl md:text-6xl font-bold tracking-tight">
-            Yoga & <span className="text-gradient-electric">Mobility</span>
+            Yoga & <span className="text-gradient-electric">Stretching</span>
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
             A quiet space to breathe, stretch, and recover. Start with a featured practice,
-            learn the foundational poses, and explore short reads on mindful movement.
+            learn the foundational poses and stretches, and explore short reads on mindful movement.
           </p>
         </div>
       </section>
@@ -967,12 +530,11 @@ function YogaMobilityPage() {
               The Practice
             </span>
             <h2 className="mt-2 font-display text-2xl md:text-3xl font-bold">
-              Ten poses. A lifetime of practice.
+              Daily flows. A lifetime of health.
             </h2>
             <p className="mt-3 text-sm md:text-base text-muted-foreground leading-relaxed">
-              You don't need a hundred postures - you need a handful, practiced with attention.
-              Below are the foundational shapes that most yoga sessions return to. Learn them
-              slowly, feel them deeply, and let them become old friends.
+              You don't need a hundred exercises — you need a handful of high-quality moves, practiced with attention.
+              Explore the video library below, learn the postures, and feel the difference.
             </p>
           </div>
           <div className="relative rounded-2xl overflow-hidden border border-border/60 min-h-[220px]">
@@ -992,10 +554,10 @@ function YogaMobilityPage() {
         <div className="mb-6 flex items-end justify-between gap-4">
           <div className="min-w-0">
             <span className="text-xs uppercase tracking-wider text-electric font-semibold">
-              Foundational Poses
+              Library
             </span>
             <h2 className="mt-1 font-display text-2xl md:text-3xl font-bold">
-              The shapes worth knowing
+              Foundational poses & stretches
             </h2>
           </div>
           <Dialog>
@@ -1008,14 +570,14 @@ function YogaMobilityPage() {
               </button>
             </DialogTrigger>
             <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-5xl h-[100dvh] sm:h-[92dvh] max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
-              <DialogHeader className="relative sticky top-0 z-10 bg-onyx-50/95 backdrop-blur border-b border-border/60 px-4 sm:px-6 py-4 text-left">
+              <DialogHeader className="relative sticky top-0 z-10 bg-onyx-50/95 backdrop-blur border-b border-border/60 px-4 sm:px-6 pb-4 pt-[calc(16px+env(safe-area-inset-top,0px))] sm:pt-4 text-left">
                 <DialogTitle className="font-display text-xl md:text-2xl font-bold">
-                  Foundational Poses
+                  Yoga & Stretching Library
                 </DialogTitle>
                 <DialogDescription className="text-sm text-muted-foreground">
-                  Every shape, one place. Tap any pose for the full guide.
+                  Every video, one place. Tap any video for the full guide.
                 </DialogDescription>
-                <DialogCloseX className="absolute right-3 top-1/2 -translate-y-1/2" />
+                <DialogCloseX className="absolute right-3 top-[calc(18px+env(safe-area-inset-top,0px))] sm:top-1/2 sm:-translate-y-1/2" />
               </DialogHeader>
               <div className="px-4 sm:px-6 py-6 grid grid-cols-2 gap-4">
                 {poses.map((p) => (
@@ -1027,7 +589,7 @@ function YogaMobilityPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4 md:gap-5">
-          {poses.map((p) => (
+          {poses.slice(0, 10).map((p) => (
             <PoseCard key={p.name} pose={p} />
           ))}
         </div>
@@ -1097,8 +659,8 @@ function YogaMobilityPage() {
                   </article>
                 </DialogTrigger>
 
-                <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
-                  <DialogCloseX className="absolute right-3 top-3 z-50" />
+                <DialogContent className="block w-full sm:w-[calc(100%-1rem)] max-w-full sm:max-w-2xl h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain p-0 pt-[env(safe-area-inset-top,0px)] sm:pt-0 bg-onyx-50 border-border/60 rounded-none sm:rounded-2xl [-webkit-overflow-scrolling:touch]">
+                  <DialogCloseX className="absolute right-3 top-[calc(12px+env(safe-area-inset-top,0px))] sm:top-3 z-50" />
                   <div className="relative aspect-[16/9] overflow-hidden rounded-none sm:rounded-t-2xl bg-onyx-100">
                     <img
                       src={a.image}
