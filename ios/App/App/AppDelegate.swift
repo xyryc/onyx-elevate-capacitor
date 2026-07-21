@@ -8,7 +8,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Force CapgoCapacitorHealth framework to load before Capacitor's bridge scans
+        // for CAPBridgedPlugin subclasses. Dynamic frameworks are loaded lazily on iOS,
+        // so without this explicit reference the ObjC runtime won't see HealthPlugin
+        // during startup and every bridge call will hang indefinitely.
+        _ = HealthPlugin.self
         return true
     }
 
