@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import CapgoCapacitorHealth
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

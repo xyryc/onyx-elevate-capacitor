@@ -64,39 +64,55 @@ export async function hkIsAvailable(): Promise<boolean> {
  */
 export async function hkRequestPermissions(): Promise<boolean> {
   if (!isIOSNative()) return false;
-  try {
-    console.log("[HealthKit] Requesting permissions...");
-    const Health = await getHealth();
 
-    // First verify HealthKit is actually available on this device.
-    const available = await Health.isAvailable();
-    if (!available) {
-      console.warn("[HealthKit] HealthKit is not available on this device/simulator.");
+  // Safety timeout — if the native bridge doesn't respond in 10s, resolve false
+  // rather than hanging the UI forever. This can happen if the plugin class is
+  // stripped by the linker (requires import CapgoCapacitorHealth in AppDelegate).
+  const timeoutPromise = new Promise<boolean>((resolve) =>
+    setTimeout(() => {
+      console.warn(
+        "[HealthKit] Native bridge timed out (10s). " +
+          "Ensure `import CapgoCapacitorHealth` is in AppDelegate.swift and rebuild from Xcode.",
+      );
+      resolve(false);
+    }, 10000),
+  );
+
+  const authPromise = (async (): Promise<boolean> => {
+    try {
+      console.log("[HealthKit] Requesting permissions...");
+      const Health = await getHealth();
+
+      // Fast-fail if HealthKit is not available on this device/simulator.
+      const available = await Health.isAvailable();
+      if (!available) {
+        console.warn("[HealthKit] HealthKit is not available on this device.");
+        return false;
+      }
+      console.log("[HealthKit] HealthKit available — calling requestAuthorization...");
+
+      const options = {
+        read: ["steps", "calories", "weight", "height"],
+        write: ["weight", "calories"],
+      };
+      await Health.requestAuthorization(options);
+      console.log("[HealthKit] requestAuthorization resolved — permission sheet answered.");
+      return true;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg.includes("Failed to execute") || msg.includes("not implemented")) {
+        console.error(
+          "[HealthKit] Native plugin not linked. Rebuild from Xcode after adding import.",
+          err,
+        );
+      } else {
+        console.error("[HealthKit] Authorization failed:", err);
+      }
       return false;
     }
+  })();
 
-    const options = {
-      read: ["steps", "calories", "weight", "height"],
-      write: ["weight", "calories"],
-    };
-
-    console.log("[HealthKit] Calling requestAuthorization...");
-    await Health.requestAuthorization(options);
-    console.log("[HealthKit] requestAuthorization resolved — user answered sheet.");
-    return true;
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    // "Failed to execute" or bridge errors mean the native plugin isn't linked yet.
-    if (msg.includes("Failed to execute") || msg.includes("not implemented")) {
-      console.error(
-        "[HealthKit] Native plugin not linked. Rebuild the app from Xcode after `pod install`.",
-        err,
-      );
-    } else {
-      console.error("[HealthKit] Authorization failed:", err);
-    }
-    return false;
-  }
+  return Promise.race([authPromise, timeoutPromise]);
 }
 
 /**
