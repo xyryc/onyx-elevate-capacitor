@@ -1824,7 +1824,7 @@ function ScanFoodDialog({ date, slot, onClose, onLogged }: { date: string; slot:
 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="flex h-[100dvh] max-h-[100dvh] w-full min-w-0 flex-col overflow-hidden rounded-none border border-border bg-onyx-50 sm:h-auto sm:max-h-[92dvh] sm:max-w-lg sm:rounded-2xl">
+      <div className="flex h-[100dvh] max-h-[100dvh] w-full min-w-0 flex-col overflow-hidden rounded-none border border-border bg-onyx-50 pt-[env(safe-area-inset-top,0px)] sm:pt-0 sm:h-auto sm:max-h-[92dvh] sm:max-w-lg sm:rounded-2xl">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border p-3 sm:p-4">
           <div className="min-w-0">
             <h3 className="flex items-center gap-2 truncate font-display font-bold capitalize"><Camera className="h-4 w-4 shrink-0 text-electric" /> Scan food · {slot}</h3>
@@ -1850,7 +1850,7 @@ function ScanFoodDialog({ date, slot, onClose, onLogged }: { date: string; slot:
           </button>
         </div>
 
-        <div className="min-w-0 flex-1 space-y-3 overflow-y-auto p-3 sm:p-4">
+        <div className="min-w-0 flex-1 space-y-3 overflow-y-auto px-3 pt-3 pb-[calc(12px+env(safe-area-inset-bottom,0px))] sm:p-4">
           {!preview && !scanning && (
             <label className="block cursor-pointer">
               <div className="rounded-xl border-2 border-dashed border-electric/40 bg-electric/5 p-8 text-center hover:bg-electric/10 transition-colors">

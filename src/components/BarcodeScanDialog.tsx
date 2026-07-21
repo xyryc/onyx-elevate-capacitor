@@ -415,7 +415,7 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
 
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="flex h-[100dvh] max-h-[100dvh] w-full min-w-0 flex-col overflow-hidden rounded-none border border-border bg-onyx-50 sm:h-auto sm:max-h-[92dvh] sm:max-w-lg sm:rounded-2xl">
+      <div className="flex h-[100dvh] max-h-[100dvh] w-full min-w-0 flex-col overflow-hidden rounded-none border border-border bg-onyx-50 pt-[env(safe-area-inset-top,0px)] sm:pt-0 sm:h-auto sm:max-h-[92dvh] sm:max-w-lg sm:rounded-2xl">
         <div className="grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border p-3 sm:p-4">
           <div className="min-w-0">
             <h3 className="flex items-center gap-2 truncate font-display font-bold capitalize">
@@ -430,7 +430,7 @@ export function BarcodeScanDialog({ date, slot, onClose, onLogged, onDraftSaved 
           </button>
         </div>
 
-        <div className="min-w-0 flex-1 space-y-3 overflow-y-auto p-3 sm:p-4">
+        <div className="min-w-0 flex-1 space-y-3 overflow-y-auto px-3 pt-3 pb-[calc(12px+env(safe-area-inset-bottom,0px))] sm:p-4">
           {!product && (
             <>
               <div className="flex items-center justify-center gap-1 rounded-lg bg-onyx-100 p-1">

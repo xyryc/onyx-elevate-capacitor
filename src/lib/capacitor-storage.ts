@@ -1,3 +1,5 @@
+import { Capacitor } from "@capacitor/core";
+
 /**
  * Capacitor-native storage adapter for Supabase auth.
  *
@@ -69,6 +71,5 @@ export const capacitorStorage: StorageAdapter = {
  * Checks whether the code is running inside a Capacitor native WebView.
  */
 export function isCapacitorNative(): boolean {
-  if (typeof window === "undefined") return false;
-  return (window as unknown as { Capacitor?: { isNative?: boolean } }).Capacitor?.isNative === true;
+  return Capacitor.isNativePlatform();
 }
