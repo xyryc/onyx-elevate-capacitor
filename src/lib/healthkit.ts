@@ -22,12 +22,20 @@ export function isIOSNative(): boolean {
 
 type HealthDataType = "steps" | "calories" | "weight" | "height";
 
+export interface HkSummary {
+  steps?: number;
+  calories?: number;
+  weightKg?: number;
+  heightCm?: number;
+}
+
 interface HealthPlugin {
   isAvailable(): Promise<{ available: boolean; platform: "ios" }>;
   requestAuthorization(options: {
     read: HealthDataType[];
     write: HealthDataType[];
   }): Promise<unknown>;
+  getTodaySummary(): Promise<HkSummary>;
 }
 
 const Health = registerPlugin<HealthPlugin>("Health");
@@ -95,6 +103,22 @@ export async function hkRequestPermissions(): Promise<boolean> {
     return await Promise.race([authPromise, timeoutPromise]);
   } finally {
     if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Fetch today's summary metrics from Apple Health:
+ * steps, active calories, latest weight (kg), latest height (cm).
+ */
+export async function hkGetTodaySummary(): Promise<HkSummary | null> {
+  if (!isIOSNative()) return null;
+  try {
+    const summary = await Health.getTodaySummary();
+    console.log("[HealthKit] getTodaySummary result:", JSON.stringify(summary));
+    return summary;
+  } catch (err) {
+    console.error("[HealthKit] getTodaySummary failed:", err);
+    return null;
   }
 }
 

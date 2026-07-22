@@ -18,8 +18,11 @@ import {
   BarChart3,
   Pencil,
   X,
+  Footprints,
+  RefreshCw,
 } from "lucide-react";
 import { Link, useRouter } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
 import { getMyStreak, getRecentCheckInDays, getThisWeekLoggedDays } from "@/lib/streak";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { useT, useLang } from "@/i18n/LanguageProvider";
@@ -29,6 +32,8 @@ import {
   hkRequestPermissions,
   hkIsConnected,
   hkSetEnabled,
+  hkGetTodaySummary,
+  type HkSummary,
 } from "@/lib/healthkit";
 import type { Lang } from "@/i18n";
 import { Progress } from "@/components/ui/progress";
@@ -135,11 +140,32 @@ export function ProfileHero({
   const [hkAvailable, setHkAvailable] = useState(false);
   const [hkConnected, setHkConnected] = useState(false);
   const [syncingHk, setSyncingHk] = useState(false);
+  const [hkSummary, setHkSummary] = useState<HkSummary | null>(null);
+  const [fetchingHk, setFetchingHk] = useState(false);
+
+  const fetchHkData = async () => {
+    setFetchingHk(true);
+    try {
+      const data = await hkGetTodaySummary();
+      if (data) {
+        setHkSummary(data);
+      }
+    } catch (err) {
+      console.error("[HealthKit] Error fetching summary:", err);
+    } finally {
+      setFetchingHk(false);
+    }
+  };
 
   useEffect(() => {
     if (isIOSNative()) {
       hkIsAvailable().then(setHkAvailable);
-      hkIsConnected().then(setHkConnected);
+      hkIsConnected().then((connected) => {
+        setHkConnected(connected);
+        if (connected) {
+          fetchHkData();
+        }
+      });
     }
   }, []);
 
@@ -158,6 +184,7 @@ export function ProfileHero({
         if (authorized) {
           await hkSetEnabled(true);
           setHkConnected(true);
+          fetchHkData();
           toast.success(
             t("profile.healthkit.success") || "Apple Health sync enabled successfully! ✅",
           );
@@ -175,6 +202,7 @@ export function ProfileHero({
     } else {
       await hkSetEnabled(false);
       setHkConnected(false);
+      setHkSummary(null);
       toast.success(t("profile.healthkit.disabled") || "Apple Health sync disabled.");
     }
   };
@@ -668,38 +696,134 @@ export function ProfileHero({
         )}
       </div>
 
-      {/* iOS HealthKit Integration Card */}
-      {isIOSNative() && !hkConnected && (
-        <div className="relative overflow-hidden rounded-[1.5rem] border border-rose-500/25 bg-gradient-to-br from-rose-500/10 via-onyx-100 to-onyx-100 p-5 shadow-[0_12px_24px_rgba(244,63,94,0.06)]">
-          <div
-            className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-rose-500/10 blur-2xl"
-            aria-hidden
-          />
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex gap-3">
-              <div className="h-10 w-10 shrink-0 rounded-xl bg-rose-500/20 grid place-items-center text-rose-400">
-                <Heart className="h-5 w-5 fill-rose-500/30 animate-pulse" />
+      {/* iOS HealthKit Integration Card / Metrics Widget */}
+      {isIOSNative() && (
+        hkConnected ? (
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-rose-500/30 bg-gradient-to-br from-rose-500/15 via-onyx-100/90 to-onyx-100 p-5 sm:p-6 shadow-[0_12px_28px_rgba(244,63,94,0.1)]">
+            <div
+              className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-rose-500/15 blur-3xl"
+              aria-hidden
+            />
+            
+            <div className="flex items-center justify-between gap-3 pb-4 border-b border-rose-500/20">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 shrink-0 rounded-xl bg-rose-500/20 grid place-items-center text-rose-400 border border-rose-500/30">
+                  <Heart className="h-5 w-5 fill-rose-500/40 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">
+                    Apple Health Data
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Today's activity & body metrics synced directly from Apple Health.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
-                  Sync with Apple Health
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5 max-w-md">
-                  Automatically import your body weight, sync workouts, and track daily activity
-                  calories.
-                </p>
+              
+              <button
+                type="button"
+                disabled={fetchingHk}
+                onClick={fetchHkData}
+                className="p-2 text-muted-foreground hover:text-white hover:bg-onyx-200 rounded-lg transition active:scale-95 disabled:opacity-50"
+                title="Refresh Apple Health Data"
+              >
+                <RefreshCw className={cn("h-4 w-4", fetchingHk && "animate-spin text-rose-400")} />
+              </button>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {/* Steps */}
+              <div className="rounded-xl border border-border/50 bg-onyx-50/60 p-3 flex flex-col justify-between">
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span className="text-[11px] font-medium uppercase tracking-wider">Steps Today</span>
+                  <Footprints className="h-4 w-4 text-rose-400" />
+                </div>
+                <div className="mt-2">
+                  <span className="text-xl font-bold font-display text-white">
+                    {hkSummary?.steps !== undefined ? hkSummary.steps.toLocaleString() : "—"}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground ml-1">steps</span>
+                </div>
+              </div>
+
+              {/* Calories */}
+              <div className="rounded-xl border border-border/50 bg-onyx-50/60 p-3 flex flex-col justify-between">
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span className="text-[11px] font-medium uppercase tracking-wider">Active Energy</span>
+                  <Flame className="h-4 w-4 text-amber-400" />
+                </div>
+                <div className="mt-2">
+                  <span className="text-xl font-bold font-display text-white">
+                    {hkSummary?.calories !== undefined
+                      ? hkSummary.calories > 0 && hkSummary.calories < 10
+                        ? hkSummary.calories.toFixed(2)
+                        : Math.round(hkSummary.calories).toLocaleString()
+                      : "—"}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground ml-1">kcal</span>
+                </div>
+              </div>
+
+              {/* Weight */}
+              <div className="rounded-xl border border-border/50 bg-onyx-50/60 p-3 flex flex-col justify-between">
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span className="text-[11px] font-medium uppercase tracking-wider">Weight</span>
+                  <Dumbbell className="h-4 w-4 text-blue-400" />
+                </div>
+                <div className="mt-2">
+                  <span className="text-xl font-bold font-display text-white">
+                    {hkSummary?.weightKg !== undefined ? `${hkSummary.weightKg}` : "—"}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground ml-1">kg</span>
+                </div>
+              </div>
+
+              {/* Height */}
+              <div className="rounded-xl border border-border/50 bg-onyx-50/60 p-3 flex flex-col justify-between">
+                <div className="flex items-center justify-between text-muted-foreground">
+                  <span className="text-[11px] font-medium uppercase tracking-wider">Height</span>
+                  <BarChart3 className="h-4 w-4 text-emerald-400" />
+                </div>
+                <div className="mt-2">
+                  <span className="text-xl font-bold font-display text-white">
+                    {hkSummary?.heightCm !== undefined ? `${hkSummary.heightCm}` : "—"}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground ml-1">cm</span>
+                </div>
               </div>
             </div>
-            <button
-              type="button"
-              disabled={syncingHk}
-              onClick={() => handleHkToggle(true)}
-              className="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-rose-500 hover:bg-rose-600 active:scale-95 text-white rounded-xl transition duration-150 shrink-0"
-            >
-              {syncingHk ? "Connecting..." : "Enable Sync"}
-            </button>
           </div>
-        </div>
+        ) : (
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-rose-500/25 bg-gradient-to-br from-rose-500/10 via-onyx-100 to-onyx-100 p-5 shadow-[0_12px_24px_rgba(244,63,94,0.06)]">
+            <div
+              className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-rose-500/10 blur-2xl"
+              aria-hidden
+            />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex gap-3">
+                <div className="h-10 w-10 shrink-0 rounded-xl bg-rose-500/20 grid place-items-center text-rose-400">
+                  <Heart className="h-5 w-5 fill-rose-500/30 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    Sync with Apple Health
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5 max-w-md">
+                    Automatically import your daily steps, active energy, body weight, and height.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={syncingHk}
+                onClick={() => handleHkToggle(true)}
+                className="w-full sm:w-auto px-4 py-2 text-xs font-bold bg-rose-500 hover:bg-rose-600 active:scale-95 text-white rounded-xl transition duration-150 shrink-0"
+              >
+                {syncingHk ? "Connecting..." : "Enable Sync"}
+              </button>
+            </div>
+          </div>
+        )
       )}
 
       {/* Achievements */}
