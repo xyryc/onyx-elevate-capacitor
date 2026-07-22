@@ -400,6 +400,20 @@ function PoseCard({ pose: p }: { pose: Pose }) {
 }
 
 function YogaMobilityPage() {
+  const yogaFeatured = [
+    poses.find((p) => p.name === "Downward Facing Dog"),
+    poses.find((p) => p.name === "Child's Pose"),
+    poses.find((p) => p.name === "Warrior II (Right)"),
+    poses.find((p) => p.name === "Bridge Pose"),
+  ].filter(Boolean) as Pose[];
+
+  const stretchingFeatured = [
+    poses.find((p) => p.name === "Neck Stretch (Right)"),
+    poses.find((p) => p.name === "Low Lunge With Rotation (Left)"),
+    poses.find((p) => p.name === "Hamstring Stretch (Right)"),
+    poses.find((p) => p.name === "Arm Circles (Forward)"),
+  ].filter(Boolean) as Pose[];
+
   return (
     <div className="min-h-screen bg-onyx-50">
       {/* Hero */}
@@ -547,7 +561,7 @@ function YogaMobilityPage() {
 
       {/* Foundational Poses */}
       <section className="container-onyx py-6 md:py-10">
-        <div className="mb-6 flex items-end justify-between gap-4">
+        <div className="mb-8 flex items-end justify-between gap-4">
           <div className="min-w-0">
             <span className="text-xs uppercase tracking-wider text-electric font-semibold">
               Library
@@ -587,10 +601,40 @@ function YogaMobilityPage() {
           </Dialog>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 md:gap-5">
-          {poses.slice(0, 10).map((p) => (
-            <PoseCard key={p.name} pose={p} />
-          ))}
+        <div className="space-y-10">
+          {/* Yoga Poses Grid */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-electric/10 border border-electric/25">
+                <Flower2 className="h-4 w-4 text-electric" />
+              </div>
+              <h3 className="font-display text-lg font-bold text-foreground">
+                Foundational Yoga Poses
+              </h3>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+              {yogaFeatured.map((p) => (
+                <PoseCard key={p.name} pose={p} />
+              ))}
+            </div>
+          </div>
+
+          {/* Stretches & Mobility Grid */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-electric/10 border border-electric/25">
+                <Waves className="h-4 w-4 text-electric" />
+              </div>
+              <h3 className="font-display text-lg font-bold text-foreground">
+                Essential Stretches & Mobility
+              </h3>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+              {stretchingFeatured.map((p) => (
+                <PoseCard key={p.name} pose={p} />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
